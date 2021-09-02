@@ -6,8 +6,8 @@ import Header from '../components/header/Index';
 import Routing from '../routing/Routing';
 
 function App(): JSX.Element {
-  return <div className="App">
-    <header className="app-header">
+  return <div className="app">
+    <header>
       <Header/>
     </header>
     <main className="app-main">
@@ -15,7 +15,7 @@ function App(): JSX.Element {
         <Routing/>
       </HashRouter>
     </main>
-    <footer className="app-footer">
+    <footer>
       <Footer/>
     </footer>
   </div>;
