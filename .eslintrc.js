@@ -37,5 +37,5 @@ module.exports = {
       "props": false
     }],
     "import/extensions": 0
-    },
+  },
 };
