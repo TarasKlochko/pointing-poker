@@ -1,5 +1,5 @@
 import React from 'react';
-import GamePage from './game_page/Index';
+import GamePage from './gamePage';
 
 export default function WrapperPage(): JSX.Element {
   /**

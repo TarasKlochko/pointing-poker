@@ -1,8 +1,8 @@
 import React from 'react';
 import { Route, Switch, useLocation } from "react-router-dom";
-import MainPage from '../components/main_page/Index';
-import { NotFoundPage } from '../components/not_found/Index';
-import WrapperPage from '../components/wrapper_page/Index';
+import MainPage from '../components/mainPage';
+import { NotFoundPage } from '../components/notFound';
+import WrapperPage from '../components/wrapperPage';
 
 export default function Routing(): JSX.Element {
   const location = useLocation();

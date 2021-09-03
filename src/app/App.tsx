@@ -1,8 +1,8 @@
 import React from 'react';
 import { HashRouter } from 'react-router-dom';
 import './App.css';
-import Footer from '../components/footer/Index';
-import Header from '../components/header/Index';
+import Footer from '../components/footer';
+import Header from '../components/header';
 import Routing from '../routing/Routing';
 
 function App(): JSX.Element {
