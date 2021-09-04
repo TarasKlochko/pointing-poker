@@ -1,0 +1,112 @@
+.main-page {
+  padding: 134px 26px 25px;
+  /* height: 933px; */
+  width: 1000px;
+  background: #ffffff;
+  border: 1px solid #000;
+  margin: 0 auto;
+}
+
+.main-page__title {
+  position: relative;
+  padding-left: 134px;
+  width: 552px;
+  height: 149px;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Roboto';
+  font-weight: 700;
+  font-size: 70px;
+  line-height: 65px;
+  margin: 0 auto;
+  margin-bottom: 30px;
+}
+
+.main-page__title_under {
+  align-self: flex-end;
+}
+.main-page__title::before {
+  content: url(../../assets/cards-title.svg);
+  position: absolute;
+  left: 3px;
+  top: -10px;
+  width: 104px;
+  height: 104px;
+}
+.main-page__title::after {
+  content: '';
+  position: absolute;
+  left: 158px;
+  top: 51px;
+  width: 350.3px;
+  height: 0px;
+  border: 5px solid #ffffff;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  transform: rotate(344.77deg);
+}
+
+.main-page__subtitle {
+  font-family: 'Roboto';
+  font-weight: 700;
+  font-size: 48px;
+  line-height: 56px;
+  color: #66999b;
+}
+.main-page__subtitle_start {
+  margin-bottom: 66px;
+}
+.main-page__subtitle_or {
+  margin-bottom: 33px;
+  padding-left: 193px;
+}
+.main-page__wrap {
+  margin-top: 15px;
+  margin-bottom: 34px;
+  width: 517px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.main-page__label {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 300;
+  font-size: 24px;
+  line-height: 28px;
+  display: flex;
+  align-items: center;
+  color: #000000;
+}
+
+.main-page__label_id {
+  padding-left: 4px;
+  font-weight: 700;
+  color: #66999b;
+}
+.main-page__label_dots {
+  font-weight: 700;
+}
+.main-page__input {
+  width: 276px;
+  height: 47px;
+  background: #ffffff;
+  border: 1px solid #2b3a67;
+  box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 0px 0px 0px 10px;
+}
+.main-page__button {
+  width: 241px;
+  height: 47px;
+  background: #2b3a67;
+  border: 1px solid #496a81;
+  border-radius: 3px;
+  font-family: 'Ruda';
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
