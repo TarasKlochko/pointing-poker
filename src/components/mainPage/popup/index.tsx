@@ -73,7 +73,7 @@ export function Popup(): JSX.Element {
           <input className="popup__input" id="name" type="text" name="name" onChange={(event) => handleInput(event)} />
 
           <label className="popup__label" htmlFor="last-name">
-            Your last name {isCreateGame ? '(optional)' : ''}:
+            Your last name {isCreateGame ? '' : '(optional)'}:
           </label>
           <input
             className="popup__input"
@@ -84,7 +84,7 @@ export function Popup(): JSX.Element {
           />
 
           <label className="popup__label" htmlFor="job-position">
-            Your job position {isCreateGame ? '(optional)' : ''}:
+            Your job position {isCreateGame ? '' : '(optional)'}:
           </label>
           <input
             className="popup__input"
