@@ -4,7 +4,7 @@ const initialStates = {
   isPopup: false,
   isObsorverShow: true,
   popupData: {
-    name: 'NN',
+    name: '',
     lastName: '',
     jobPosition: '',
     avatar: '',

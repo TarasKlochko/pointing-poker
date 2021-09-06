@@ -20,7 +20,17 @@ export function Popup(): JSX.Element {
   const name = useAppSelector((state) => state.popup.popupData.name);
   const lastName = useAppSelector((state) => state.popup.popupData.lastName);
   const avatar = useAppSelector((state) => state.popup.popupData.avatar);
-  const avatarName = lastName.length > 0 ? name[0] + lastName[0] : name[0] + name[name.length - 1].toUpperCase();
+
+  function createAvatarName() {
+    let avatarName = 'NN';
+    if (name) {
+      avatarName = name[0] + name[name.length - 1];
+    }
+    if (name && lastName) {
+      avatarName = name[0] + lastName[0];
+    }
+    return avatarName.toUpperCase();
+  }
 
   function handleCheker(fn: boolean) {
     dispatch(observerAction(fn));
@@ -111,7 +121,7 @@ export function Popup(): JSX.Element {
           </div>
 
           <div className="popup__avatar popup__avatar_name" style={{ background: avatar ? `url(${avatar})` : '' }}>
-            {avatar ? '' : avatarName}
+            {avatar ? '' : createAvatarName()}
           </div>
 
           <div className="popup__btn-wrap">
