@@ -2,7 +2,6 @@
 .simple-white-button {
   background: #2B3A67;
   border: 1px solid #496A81;
-  box-sizing: border-box;
   border-radius: 3px;
   width: 189px;
   height: 47px;
@@ -17,7 +16,7 @@
 }
 
 .simple-white-button {
-  color: #2B3A67;
+  color: #2b3a67;
   background: #fefeff;
 }
 

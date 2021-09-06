@@ -21,7 +21,6 @@ export default function MemberCard(props: MemberCardProps): JSX.Element {
     })
   }
   
-
   const playerLogo: JSX.Element = <img src={playerLogoI} alt="player logo" 
     className={props.kind === MemberCardKind.SIMPLE? 'member__simple-user-logo' : 'member__chat-user-logo'}></img>
   const kickButton: JSX.Element = <button className={props.kind === MemberCardKind.SIMPLE? 
