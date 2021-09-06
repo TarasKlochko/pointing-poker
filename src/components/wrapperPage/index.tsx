@@ -1,9 +1,9 @@
 import React from 'react';
-import GamePage from './gamePage';
+import LobbyPage from './lobby';
 
 export default function WrapperPage(): JSX.Element {
   /**
      * Then we should add logic for returning component
      */
-  return <GamePage></GamePage>
+  return <LobbyPage></LobbyPage>
 }
