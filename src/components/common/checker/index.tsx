@@ -1,7 +1,7 @@
 import React from 'react';
 import './checker.css';
 
-export function Checker(props: { stateName: boolean; setState: (arg0: boolean) => void }) {
+export function Checker(props: { stateName: boolean; setState: (arg0: boolean) => void }): JSX.Element {
   return (
     <div
       className={props.stateName ? 'cheker cheker_active' : 'cheker'}

@@ -37,7 +37,7 @@ export const popupSlice = createSlice({
     observerAction: (state, action: PayloadAction<boolean>) => {
       state.popupData.observer = action.payload;
     },
-    clearPopupAction: (state) => initialStates,
+    clearPopupAction: () => initialStates,
   },
 });
 

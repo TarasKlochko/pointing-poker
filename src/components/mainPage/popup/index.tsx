@@ -12,7 +12,7 @@ import {
   observerAction,
 } from './popupSlice';
 
-export function Popup() {
+export function Popup(): JSX.Element {
   const dispatch = useAppDispatch();
   const isCreateGame = useAppSelector((state) => state.createGame.isCreateGame);
   const isObserverShow = useAppSelector((state) => state.popup.isObsorverShow);
@@ -38,11 +38,9 @@ export function Popup() {
     }
     if (event.target.name === 'image') {
       const file = event?.currentTarget?.files![0] as File;
-      console.log(file);
       const reader = new FileReader();
       reader.onload = () => {
         dispatch(avatarAction(reader.result as string));
-        console.log(avatar);
       };
       reader.readAsDataURL(file);
     }
