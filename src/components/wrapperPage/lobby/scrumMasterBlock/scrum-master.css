@@ -49,6 +49,14 @@
   color: #000000;
 }
 
+.scrum-master__no-buttons {
+  height: 77px;
+}
+
+.scrum-master__no-label-block {
+  height: 86px;
+}
+
 @media (max-width: 615px) {
   .scrum-master__start-exit-buttons__cancel {
     margin-top: 20px;
