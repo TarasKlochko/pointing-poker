@@ -11,6 +11,7 @@ const users: User[] = usersJSON
 
 export default function ScrumMasterBlock(): JSX.Element {
   const classes = useButtonStyles();
+  
   return <div className="scrum-master">
     <h5 className="scrum-master__title">Scram master:</h5>
     <MemberCard kind={MemberCardKind.SIMPLE} user={users[0]}></MemberCard>
