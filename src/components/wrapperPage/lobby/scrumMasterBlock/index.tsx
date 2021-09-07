@@ -29,8 +29,8 @@ export default function ScrumMasterBlock(): JSX.Element {
     <div className="scrum-master__start-exit-buttons-wrapper">
       {
         currentUser.role === UserRole.DEALER? 
-        <Button className={classes.blueButton} onClick={(): void => console.log('click')}
-          variant="contained" color="primary">Start Game</Button> : <div></div>
+          <Button className={classes.blueButton} onClick={(): void => console.log('click')}
+            variant="contained" color="primary">Start Game</Button> : <div></div>
       }
       <Button className={`${classes.whiteButton} ${classes.marginButton}`} onClick={(): void => console.log('click')}
         variant="contained" color="primary">Cancel Game</Button>
