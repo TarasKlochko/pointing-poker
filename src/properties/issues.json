@@ -1,0 +1,20 @@
+[{
+  "id": "1",
+  "priority": "Low priority",
+  "name": "Issue 1"
+},
+{
+  "id": "2",
+  "priority": "Middle priority",
+  "name": "Issue 2"
+},
+{
+  "id": "3",
+  "priority": "Low priority",
+  "name": "Issue 3"
+},
+{
+  "id": "4",
+  "priority": "Hight priority",
+  "name": "Issue 4"
+}]

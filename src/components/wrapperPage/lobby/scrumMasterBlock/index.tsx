@@ -23,7 +23,7 @@ export default function ScrumMasterBlock(): JSX.Element {
         <h2 className="scrum-master__label-block__label">Label:</h2>
         <div className="scrum-master__label-block__input-block">
           <input type="text" className="scrum-master__label-block__input-block-input"></input>
-          <Button className={classes.blueButton} onClick={(): void => console.log('click')}
+          <Button className={`${classes.blueButton} ${classes.margitTop}`} onClick={(): void => console.log('click')}
             variant="contained" color="primary">Button</Button>
         </div>
       </div> : <div className="scrum-master__no-label-block"></div>

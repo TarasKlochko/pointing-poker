@@ -141,3 +141,9 @@
   height: 25px; 
   border-radius: 50%;
 }
+
+@media (max-width: 950px) {
+  .simple-member-wrapper {
+    margin: auto;
+  }
+}

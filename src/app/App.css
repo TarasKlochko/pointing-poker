@@ -1,4 +1,37 @@
 .app {
-    max-width: 1440px;
+  max-width: 1440px;
+  margin: auto;
+}
+
+.common-title {
+  font-family: Ruda;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 24px;
+  line-height: 30px;
+  text-align: center;
+  color: #000000;
+}
+
+.common-card-block {
+  margin-top: 55px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 1428px) {
+  .common-card-block {
+    justify-content: space-between;
+  }
+}
+  
+@media (max-width: 950px) {
+  .common-card-block {
     margin: auto;
+    margin-top: 20px;
+  }
+
+  .margin-ato {
+    margin: auto;
+  }
 }
