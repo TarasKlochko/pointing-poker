@@ -12,6 +12,10 @@ export const useButtonStyles = makeStyles((theme) => ({
     },
   },
 
+  margitTop: {
+    marginTop: '-6px'
+  },
+
   marginButton: {
     [theme.breakpoints.down('xs')]: {
       marginTop: '20px'
@@ -25,7 +29,7 @@ export const useButtonStyles = makeStyles((theme) => ({
     width: '189px',
     height: '47px',
     '&:hover': {
-      background: '#09fc46',
+      background: '#e21a1a',
     },
   },
 }));
