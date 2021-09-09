@@ -19,6 +19,12 @@
   justify-content: space-between;
   align-items: center;
   padding-bottom: 25px;
+  column-gap: 10px;
+}
+@media (max-width: 880px) {
+  .setting__item {
+    width: 100%;
+  }
 }
 .setting__item_card {
   display: block;
@@ -31,7 +37,7 @@
   color: #000000;
 }
 .setting__input {
-  width: 326px;
+  min-width: 126px;
   height: 36.5px;
   background: #ffffff;
   border: 1px solid #2b3a67;
@@ -133,6 +139,11 @@
   justify-content: start;
   column-gap: 10px;
   row-gap: 10px;
+}
+@media (max-width: 700px) {
+  .setting-card-wrap {
+    justify-content: center;
+  }
 }
 .setting__card-cover,
 .setting__card-value {
