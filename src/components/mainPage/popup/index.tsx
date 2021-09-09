@@ -32,6 +32,7 @@ export function Popup(): JSX.Element {
   const lastName = useAppSelector((state) => state.popup.popupData.lastName);
   const avatar = useAppSelector((state) => state.popup.popupData.avatar);
   const jobPosition = useAppSelector((state) => state.popup.popupData.jobPosition);
+  const room = useAppSelector((state) => state.createGame.id);
   const socket = useAppSelector((state) => state.socket.socket)
 
   function createAvatarName() {
@@ -73,6 +74,16 @@ export function Popup(): JSX.Element {
     if (isCreateGame) {
       const role = UserRole.DEALER;
       socket.emit('createRoom', {name, lastName, jobPosition, avatar, role }, (response: string) => {
+        const responseObject: Response = JSON.parse(response);
+        if (responseObject.status === 200) {
+          console.log(responseObject);
+        } else {
+          console.log('error: ', responseObject);
+        }
+      });
+    } else {
+      const role = observer ? UserRole.OBSERVER : UserRole.PLAYER;
+      socket.emit('login', {name, lastName, jobPosition, avatar, role, room }, (response: string) => {
         const responseObject: Response = JSON.parse(response);
         if (responseObject.status === 200) {
           console.log(responseObject);
