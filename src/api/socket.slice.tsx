@@ -7,7 +7,6 @@ const defaultSocket = io(REACT_APP_SERVER_DEPLOY!, { transports: ['websocket', '
 export const socketSlice = createSlice({
   name: 'socket',
   initialState: { socket: defaultSocket},
-  reducers: {
-  },
+  reducers: {},
 });
 export default socketSlice.reducer;
