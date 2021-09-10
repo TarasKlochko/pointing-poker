@@ -12,16 +12,7 @@ import {
   observerAction,
 } from './popupSlice';
 import { UserRole } from '../../../model/UserRole';
-
-interface Response {
-  roomObj?: {
-    id: string, 
-    state: string 
-  };
-  typeError?: string;
-  message?: string;
-  status: number;
-}
+import { Controller, PopupData } from '../../../api/Api';
 
 export function Popup(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -33,7 +24,8 @@ export function Popup(): JSX.Element {
   const avatar = useAppSelector((state) => state.popup.popupData.avatar);
   const jobPosition = useAppSelector((state) => state.popup.popupData.jobPosition);
   const room = useAppSelector((state) => state.createGame.id);
-  const socket = useAppSelector((state) => state.socket.socket)
+  const popupData: PopupData = useAppSelector((state) => state.popup.popupData);
+  const socket = useAppSelector((state) => state.socket.socket);
 
   function createAvatarName() {
     let avatarName = 'NN';
@@ -72,9 +64,7 @@ export function Popup(): JSX.Element {
 
   function handleConfirm() {
     if (isCreateGame) {
-      const role = UserRole.DEALER;
-      socket.emit('createRoom', {name, lastName, jobPosition, avatar, role }, (response: string) => {
-        const responseObject: Response = JSON.parse(response);
+      Controller.createRoom(socket, popupData).then(responseObject => {
         if (responseObject.status === 200) {
           console.log(responseObject);
         } else {
@@ -82,9 +72,7 @@ export function Popup(): JSX.Element {
         }
       });
     } else {
-      const role = observer ? UserRole.OBSERVER : UserRole.PLAYER;
-      socket.emit('login', {name, lastName, jobPosition, avatar, role, room }, (response: string) => {
-        const responseObject: Response = JSON.parse(response);
+      Controller.login(socket, popupData, room).then(responseObject => {
         if (responseObject.status === 200) {
           console.log(responseObject);
         } else {
