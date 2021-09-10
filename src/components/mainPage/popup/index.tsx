@@ -11,6 +11,17 @@ import {
   nameAction,
   observerAction,
 } from './popupSlice';
+import { UserRole } from '../../../model/UserRole';
+
+interface Response {
+  roomObj?: {
+    id: string, 
+    state: string 
+  };
+  typeError?: string;
+  message?: string;
+  status: number;
+}
 
 export function Popup(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -20,6 +31,9 @@ export function Popup(): JSX.Element {
   const name = useAppSelector((state) => state.popup.popupData.name);
   const lastName = useAppSelector((state) => state.popup.popupData.lastName);
   const avatar = useAppSelector((state) => state.popup.popupData.avatar);
+  const jobPosition = useAppSelector((state) => state.popup.popupData.jobPosition);
+  const room = useAppSelector((state) => state.createGame.id);
+  const socket = useAppSelector((state) => state.socket.socket)
 
   function createAvatarName() {
     let avatarName = 'NN';
@@ -57,6 +71,27 @@ export function Popup(): JSX.Element {
   }
 
   function handleConfirm() {
+    if (isCreateGame) {
+      const role = UserRole.DEALER;
+      socket.emit('createRoom', {name, lastName, jobPosition, avatar, role }, (response: string) => {
+        const responseObject: Response = JSON.parse(response);
+        if (responseObject.status === 200) {
+          console.log(responseObject);
+        } else {
+          console.log('error: ', responseObject);
+        }
+      });
+    } else {
+      const role = observer ? UserRole.OBSERVER : UserRole.PLAYER;
+      socket.emit('login', {name, lastName, jobPosition, avatar, role, room }, (response: string) => {
+        const responseObject: Response = JSON.parse(response);
+        if (responseObject.status === 200) {
+          console.log(responseObject);
+        } else {
+          console.log('error: ', responseObject);
+        }
+      });
+    };
     dispatch(isPopupAction(false));
   }
 
