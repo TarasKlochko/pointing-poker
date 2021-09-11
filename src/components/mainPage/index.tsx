@@ -4,10 +4,13 @@ import './mainPage.css';
 import { isObsorverShow, isPopupAction } from './popup/popupSlice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { createGameAction, IDGameAction } from './createGame.slice';
+import { Controller } from '../../api/Controller';
 
 export default function MainPage(): JSX.Element {
   const dispatch = useAppDispatch();
   const isPopup = useAppSelector((state) => state.popup.isPopup);
+  const socket = useAppSelector((state) => state.socket.socket);
+  const room = useAppSelector((state) => state.createGame.id);
 
   function handleClickStart() {
     dispatch(isPopupAction(true));
@@ -18,9 +21,16 @@ export default function MainPage(): JSX.Element {
     dispatch(IDGameAction(event.target.value));
   }
   function handleClickConnect() {
-    dispatch(createGameAction(false));
-    dispatch(isPopupAction(true));
-    dispatch(isObsorverShow(true));
+    Controller.checkRoom(socket, room).then(responseObject => {
+      if (responseObject.status === 200) {
+        dispatch(createGameAction(false));
+        dispatch(isPopupAction(true));
+        dispatch(isObsorverShow(true));
+      } else {
+        console.log(responseObject);
+      }
+    });
+
   }
 
   return (

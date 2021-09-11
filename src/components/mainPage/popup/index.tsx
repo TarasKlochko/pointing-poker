@@ -11,8 +11,7 @@ import {
   nameAction,
   observerAction,
 } from './popupSlice';
-import { UserRole } from '../../../model/UserRole';
-import { Controller, PopupData } from '../../../api/Api';
+import { Controller, PopupData } from '../../../api/Controller';
 
 export function Popup(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -22,7 +21,6 @@ export function Popup(): JSX.Element {
   const name = useAppSelector((state) => state.popup.popupData.name);
   const lastName = useAppSelector((state) => state.popup.popupData.lastName);
   const avatar = useAppSelector((state) => state.popup.popupData.avatar);
-  const jobPosition = useAppSelector((state) => state.popup.popupData.jobPosition);
   const room = useAppSelector((state) => state.createGame.id);
   const popupData: PopupData = useAppSelector((state) => state.popup.popupData);
   const socket = useAppSelector((state) => state.socket.socket);

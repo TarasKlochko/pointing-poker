@@ -48,4 +48,16 @@ export class Controller {
         });
     })
   }
+
+  public static checkRoom(socket: Socket, roomID: string): Promise<Response>  {
+    return new Promise(resolve => {
+      socket.emit(
+        'checkRoom',
+        {roomID},
+        (response: string) => {
+          const responseObject: Response = JSON.parse(response);
+          resolve(responseObject);
+        });
+    })
+  }
 }
