@@ -2,43 +2,75 @@ import React, { useState } from 'react';
 import { Checker } from '../../../common/checker';
 import './settingsBlock.css';
 import coffee from '../../../../assets/coffee.png';
+import { useAppDispatch, useAppSelector } from '../../../../app/hooks';
+import {
+  cardCoverAction,
+  cardValuesAction,
+  isAutoCardFlippingAction,
+  isAutoNewPlayerAction,
+  isChangingCardAction,
+  isMasterAsPlayerAction,
+  isTimerAction,
+  scopeTipeShortAction,
+  timeMinAction,
+  timeSecAction,
+} from './settingBlog.slice';
 
 export default function SettingsBlock(): JSX.Element {
   const fibonacci = ['0', '1', '2', '3', '5', '8', '13', '21', '34', '55', '89'];
   const poverOfTwo = ['0', '1/2', '2', '4', '8', '16', '32', '64', '128'];
-
-  const [isMasterAsPlayer, setIsMasterAsPlayer] = useState(true);
-  const [isAutoNewPlayer, setIsAutoNewPlayer] = useState(true);
-  const [isChangingCard, setIsChangingCard] = useState(false);
-  const [isAutoCardFlipping, setIsAutoCardFlipping] = useState(true);
-  const [isTimer, setIsTimer] = useState(false);
+  const dispatch = useAppDispatch();
+  const isMasterAsPlayer = useAppSelector((state) => state.gameSettings.isMasterAsPlayer);
+  const cardValues = useAppSelector((state) => state.gameSettings.cardValues);
+  const scopeTipeShort = useAppSelector((state) => state.gameSettings.scopeTipeShort);
+  const cardCover = useAppSelector((state) => state.gameSettings.cardCover);
+  const isAutoNewPlayer = useAppSelector((state) => state.gameSettings.isAutoNewPlayer);
+  const isAutoCardFlipping = useAppSelector((state) => state.gameSettings.isAutoCardFlipping);
+  const isChangingCard = useAppSelector((state) => state.gameSettings.isChangingCard);
+  const isTimer = useAppSelector((state) => state.gameSettings.isTimer);
+  const timeMin = useAppSelector((state) => state.gameSettings.timeMin);
+  const timeSec = useAppSelector((state) => state.gameSettings.timeSec);
   const [scopeTipe, setScopeTipe] = useState('');
-  const [scopeTipeShort, setScopeTipeShort] = useState('');
-  const [time, setTime] = useState('');
-  const [timeMin, setTimeMin] = useState('2');
-  const [timeSec, setTimeSec] = useState('00');
   const [cardCoverAll, setCardCoverAll] = useState<string[]>([]);
-  const [cardCover, setCardCover] = useState('5');
-  const [cardValues, setCardValues] = useState<string[]>(fibonacci);
   const [isCustomCardsInput, setIsCustomCardsInput] = useState(false);
   const [cardValuesCustom, setCardValuesCustom] = useState<string[]>([]);
   const [isChangeButton, setIsChangeButton] = useState(false);
+
+  function handleIsMasterAsPlayerAction(fn: boolean) {
+    dispatch(isMasterAsPlayerAction(fn));
+  }
+
+  function handleIsAutoNewPlayerAction(fn: boolean) {
+    dispatch(isAutoNewPlayerAction(fn));
+  }
+
+  function handleIsChangingCardAction(fn: boolean) {
+    dispatch(isChangingCardAction(fn));
+  }
+
+  function handleIsAutoCardFlippingAction(fn: boolean) {
+    dispatch(isAutoCardFlippingAction(fn));
+  }
+
+  function handleIsTimerAction(fn: boolean) {
+    dispatch(isTimerAction(fn));
+  }
 
   function handleScopeType(event: React.ChangeEvent<HTMLInputElement>) {
     setScopeTipe(event.currentTarget.value);
   }
 
   function handleScopeTypeShort(event: React.ChangeEvent<HTMLInputElement>) {
-    setScopeTipeShort(event.currentTarget.value);
+    dispatch(scopeTipeShortAction(event.currentTarget.value));
   }
 
   function handleTimeMin(event: React.ChangeEvent<HTMLInputElement>) {
     const minite = event.currentTarget.value;
 
     if (Number(minite) <= 59 && Number(minite) > 0) {
-      setTimeMin(minite);
+      dispatch(timeMinAction(minite));
     } else if (Number(minite) === 0) {
-      setTimeMin('');
+      dispatch(timeMinAction(''));
     }
   }
 
@@ -46,19 +78,19 @@ export default function SettingsBlock(): JSX.Element {
     const second = event.currentTarget.value;
 
     if (Number(second) <= 59 && second.length <= 2) {
-      setTimeSec(second);
+      dispatch(timeSecAction(second));
     }
   }
 
   function handleOnblur() {
     if (!timeMin) {
-      setTimeMin('0');
+      dispatch(timeMinAction('0'));
     }
     if (!timeSec || timeSec === '0') {
-      setTimeSec('00');
+      dispatch(timeSecAction('00'));
     }
     if (timeSec.length === 1) {
-      setTimeSec(`0${timeSec}`);
+      dispatch(timeSecAction(`0${timeSec}`));
     }
   }
 
@@ -83,16 +115,14 @@ export default function SettingsBlock(): JSX.Element {
 
     if (/backSides/.test(cover)) {
       const coverName = cover.split('backSides')[1].split('.')[0];
-      setCardCover(coverName);
+      dispatch(cardCoverAction(coverName));
     } else {
-      setCardCover(cover);
+      dispatch(cardCoverAction(cover));
     }
   }
 
   function changeCardValues(arr: string[]) {
-    setCardValues((prevState) =>
-      [...prevState].filter((el) => el === 'coffee' || el === '?' || el === '∞').concat(arr),
-    );
+    dispatch(cardValuesAction([...cardValues].filter((el) => el === 'coffee' || el === '?' || el === '∞').concat(arr)));
   }
 
   function hanleSelectValue(event: React.ChangeEvent<HTMLSelectElement>) {
@@ -120,9 +150,9 @@ export default function SettingsBlock(): JSX.Element {
     const { checked } = event.currentTarget;
 
     if (checked) {
-      setCardValues((prevState) => [...prevState, name]);
+      dispatch(cardValuesAction([...cardValues, name]));
     } else {
-      setCardValues((prevState) => [...prevState].filter((el) => el !== name));
+      dispatch(cardValuesAction([...cardValues].filter((el) => el !== name)));
     }
   }
 
@@ -153,6 +183,10 @@ export default function SettingsBlock(): JSX.Element {
     setIsChangeButton(false);
   }
 
+  function handleSimbols(event: React.KeyboardEvent<HTMLInputElement>) {
+    return ['e', 'E', '+', '-', ',', '.'].includes(event.key) && event.preventDefault();
+  }
+
   return (
     <div className="setting">
       <h2 className="setting__title">Game settings</h2>
@@ -160,23 +194,23 @@ export default function SettingsBlock(): JSX.Element {
       <ul className="setting__list">
         <li className="setting__item">
           <h3 className="setting__item-title">Scram master as player:</h3>
-          <Checker stateName={isMasterAsPlayer} setState={setIsMasterAsPlayer}></Checker>
+          <Checker stateName={isMasterAsPlayer} setState={handleIsMasterAsPlayerAction}></Checker>
         </li>
         <li className="setting__item">
           <h3 className="setting__item-title">Auto confirm new player:</h3>
-          <Checker stateName={isAutoNewPlayer} setState={setIsAutoNewPlayer}></Checker>
+          <Checker stateName={isAutoNewPlayer} setState={handleIsAutoNewPlayerAction}></Checker>
         </li>
         <li className="setting__item">
           <h3 className="setting__item-title">Changing card in round end:</h3>
-          <Checker stateName={isChangingCard} setState={setIsChangingCard}></Checker>
+          <Checker stateName={isChangingCard} setState={handleIsChangingCardAction}></Checker>
         </li>
         <li className="setting__item">
           <h3 className="setting__item-title">Auto card flipping:</h3>
-          <Checker stateName={isAutoCardFlipping} setState={setIsAutoCardFlipping}></Checker>
+          <Checker stateName={isAutoCardFlipping} setState={handleIsAutoCardFlippingAction}></Checker>
         </li>
         <li className="setting__item">
           <h3 className="setting__item-title">Is timer needed:</h3>
-          <Checker stateName={isTimer} setState={setIsTimer}></Checker>
+          <Checker stateName={isTimer} setState={handleIsTimerAction}></Checker>
         </li>
         <li className="setting__item">
           <h3 className="setting__item-title">Score type:</h3>
@@ -196,7 +230,7 @@ export default function SettingsBlock(): JSX.Element {
               value={timeMin}
               onBlur={handleOnblur}
               onChange={handleTimeMin}
-              onKeyDown={(event) => ['e', 'E', '+', '-', ',', '.'].includes(event.key) && event.preventDefault()}
+              onKeyDown={handleSimbols}
             />
             <span
               className={
@@ -212,7 +246,7 @@ export default function SettingsBlock(): JSX.Element {
               value={timeSec}
               onBlur={handleOnblur}
               onChange={handleTimeSec}
-              onKeyDown={(event) => ['e', 'E', '+', '-', ',', '.'].includes(event.key) && event.preventDefault()}
+              onKeyDown={handleSimbols}
             />
           </div>
         </li>
