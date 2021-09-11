@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Checker } from '../../common/checker';
 import './popup.css';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
@@ -12,11 +13,12 @@ import {
   observerAction,
 } from './popupSlice';
 import { UserRole } from '../../../model/UserRole';
+import { IDGameAction } from '../createGame.slice';
 
 interface Response {
   roomObj?: {
-    id: string, 
-    state: string 
+    id: string;
+    state: string;
   };
   typeError?: string;
   message?: string;
@@ -33,7 +35,10 @@ export function Popup(): JSX.Element {
   const avatar = useAppSelector((state) => state.popup.popupData.avatar);
   const jobPosition = useAppSelector((state) => state.popup.popupData.jobPosition);
   const room = useAppSelector((state) => state.createGame.id);
-  const socket = useAppSelector((state) => state.socket.socket)
+  const socket = useAppSelector((state) => state.socket.socket);
+  const [isError, setIsError] = useState(false);
+
+  const history = useHistory();
 
   function createAvatarName() {
     let avatarName = 'NN';
@@ -70,29 +75,40 @@ export function Popup(): JSX.Element {
     }
   }
 
-  function handleConfirm() {
-    if (isCreateGame) {
-      const role = UserRole.DEALER;
-      socket.emit('createRoom', {name, lastName, jobPosition, avatar, role }, (response: string) => {
-        const responseObject: Response = JSON.parse(response);
-        if (responseObject.status === 200) {
-          console.log(responseObject);
-        } else {
-          console.log('error: ', responseObject);
-        }
-      });
+  function handleConfirm(event: React.MouseEvent<HTMLButtonElement>) {
+    event.preventDefault();
+    if (name) {
+      if (isCreateGame) {
+        const role = UserRole.DEALER;
+        socket.emit('createRoom', { name, lastName, jobPosition, avatar, role }, (response: string) => {
+          const responseObject: Response = JSON.parse(response);
+          if (responseObject.status === 200) {
+            console.log(responseObject);
+            history.push(`/game/${responseObject.roomObj?.id}`);
+            dispatch(IDGameAction(responseObject.roomObj?.id as string));
+            dispatch(isPopupAction(false));
+            dispatch(clearPopupAction());
+          } else {
+            console.log('error: ', responseObject);
+          }
+        });
+      } else {
+        const role = observer ? UserRole.OBSERVER : UserRole.PLAYER;
+        socket.emit('login', { name, lastName, jobPosition, avatar, role, room }, (response: string) => {
+          const responseObject: Response = JSON.parse(response);
+          if (responseObject.status === 200) {
+            console.log(responseObject);
+            history.push(`/game/${responseObject.roomObj?.id}`);
+            dispatch(isPopupAction(false));
+            dispatch(clearPopupAction());
+          } else {
+            console.log('error: ', responseObject);
+          }
+        });
+      }
     } else {
-      const role = observer ? UserRole.OBSERVER : UserRole.PLAYER;
-      socket.emit('login', {name, lastName, jobPosition, avatar, role, room }, (response: string) => {
-        const responseObject: Response = JSON.parse(response);
-        if (responseObject.status === 200) {
-          console.log(responseObject);
-        } else {
-          console.log('error: ', responseObject);
-        }
-      });
-    };
-    dispatch(isPopupAction(false));
+      setIsError(true);
+    }
   }
 
   function handleCancel() {
@@ -114,11 +130,11 @@ export function Popup(): JSX.Element {
         <form className="popup__form">
           <label className="popup__label" htmlFor="name">
             Your first name:
-          </label>
+          </label>{' '}
+          {isError && <p className="popup__form-error">Please enter your first name</p>}
           <input className="popup__input" id="name" type="text" name="name" onChange={(event) => handleInput(event)} />
-
           <label className="popup__label" htmlFor="last-name">
-            Your last name {isCreateGame ? '' : '(optional)'}:
+            Your last name (optional):
           </label>
           <input
             className="popup__input"
@@ -127,9 +143,8 @@ export function Popup(): JSX.Element {
             name="last-name"
             onChange={(event) => handleInput(event)}
           />
-
           <label className="popup__label" htmlFor="job-position">
-            Your job position {isCreateGame ? '' : '(optional)'}:
+            Your job position (optional):
           </label>
           <input
             className="popup__input"
@@ -138,7 +153,6 @@ export function Popup(): JSX.Element {
             name="job-position"
             onChange={(event) => handleInput(event)}
           />
-
           <label className="popup__label" htmlFor="job-position">
             Label:
           </label>
@@ -154,13 +168,15 @@ export function Popup(): JSX.Element {
               Button
             </label>
           </div>
-
           <div className="popup__avatar popup__avatar_name" style={{ background: avatar ? `url(${avatar})` : '' }}>
             {avatar ? '' : createAvatarName()}
           </div>
-
           <div className="popup__btn-wrap">
-            <button className="popup__button popup__button_main" type="submit" onClick={handleConfirm}>
+            <button
+              className="popup__button popup__button_main"
+              type="submit"
+              onClick={(event) => handleConfirm(event)}
+            >
               Confirm
             </button>
             <button
