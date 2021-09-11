@@ -8,4 +8,5 @@ export interface Issue {
   id: string
   priority: string
   name: string
+  link: string
 }

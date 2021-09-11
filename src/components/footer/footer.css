@@ -1,9 +1,6 @@
 .footer__second-line {
     background: #2B3A67;
     min-height: 50px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
 }
 
 .footer__first-line {
@@ -65,6 +62,14 @@
 
 .footer__members-navigation {
     min-width: 60%;
+}
+
+.footer-nav-wrapper {
+    max-width: 1440px;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 @media (max-width: 950px) {

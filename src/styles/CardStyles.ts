@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core";
 
-export const useCardsStyles = makeStyles((theme) => ({
+export const useCardsStyles = makeStyles(() => ({
   createIssueButton: {
     paddingLeft: '20px',
     paddingRight: '40px',

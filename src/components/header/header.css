@@ -2,6 +2,13 @@
     position: relative;
 }
 
+.header-logo-wrapper {
+    top: -70px;
+    max-width: 1440px;
+    margin: auto;
+    position: relative;
+}
+
 .logo-wrapper {
     position: absolute;
     width: 50px;
