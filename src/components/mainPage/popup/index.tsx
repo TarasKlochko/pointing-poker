@@ -15,8 +15,8 @@ import { UserRole } from '../../../model/UserRole';
 
 interface Response {
   roomObj?: {
-    id: string, 
-    state: string 
+    id: string;
+    state: string;
   };
   typeError?: string;
   message?: string;
@@ -33,7 +33,7 @@ export function Popup(): JSX.Element {
   const avatar = useAppSelector((state) => state.popup.popupData.avatar);
   const jobPosition = useAppSelector((state) => state.popup.popupData.jobPosition);
   const room = useAppSelector((state) => state.createGame.id);
-  const socket = useAppSelector((state) => state.socket.socket)
+  const socket = useAppSelector((state) => state.socket.socket);
 
   function createAvatarName() {
     let avatarName = 'NN';
@@ -73,7 +73,7 @@ export function Popup(): JSX.Element {
   function handleConfirm() {
     if (isCreateGame) {
       const role = UserRole.DEALER;
-      socket.emit('createRoom', {name, lastName, jobPosition, avatar, role }, (response: string) => {
+      socket.emit('createRoom', { name, lastName, jobPosition, avatar, role }, (response: string) => {
         const responseObject: Response = JSON.parse(response);
         if (responseObject.status === 200) {
           console.log(responseObject);
@@ -83,7 +83,7 @@ export function Popup(): JSX.Element {
       });
     } else {
       const role = observer ? UserRole.OBSERVER : UserRole.PLAYER;
-      socket.emit('login', {name, lastName, jobPosition, avatar, role, room }, (response: string) => {
+      socket.emit('login', { name, lastName, jobPosition, avatar, role, room }, (response: string) => {
         const responseObject: Response = JSON.parse(response);
         if (responseObject.status === 200) {
           console.log(responseObject);
@@ -91,7 +91,7 @@ export function Popup(): JSX.Element {
           console.log('error: ', responseObject);
         }
       });
-    };
+    }
     dispatch(isPopupAction(false));
   }
 
@@ -118,7 +118,7 @@ export function Popup(): JSX.Element {
           <input className="popup__input" id="name" type="text" name="name" onChange={(event) => handleInput(event)} />
 
           <label className="popup__label" htmlFor="last-name">
-            Your last name {isCreateGame ? '' : '(optional)'}:
+            Your last name (optional):
           </label>
           <input
             className="popup__input"
@@ -129,7 +129,7 @@ export function Popup(): JSX.Element {
           />
 
           <label className="popup__label" htmlFor="job-position">
-            Your job position {isCreateGame ? '' : '(optional)'}:
+            Your job position (optional):
           </label>
           <input
             className="popup__input"
