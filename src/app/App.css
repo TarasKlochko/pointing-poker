@@ -1,5 +1,4 @@
 .app {
-  max-width: 1440px;
   margin: auto;
 }
 
@@ -19,10 +18,9 @@
   flex-wrap: wrap;
 }
 
-@media (max-width: 1428px) {
-  .common-card-block {
-    justify-content: space-between;
-  }
+.hidden {
+  visibility: hidden;
+  opacity: 0;
 }
   
 @media (max-width: 950px) {
