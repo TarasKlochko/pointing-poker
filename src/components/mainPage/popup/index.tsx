@@ -98,6 +98,7 @@ export function Popup(): JSX.Element {
           const responseObject: Response = JSON.parse(response);
           if (responseObject.status === 200) {
             console.log(responseObject);
+            history.push(`/game/${responseObject.roomObj?.id}`);
             dispatch(isPopupAction(false));
             dispatch(clearPopupAction());
           } else {

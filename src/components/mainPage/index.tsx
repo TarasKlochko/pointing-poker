@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Popup } from './popup';
 import './mainPage.css';
 import { isObsorverShow, isPopupAction } from './popup/popupSlice';
@@ -8,7 +8,8 @@ import { createGameAction, IDGameAction } from './createGame.slice';
 export default function MainPage(): JSX.Element {
   const dispatch = useAppDispatch();
   const isPopup = useAppSelector((state) => state.popup.isPopup);
-
+  const [isErrorID, setIsError] = useState(false);
+  const id = useAppSelector((state) => state.createGame.id);
   function handleClickStart() {
     dispatch(isPopupAction(true));
     dispatch(isObsorverShow(false));
@@ -17,10 +18,16 @@ export default function MainPage(): JSX.Element {
   function handleInput(event: React.ChangeEvent<HTMLInputElement>) {
     dispatch(IDGameAction(event.target.value));
   }
+
   function handleClickConnect() {
-    dispatch(createGameAction(false));
-    dispatch(isPopupAction(true));
-    dispatch(isObsorverShow(true));
+    if (id) {
+      dispatch(createGameAction(false));
+      dispatch(isPopupAction(true));
+      dispatch(isObsorverShow(true));
+      setIsError(false);
+    } else {
+      setIsError(true);
+    }
   }
 
   return (
@@ -41,8 +48,10 @@ export default function MainPage(): JSX.Element {
       <p className="main-page__label">
         Connect to lobby by <span className="main-page__label_id">ID</span>:
       </p>
+      {isErrorID && <p className="main-page__input-error">Please enter correct ID</p>}
+
       <div className="main-page__wrap">
-        <input className="main-page__input" type="numtextber" onChange={handleInput} />
+        <input className="main-page__input" type="numtextber" value={id} onChange={handleInput} />
         <button className="main-page__button" onClick={handleClickConnect}>
           Connect
         </button>
