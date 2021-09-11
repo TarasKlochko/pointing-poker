@@ -10,6 +10,9 @@ export default function MainPage(): JSX.Element {
   const isPopup = useAppSelector((state) => state.popup.isPopup);
   const [isErrorID, setIsError] = useState(false);
   const id = useAppSelector((state) => state.createGame.id);
+
+  const socket = useAppSelector((state) => state.socket.socket);
+
   function handleClickStart() {
     dispatch(isPopupAction(true));
     dispatch(isObsorverShow(false));
@@ -21,10 +24,19 @@ export default function MainPage(): JSX.Element {
 
   function handleClickConnect() {
     if (id) {
-      dispatch(createGameAction(false));
-      dispatch(isPopupAction(true));
-      dispatch(isObsorverShow(true));
-      setIsError(false);
+      socket.emit('checkRoom', { id }, (response: string) => {
+        const responseObject: Response = JSON.parse(response);
+        if (responseObject.status === 200) {
+          console.log(responseObject);
+          dispatch(createGameAction(false));
+          dispatch(isPopupAction(true));
+          dispatch(isObsorverShow(true));
+          setIsError(false);
+        } else {
+          console.log('error: ', responseObject);
+          setIsError(true);
+        }
+      });
     } else {
       setIsError(true);
     }
