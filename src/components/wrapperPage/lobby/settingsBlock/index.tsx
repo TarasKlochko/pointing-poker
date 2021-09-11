@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Checker } from '../../../common/checker';
 import './settingsBlock.css';
-import coffee from '../../../../assets/coffee.png';
 import { useAppDispatch, useAppSelector } from '../../../../app/hooks';
 import {
   cardCoverAction,
@@ -15,6 +14,7 @@ import {
   timeMinAction,
   timeSecAction,
 } from './settingBlog.slice';
+import Card from '../../../common/card';
 
 export default function SettingsBlock(): JSX.Element {
   const fibonacci = ['0', '1', '2', '3', '5', '8', '13', '21', '34', '55', '89'];
@@ -22,7 +22,6 @@ export default function SettingsBlock(): JSX.Element {
   const dispatch = useAppDispatch();
   const isMasterAsPlayer = useAppSelector((state) => state.gameSettings.isMasterAsPlayer);
   const cardValues = useAppSelector((state) => state.gameSettings.cardValues);
-  const scopeTipeShort = useAppSelector((state) => state.gameSettings.scopeTipeShort);
   const cardCover = useAppSelector((state) => state.gameSettings.cardCover);
   const isAutoNewPlayer = useAppSelector((state) => state.gameSettings.isAutoNewPlayer);
   const isAutoCardFlipping = useAppSelector((state) => state.gameSettings.isAutoCardFlipping);
@@ -334,14 +333,7 @@ export default function SettingsBlock(): JSX.Element {
             />
           </label>
           <div className="setting-card-wrap">
-            {cardValues &&
-              cardValues.map((el, index) => (
-                <div className="setting__card-value" key={index}>
-                  <span className="setting__card-value-type">{scopeTipeShort}</span>
-                  {el === 'coffee' ? <img src={coffee} alt="df" className="setting__card-value-img" /> : el}
-                  <span className="setting__card-value-type">{scopeTipeShort}</span>
-                </div>
-              ))}
+            {cardValues && cardValues.map((el, index) => <Card value={el} key={index}></Card>)}
           </div>
           {isCustomCardsInput && (
             <>
