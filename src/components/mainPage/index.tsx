@@ -20,6 +20,7 @@ export default function MainPage(): JSX.Element {
   function handleInput(event: React.ChangeEvent<HTMLInputElement>) {
     dispatch(IDGameAction(event.target.value));
   }
+
   function handleClickConnect() {
     Controller.checkRoom(socket, room).then(responseObject => {
       if (responseObject.status === 200) {
@@ -30,7 +31,6 @@ export default function MainPage(): JSX.Element {
         console.log(responseObject);
       }
     });
-
   }
 
   return (

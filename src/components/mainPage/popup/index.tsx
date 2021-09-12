@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Checker } from '../../common/checker';
 import './popup.css';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
@@ -84,6 +84,12 @@ export function Popup(): JSX.Element {
   function handleCancel() {
     dispatch(clearPopupAction());
   }
+
+  useEffect(() => {
+    socket.on("users", users => {
+      console.log(users);
+    })
+  },[socket])
 
   return (
     <div className="popup-wrapper">
