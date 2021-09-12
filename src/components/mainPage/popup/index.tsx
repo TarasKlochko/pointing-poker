@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Checker } from '../../common/checker';
 import './popup.css';
@@ -12,18 +12,8 @@ import {
   nameAction,
   observerAction,
 } from './popupSlice';
-import { UserRole } from '../../../model/UserRole';
 import { IDGameAction } from '../createGame.slice';
-
-interface Response {
-  roomObj?: {
-    id: string;
-    state: string;
-  };
-  typeError?: string;
-  message?: string;
-  status: number;
-}
+import { Controller, PopupData } from '../../../api/Controller';
 
 export function Popup(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -33,8 +23,8 @@ export function Popup(): JSX.Element {
   const name = useAppSelector((state) => state.popup.popupData.name);
   const lastName = useAppSelector((state) => state.popup.popupData.lastName);
   const avatar = useAppSelector((state) => state.popup.popupData.avatar);
-  const jobPosition = useAppSelector((state) => state.popup.popupData.jobPosition);
   const room = useAppSelector((state) => state.createGame.id);
+  const popupData: PopupData = useAppSelector((state) => state.popup.popupData);
   const socket = useAppSelector((state) => state.socket.socket);
   const [isError, setIsError] = useState(false);
 
@@ -79,9 +69,7 @@ export function Popup(): JSX.Element {
     event.preventDefault();
     if (name) {
       if (isCreateGame) {
-        const role = UserRole.DEALER;
-        socket.emit('createRoom', { name, lastName, jobPosition, avatar, role }, (response: string) => {
-          const responseObject: Response = JSON.parse(response);
+        Controller.createRoom(socket, popupData).then(responseObject => {
           if (responseObject.status === 200) {
             console.log(responseObject);
             history.push(`/game/${responseObject.roomObj?.id}`);
@@ -93,9 +81,7 @@ export function Popup(): JSX.Element {
           }
         });
       } else {
-        const role = observer ? UserRole.OBSERVER : UserRole.PLAYER;
-        socket.emit('login', { name, lastName, jobPosition, avatar, role, room }, (response: string) => {
-          const responseObject: Response = JSON.parse(response);
+        Controller.login(socket, popupData, room).then(responseObject => {
           if (responseObject.status === 200) {
             console.log(responseObject);
             history.push(`/game/${responseObject.roomObj?.id}`);
@@ -105,7 +91,7 @@ export function Popup(): JSX.Element {
             console.log('error: ', responseObject);
           }
         });
-      }
+      };
     } else {
       setIsError(true);
     }
@@ -114,6 +100,12 @@ export function Popup(): JSX.Element {
   function handleCancel() {
     dispatch(clearPopupAction());
   }
+
+  useEffect(() => {
+    socket.on("users", users => {
+      console.log(users);
+    })
+  },[socket])
 
   return (
     <div className="popup-wrapper">

@@ -4,6 +4,7 @@ import './mainPage.css';
 import { isObsorverShow, isPopupAction } from './popup/popupSlice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { createGameAction, IDGameAction } from './createGame.slice';
+import { Controller } from '../../api/Controller';
 
 export default function MainPage(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -24,8 +25,7 @@ export default function MainPage(): JSX.Element {
 
   function handleClickConnect() {
     if (id) {
-      socket.emit('checkRoom', { id }, (response: string) => {
-        const responseObject: Response = JSON.parse(response);
+      Controller.checkRoom(socket, id).then(responseObject => {
         if (responseObject.status === 200) {
           console.log(responseObject);
           dispatch(createGameAction(false));
