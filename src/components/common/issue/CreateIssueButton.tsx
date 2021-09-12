@@ -19,9 +19,13 @@ export default function CreateIssueButton(props: CreateIssueButtonProps): JSX.El
     setOpen(true);
   };
 
-  const handleClose = (issue: Issue) => {
+  const yesHandler = (issue: Issue) => {
     setOpen(false);
     props.onClickHandler(issue);
+  };
+
+  const noHandler = () => {
+    setOpen(false);
   };
 
   return <div>
@@ -31,7 +35,7 @@ export default function CreateIssueButton(props: CreateIssueButtonProps): JSX.El
       className={`${classes.createIssueButton}`}
       endIcon={<SvgIcon className="icon" component={StarIcon} viewBox="0 0 56 56" ></SvgIcon>}
     > Create New Issue</Button>
-    <IssueDialog create={true} open={open} onClose={handleClose}></IssueDialog>
+    <IssueDialog noHandler={noHandler} open={open} onClose={yesHandler}></IssueDialog>
   </div>
 
 }

@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-type GameSettings = {
+export type GameSettings = {
   isMasterAsPlayer: boolean;
   cardValues: string[];
   scopeTipeShort: string;

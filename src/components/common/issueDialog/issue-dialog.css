@@ -8,11 +8,28 @@
   color: #000000;
 }
 
-.issue-dialog-name {
+.issue-dialog-input-wrapper, 
+.issue-dialog-select-wrapper {
+  width: 420px;
+  height: 47px;
+  margin: 30px;
+}
+
+.issue-dialog-input {
   width: 420px;
   height: 47px;
   background: #FFFFFF;
   border: 1px solid #2B3A67;
   box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 0px;
+}
+
+.issue-dialog-select-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.issue-dialog-select-label {
+  
 }

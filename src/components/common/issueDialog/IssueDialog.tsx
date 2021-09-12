@@ -2,24 +2,42 @@ import { Button, Dialog, DialogActions, DialogTitle, MenuItem, Select, TextField
 import React, { useState } from 'react';
 import './issue-dialog.css';
 import { Issue, IssuePriority } from '../../../model/Issue';
+import { useButtonStyles } from '../../../styles/ButtonStyles';
 
 export interface IssueDialogProps {
-  create: boolean
   open: boolean;
   onClose: (issue: Issue) => void;
-  issue?: string
+  noHandler: () => void;
+  issue?: Issue;
 }
 
 export default function IssueDialog(props: IssueDialogProps): JSX.Element {
-  const [$name, setName] = useState<string>('');
-  const [$link, setLink] = useState<string>('');
-  const [$priority, setPriority] = useState<IssuePriority>(IssuePriority.LOW);
+  const classes = useButtonStyles();
 
-  const { onClose, open } = props;
+  let name: string;
+  let link: string;
+  let priority: IssuePriority;
+  let $id: number
+  if (props.issue) {
+    name = props.issue.name;
+    link = props.issue.link;
+    priority = props.issue.priority
+    $id = props.issue.id
+  } else {
+    name = '';
+    link = '';
+    priority = IssuePriority.LOW
+    $id = 0
+  }
+  const [$name, setName] = useState<string>(name);
+  const [$link, setLink] = useState<string>(link);
+  const [$priority, setPriority] = useState<IssuePriority>(priority);
+
+  const { onClose, open, noHandler } = props;
 
   const handleClose = () => {
     const issue = {
-      id: '',
+      id: $id,
       priority: $priority,
       name: $name,
       link: $link,
@@ -55,28 +73,39 @@ export default function IssueDialog(props: IssueDialogProps): JSX.Element {
   }
 
   return <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
-    <DialogTitle className="issue-dialig-tittle" id="simple-dialog-title">
-      {props.create ? 'Create issue' : 'Edit issue'}
+    <DialogTitle id="simple-dialog-title">
+      {props.issue ? 'Edit issue' : 'Create issue'}
     </DialogTitle>
-    <TextField value={$name} id="name-basic" label="title" variant="outlined" onChange={nameOnChangeHandler} />
-    <TextField value={$link} id="link-basic" label="link" variant="outlined" onChange={linkOnChangeHandler} />
-    <Select
-      labelId="demo-simple-select-helper-label"
-      id="demo-simple-select-helper"
-      value={$priority}
-      onChange={priorityOnChangeHandler}
-    >
-      <MenuItem value="">
-        <em>None</em>
-      </MenuItem>
-      <MenuItem value={IssuePriority.LOW}>LOW</MenuItem>
-      <MenuItem value={IssuePriority.MIDDLE}>MIDDLE</MenuItem>
-      <MenuItem value={IssuePriority.HIGHT}>HIGHT</MenuItem>
-    </Select>
-    <DialogActions>
-      <Button onClick={handleClose} color="primary" autoFocus>
-        Agree
-      </Button>
+    <div className="issue-dialog-input-wrapper">
+      <TextField className="issue-dialog-input" value={$name} id="name-basic" label="title" variant="outlined"
+        onChange={nameOnChangeHandler} ></TextField>
+    </div>
+    <div className="issue-dialog-input-wrapper">
+      <TextField className="issue-dialog-input" value={$link} id="link-basic" label="link" variant="outlined"
+        onChange={linkOnChangeHandler} />
+    </div>
+    <label className="issue-dialog-select-label issue-dialog-select-wrapper">
+      Priority:
+      <Select
+        labelId="demo-simple-select-helper-label"
+        id="demo-simple-select-helper"
+        value={$priority}
+        onChange={priorityOnChangeHandler}
+      >
+        <MenuItem value={IssuePriority.LOW}>LOW</MenuItem>
+        <MenuItem value={IssuePriority.MIDDLE}>MIDDLE</MenuItem>
+        <MenuItem value={IssuePriority.HIGHT}>HIGHT</MenuItem>
+      </Select>
+    </label>
+    <DialogActions >
+      <div className="issue-dialog-select-label issue-dialog-select-wrapper">
+        <Button className={classes.blueButton} onClick={handleClose} color="primary" autoFocus>
+          YES
+        </Button>
+        <Button className={classes.whiteButton} onClick={noHandler} color="primary" autoFocus>
+          NO
+        </Button>
+      </div>
     </DialogActions>
   </Dialog>
 }
