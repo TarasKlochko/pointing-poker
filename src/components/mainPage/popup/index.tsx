@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Checker } from '../../common/checker';
 import './popup.css';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
@@ -11,6 +12,7 @@ import {
   nameAction,
   observerAction,
 } from './popupSlice';
+import { IDGameAction } from '../createGame.slice';
 import { Controller, PopupData } from '../../../api/Controller';
 
 export function Popup(): JSX.Element {
@@ -25,6 +27,8 @@ export function Popup(): JSX.Element {
   const popupData: PopupData = useAppSelector((state) => state.popup.popupData);
   const socket = useAppSelector((state) => state.socket.socket);
   const [isError, setIsError] = useState(false);
+
+  const history = useHistory();
 
   function createAvatarName() {
     let avatarName = 'NN';
@@ -68,6 +72,10 @@ export function Popup(): JSX.Element {
         Controller.createRoom(socket, popupData).then(responseObject => {
           if (responseObject.status === 200) {
             console.log(responseObject);
+            history.push(`/game/${responseObject.roomObj?.id}`);
+            dispatch(IDGameAction(responseObject.roomObj?.id as string));
+            dispatch(isPopupAction(false));
+            dispatch(clearPopupAction());
           } else {
             console.log('error: ', responseObject);
           }
@@ -76,6 +84,9 @@ export function Popup(): JSX.Element {
         Controller.login(socket, popupData, room).then(responseObject => {
           if (responseObject.status === 200) {
             console.log(responseObject);
+            history.push(`/game/${responseObject.roomObj?.id}`);
+            dispatch(isPopupAction(false));
+            dispatch(clearPopupAction());
           } else {
             console.log('error: ', responseObject);
           }

@@ -27,9 +27,11 @@ export default function MainPage(): JSX.Element {
     if (id) {
       Controller.checkRoom(socket, id).then(responseObject => {
         if (responseObject.status === 200) {
+          console.log(responseObject);
           dispatch(createGameAction(false));
           dispatch(isPopupAction(true));
           dispatch(isObsorverShow(true));
+          setIsError(false);
         } else {
           console.log('error: ', responseObject);
           setIsError(true);
