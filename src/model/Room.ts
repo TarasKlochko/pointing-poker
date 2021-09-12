@@ -1,5 +1,6 @@
 import { GameSettings } from "../components/wrapperPage/lobby/settingsBlock/settingBlog.slice";
 import { Issue } from "./Issue";
+import { User } from "./User";
 
 export interface Room {
   roomID: string;
@@ -7,6 +8,7 @@ export interface Room {
   state: GameState;
   issues: Issue[];
   gameSettings: GameSettings;
+  members: User[];
 }
 
 export enum GameState {

@@ -19,9 +19,11 @@ const issues: Issue[] = issuesJSON
 const currentUser = users[0]
 
 export default function LobbyPage(): JSX.Element {
+
   return <div className="lobby-page">
     <div className="lobby-page-wrapper">
-      <LobbyName name={'Lobby name'}></LobbyName>
+      <LobbyName
+        name={'Lobby name'}></LobbyName>
       <ScrumMasterBlock></ScrumMasterBlock>
       <MembersBlock members={users}></MembersBlock>
       {
