@@ -1,8 +1,9 @@
-import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
+import { configureStore, ThunkAction, Action, getDefaultMiddleware } from '@reduxjs/toolkit';
 import popupReducer from '../components/mainPage/popup/popupSlice';
 import createGameReducer from '../components/mainPage/createGame.slice';
 import createSocketReducer from '../api/socket.slice';
 import gameSettingsReducer from '../components/wrapperPage/lobby/settingsBlock/settingBlog.slice';
+import { gameSlice } from '../slices/GameSlice';
 
 export const store = configureStore({
   reducer: {
@@ -10,7 +11,10 @@ export const store = configureStore({
     createGame: createGameReducer,
     socket: createSocketReducer,
     gameSettings: gameSettingsReducer,
-  },
+    game: gameSlice.reducer,
+  },middleware: getDefaultMiddleware({
+    serializableCheck: false,
+  }),
 });
 
 export type AppDispatch = typeof store.dispatch;

@@ -1,22 +1,28 @@
 import React from 'react';
-import { useCardsStyles } from '../../../../styles/CardStyles';
 import './issues.css';
 import IssueeCard from "../../../common/issue/IssueCard";
-import { Issue, IssuePriority } from "../../../../model/Issue";
+import { Issue } from "../../../../model/Issue";
 import { UserRole } from "../../../../model/UserRole";
 import CreateIssueButton from "../../../common/issue/CreateIssueButton";
+import { useAppDispatch, useAppSelector } from '../../../../app/hooks';
+import { addIssue } from '../../../../slices/GameSlice';
 
 export interface IssuesBlockProps {
   issues: Issue[]
 }
 
-export default function IssuesBlock(props: IssuesBlockProps): JSX.Element {
-  const classes = useCardsStyles();
+export default function IssuesBlock(): JSX.Element {
+  const dispatch = useAppDispatch();
+  const game = useAppSelector((state) => state.game);
 
   const issueItems: JSX.Element[] = [];
 
-  for (let i = 0; i < props.issues.length; i++) {
-    issueItems.push(<IssueeCard issue={props.issues[i]} userRole={UserRole.DEALER}></IssueeCard>)
+  for (let i = 0; i < game.room.issues.length; i++) {
+    issueItems.push(<IssueeCard key={i} issue={game.room.issues[i]} userRole={UserRole.DEALER}></IssueeCard>)
+  }
+
+  const createIssueHandler = (issue: Issue): void => {
+    dispatch(addIssue(issue));
   }
 
   return <div className="issues-block">
@@ -25,7 +31,7 @@ export default function IssuesBlock(props: IssuesBlockProps): JSX.Element {
       {
         issueItems
       }
-      <CreateIssueButton onClickHandler={() => console.log('click')}></CreateIssueButton>
+      <CreateIssueButton onClickHandler={createIssueHandler}></CreateIssueButton>
     </div>
   </div>
 }

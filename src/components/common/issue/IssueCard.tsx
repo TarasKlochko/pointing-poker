@@ -1,11 +1,15 @@
-import { Button, Card, CardActions, CardContent, IconButton, Menu, MenuItem, Typography } from '@material-ui/core';
-import React, { useState } from 'react';
+import { Card, CardActions, CardContent, IconButton, Typography } from '@material-ui/core';
+import React from 'react';
 import { Issue } from '../../../model/Issue';
 import { UserRole } from '../../../model/UserRole';
 import { useCardsStyles } from '../../../styles/CardStyles';
 import { ReactComponent as DeleteIcon } from '../../../assets/delete-icon.svg';
 import { ReactComponent as EditIcon } from '../../../assets/pencil.svg';
 import './issue-common.css';
+import IssueDialog from '../issueDialog/IssueDialog';
+import YesNoDialog from '../common-dialogs/YesNoDialog';
+import { useAppDispatch } from '../../../app/hooks';
+import { removeIssue, upDateIssue } from '../../../slices/GameSlice';
 
 export interface IssueCardProps {
   issue: Issue
@@ -13,23 +17,41 @@ export interface IssueCardProps {
 }
 
 export default function IssueeCard(props: IssueCardProps): JSX.Element {
-  const [name, setName] = useState<string>(props.issue.name);
-  const changeHandler = (e: React.ChangeEvent) => {
-    const input = (e.target as HTMLInputElement).value;
-    setName(input);
-  }
+  const dispatch = useAppDispatch();
+  const [open, setOpen] = React.useState(false);
+  const [deleteOpen, setDeleteOpen] = React.useState(false);
+
+  const deleteContent = `Do you realy want to delete issue: ${props.issue.name} ?`;
+
+  const deleteTitle = 'Delete issue';
 
   const classes = useCardsStyles();
 
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
+  const handleClick = () => {
+    setOpen(true);
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
+  const upDateIssueHandler = (issue: Issue) => {
+    setOpen(false);
+    dispatch(upDateIssue(issue));
   };
+
+  const noUpDateIssueHandler = () => {
+    setOpen(false);
+  };
+
+  const deleteDialogOpenHandler = () => {
+    setDeleteOpen(true);
+  }
+
+  const deleteDialogYesHandler = () => {
+    setDeleteOpen(false);
+    dispatch(removeIssue(props.issue))
+  }
+
+  const deleteDialogNoHandler = () => {
+    setDeleteOpen(false);
+  }
 
   return <Card className={`${classes.createIssueButton} ${classes.issueCardWrapper} margin-auto`}>
     <CardContent className={classes.cardContent}>
@@ -37,7 +59,7 @@ export default function IssueeCard(props: IssueCardProps): JSX.Element {
         {props.issue.id === '1' ? 'Current' : ''}
       </Typography>
       <Typography className={classes.cardFont}>
-        {name}
+        {props.issue.name}
       </Typography>
       <Typography className={classes.priorityFont}>
         {props.issue.priority}
@@ -47,18 +69,15 @@ export default function IssueeCard(props: IssueCardProps): JSX.Element {
       <IconButton aria-controls="change-issue-name" aria-haspopup="true" onClick={handleClick}>
         <EditIcon />
       </IconButton>
-      <Menu
-        id="change-issue-name"
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-      >
-        <MenuItem><input onChange={changeHandler} value={name}></input></MenuItem>
-      </Menu>
-      <IconButton>
+      <IconButton aria-controls="change-issue-name" aria-haspopup="true" onClick={deleteDialogOpenHandler}>
         <DeleteIcon />
       </IconButton>
     </CardActions>
+    <IssueDialog noHandler={noUpDateIssueHandler} issue={props.issue}
+      open={open} onClose={upDateIssueHandler}></IssueDialog>
+    <YesNoDialog content={deleteContent} open={deleteOpen}
+      yesClickHandle={deleteDialogYesHandler} noClickHandle={deleteDialogNoHandler}
+      title={deleteTitle}></YesNoDialog>
   </Card>
+
 }

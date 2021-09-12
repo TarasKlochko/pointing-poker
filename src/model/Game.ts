@@ -2,16 +2,14 @@ import { GameSettings } from "../components/wrapperPage/lobby/settingsBlock/sett
 import { Issue } from "./Issue";
 import { User } from "./User";
 
-export interface Room {
-  roomID: string;
-  name: string;
-  state: GameState;
-  issues: Issue[];
+export interface Game {
+  members: User[]
+  issues: Issue[]
   gameSettings: GameSettings;
-  members: User[];
+  gameStatus: GameStatus;
 }
 
-export enum GameState {
+export enum GameStatus {
   WAITING = 'WAITING',
   PLAYING = 'PLAYING',
   RESULT = 'RESULT'
