@@ -6,7 +6,7 @@ export enum IssuePriority {
 
 export interface Issue {
   id: string
-  priority: string
+  priority: IssuePriority
   name: string
   link: string
 }
