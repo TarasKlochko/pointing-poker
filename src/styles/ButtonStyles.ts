@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core";
 
-export const useButtonStyles = makeStyles((theme) => ({
+export const useButtonStyles = makeStyles(() => ({
   blueButton: {
     background: '#2b3a67',
     border: '1px solid #496A81',
@@ -17,9 +17,9 @@ export const useButtonStyles = makeStyles((theme) => ({
   },
 
   marginButton: {
-    [theme.breakpoints.down('xs')]: {
-      marginTop: '20px'
-    },
+    "@media (max-width: 435px)": {
+      marginTop: 20
+    }
   },
 
   whiteButton: {
