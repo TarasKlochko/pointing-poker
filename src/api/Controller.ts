@@ -15,6 +15,7 @@ export interface Response {
     state: string 
   };
   message?: string;
+  userID: string;
   status: number;
 }
 
@@ -33,8 +34,8 @@ export class Controller {
         });
     })
   }
+
   /**
-   * 
    * @param socket 
    * @param data (name, lastName, jobPosition, avatar, role)
    * @returns {@link Response}
@@ -54,6 +55,13 @@ export class Controller {
     })
   }
 
+  /**
+   * @param socket 
+   * @param data (name, lastName, jobPosition, avatar, role)
+   * @param room
+   * @returns {@link Response}
+   */
+
   public static checkRoom(socket: Socket, roomID: string): Promise<Response>  {
     return new Promise(resolve => {
       socket.emit(
@@ -62,9 +70,16 @@ export class Controller {
         (response: string) => {
           const responseObject: Response = JSON.parse(response);
           resolve(responseObject);
-        });
+        }
+      );
     })
   }
+
+  /**
+   * @param socket
+   * @param roomID
+   * @returns {@link Response}
+   */
 
   public static deleteUser(socket: Socket, userID: string): Promise<Response> {
     return new Promise(resolve => {
@@ -77,4 +92,10 @@ export class Controller {
         });
     })
   }
+
+  /**
+   * @param socket
+   * @param userID
+   * @returns {@link Response}
+   */
 }
