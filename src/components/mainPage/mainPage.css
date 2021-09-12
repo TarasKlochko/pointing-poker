@@ -148,6 +148,11 @@
   line-height: 28px;
   padding: 0 15px;
 }
+.main-page__input-error {
+  font-size: 20px;
+  color: red;
+  margin-bottom: -14px;
+}
 .main-page__button {
   width: 241px;
   height: 47px;

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Checker } from '../../common/checker';
 import './popup.css';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
@@ -24,6 +24,7 @@ export function Popup(): JSX.Element {
   const room = useAppSelector((state) => state.createGame.id);
   const popupData: PopupData = useAppSelector((state) => state.popup.popupData);
   const socket = useAppSelector((state) => state.socket.socket);
+  const [isError, setIsError] = useState(false);
 
   function createAvatarName() {
     let avatarName = 'NN';
@@ -60,25 +61,29 @@ export function Popup(): JSX.Element {
     }
   }
 
-  function handleConfirm() {
-    if (isCreateGame) {
-      Controller.createRoom(socket, popupData).then(responseObject => {
-        if (responseObject.status === 200) {
-          console.log(responseObject);
-        } else {
-          console.log('error: ', responseObject);
-        }
-      });
+  function handleConfirm(event: React.MouseEvent<HTMLButtonElement>) {
+    event.preventDefault();
+    if (name) {
+      if (isCreateGame) {
+        Controller.createRoom(socket, popupData).then(responseObject => {
+          if (responseObject.status === 200) {
+            console.log(responseObject);
+          } else {
+            console.log('error: ', responseObject);
+          }
+        });
+      } else {
+        Controller.login(socket, popupData, room).then(responseObject => {
+          if (responseObject.status === 200) {
+            console.log(responseObject);
+          } else {
+            console.log('error: ', responseObject);
+          }
+        });
+      };
     } else {
-      Controller.login(socket, popupData, room).then(responseObject => {
-        if (responseObject.status === 200) {
-          console.log(responseObject);
-        } else {
-          console.log('error: ', responseObject);
-        }
-      });
-    };
-    dispatch(isPopupAction(false));
+      setIsError(true);
+    }
   }
 
   function handleCancel() {
@@ -106,11 +111,11 @@ export function Popup(): JSX.Element {
         <form className="popup__form">
           <label className="popup__label" htmlFor="name">
             Your first name:
-          </label>
+          </label>{' '}
+          {isError && <p className="popup__form-error">Please enter your first name</p>}
           <input className="popup__input" id="name" type="text" name="name" onChange={(event) => handleInput(event)} />
-
           <label className="popup__label" htmlFor="last-name">
-            Your last name {isCreateGame ? '' : '(optional)'}:
+            Your last name (optional):
           </label>
           <input
             className="popup__input"
@@ -119,9 +124,8 @@ export function Popup(): JSX.Element {
             name="last-name"
             onChange={(event) => handleInput(event)}
           />
-
           <label className="popup__label" htmlFor="job-position">
-            Your job position {isCreateGame ? '' : '(optional)'}:
+            Your job position (optional):
           </label>
           <input
             className="popup__input"
@@ -130,7 +134,6 @@ export function Popup(): JSX.Element {
             name="job-position"
             onChange={(event) => handleInput(event)}
           />
-
           <label className="popup__label" htmlFor="job-position">
             Label:
           </label>
@@ -146,13 +149,15 @@ export function Popup(): JSX.Element {
               Button
             </label>
           </div>
-
           <div className="popup__avatar popup__avatar_name" style={{ background: avatar ? `url(${avatar})` : '' }}>
             {avatar ? '' : createAvatarName()}
           </div>
-
           <div className="popup__btn-wrap">
-            <button className="popup__button popup__button_main" type="submit" onClick={handleConfirm}>
+            <button
+              className="popup__button popup__button_main"
+              type="submit"
+              onClick={(event) => handleConfirm(event)}
+            >
               Confirm
             </button>
             <button
