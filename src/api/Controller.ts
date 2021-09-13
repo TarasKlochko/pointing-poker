@@ -11,8 +11,8 @@ export interface PopupData {
 
 export interface Response {
   roomObj?: {
-    roomID: string;
-    state: string;
+    roomID: string; 
+    state: string; 
   };
   message?: string;
   userID: string;

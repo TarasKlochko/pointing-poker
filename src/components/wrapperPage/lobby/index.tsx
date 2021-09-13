@@ -12,6 +12,8 @@ import { useAppSelector } from '../../../app/hooks';
 export default function LobbyPage(): JSX.Element {
   const game = useAppSelector((state) => state.game);
 
+  const user = useAppSelector((state) => state.user);
+
   const currentUser = game.room.members[0];
 
   return <div className="lobby-page">
@@ -21,7 +23,7 @@ export default function LobbyPage(): JSX.Element {
       <ScrumMasterBlock></ScrumMasterBlock>
       <MembersBlock members={game.room.members}></MembersBlock>
       {
-        currentUser.role === UserRole.DEALER ? <div>
+        user.user.role === UserRole.DEALER ? <div>
           <IssuesBlock></IssuesBlock>
           <SettingsBlock></SettingsBlock>
           <CardBlock></CardBlock>
