@@ -71,36 +71,20 @@ export function Popup(): JSX.Element {
     }
   }
 
+  const createUserState = (userId: string, roomId: string, userRole: string): void => {
+    dispatch(setUser({
+      name: $name,
+      surname: $lastName,
+      id: userId,
+      image: avatar,
+      role: userRole,
+      jobPosition: $jobPosition,
+      room: roomId
+    }))
+  }
+
   function handleConfirm(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
-    // if (name) {
-    //   if (isCreateGame) {
-    //     Controller.createRoom(socket, popupData).then((responseObject) => {
-    //       if (responseObject.status === 200) {
-    //         console.log(responseObject);
-    //         history.push(`/game/${responseObject.roomObj?.roomID}`);
-    //         dispatch(IDGameAction(responseObject.roomObj?.roomID as string));
-    //         dispatch(isPopupAction(false));
-    //         dispatch(clearPopupAction());
-    //       } else {
-    //         console.log('error: ', responseObject);
-    //       }
-    //     });
-    //   } else {
-    //     Controller.login(socket, popupData, room).then((responseObject) => {
-    //       if (responseObject.status === 200) {
-    //         console.log(responseObject);
-    //         history.push(`/game/${responseObject.roomObj?.roomID}`);
-    //         dispatch(isPopupAction(false));
-    //         dispatch(clearPopupAction());
-    //       } else {
-    //         console.log('error: ', responseObject);
-    //       }
-    //     });
-    //   }
-    // } else {
-    //   setIsError(true);
-    // }
     if ($name) {
       if (isCreateGame) {
         Controller.createRoom(socket, popupData).then((responseObject) => {
@@ -114,15 +98,7 @@ export function Popup(): JSX.Element {
             dispatch(IDGameAction(responseObject.roomObj?.roomID as string));
             dispatch(isPopupAction(false));
             dispatch(clearPopupAction());
-            dispatch(setUser({
-              name: $name,
-              surname: $lastName,
-              id: responseObject.userID,
-              image: avatar,
-              role: UserRole.DEALER,
-              jobPosition: $jobPosition,
-              room: roomID
-            }))
+            createUserState(responseObject.userID, roomID, UserRole.DEALER)
           } else {
             console.log('error: ', responseObject);
           }
@@ -134,6 +110,11 @@ export function Popup(): JSX.Element {
             history.push(`/game/${responseObject.roomObj?.roomID}`);
             dispatch(isPopupAction(false));
             dispatch(clearPopupAction());
+            let roomID = '';
+            if (responseObject.roomObj?.roomID) {
+              roomID = responseObject.roomObj?.roomID;
+            }
+            createUserState(responseObject.userID, roomID, UserRole.PLAYER)
           } else {
             console.log('error: ', responseObject);
           }
