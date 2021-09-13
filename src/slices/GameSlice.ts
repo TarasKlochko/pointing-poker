@@ -94,12 +94,15 @@ export const gameSlice = createSlice({
           state.room.issues[index].priority = action.payload.priority
         }
       })
+    },
+    changeGameState: (state, action: PayloadAction<GameState>): void => {
+      state.room.state = action.payload;
     }
   },
 });
 
 const { actions, reducer } = gameSlice;
 
-export const { setMembers, addIssue, removeIssue, upDateIssue } = actions;
+export const { setMembers, addIssue, removeIssue, upDateIssue, changeGameState } = actions;
 
 export default reducer as Reducer<RoomState>;

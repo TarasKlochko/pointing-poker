@@ -3,14 +3,15 @@ import { Button } from '@material-ui/core';
 import { MemberCardKind } from '../../../../model/MemberCardKind';
 import MemberCard from '../../../common/memberCard';
 import './scrum-master.css';
-import usersJSON from '../../../../properties/users.json';
-import { User } from '../../../../model/User';
 import { useButtonStyles } from '../../../../styles/ButtonStyles';
 import { UserRole } from '../../../../model/UserRole';
-import { useAppSelector } from '../../../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../../../app/hooks';
+import { changeGameState } from '../../../../slices/GameSlice';
+import { GameState } from '../../../../model/Room';
 
 
 export default function ScrumMasterBlock(): JSX.Element {
+  const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user);
   const game = useAppSelector((state) => state.game);
   const [copyVisible, setCopyVisible] = useState<boolean>(false);
@@ -25,6 +26,10 @@ export default function ScrumMasterBlock(): JSX.Element {
     setTimeout((): void => {
       setCopyVisible(false);
     }, 1500);
+  }
+
+  const startGame = (): void => {
+     dispatch(changeGameState(GameState.PLAYING));
   }
 
   return <div className="scrum-master">
@@ -46,7 +51,7 @@ export default function ScrumMasterBlock(): JSX.Element {
       <div className="scrum-master__start-exit-buttons-wrapper">
         {
           user.user.role === UserRole.DEALER ?
-            <Button className={classes.blueButton} onClick={(): void => console.log('click')}
+            <Button className={classes.blueButton} onClick={startGame}
               variant="contained" color="primary">Start Game</Button>
             : <div></div>
         }
