@@ -14,14 +14,20 @@ import {
 } from './popupSlice';
 import { IDGameAction } from '../createGame.slice';
 import { Controller, PopupData } from '../../../api/Controller';
+import { User } from '../../../model/User';
+import { setMembers } from '../../../slices/GameSlice';
+import { setUser } from '../../../slices/UserSlice';
+import { UserRole } from '../../../model/UserRole';
 
 export function Popup(): JSX.Element {
   const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.user);
   const isCreateGame = useAppSelector((state) => state.createGame.isCreateGame);
   const isObserverShow = useAppSelector((state) => state.popup.isObsorverShow);
   const observer = useAppSelector((state) => state.popup.popupData.observer);
-  const name = useAppSelector((state) => state.popup.popupData.name);
-  const lastName = useAppSelector((state) => state.popup.popupData.lastName);
+  const $name = useAppSelector((state) => state.popup.popupData.name);
+  const $lastName = useAppSelector((state) => state.popup.popupData.lastName);
+  const $jobPosition = useAppSelector((state) => state.popup.popupData.jobPosition);
   const avatar = useAppSelector((state) => state.popup.popupData.avatar);
   const room = useAppSelector((state) => state.createGame.id);
   const popupData: PopupData = useAppSelector((state) => state.popup.popupData);
@@ -32,11 +38,11 @@ export function Popup(): JSX.Element {
 
   function createAvatarName() {
     let avatarName = 'NN';
-    if (name) {
-      avatarName = name[0] + name[name.length - 1];
+    if ($name) {
+      avatarName = $name[0] + $name[$name.length - 1];
     }
-    if (name && lastName) {
-      avatarName = name[0] + lastName[0];
+    if ($name && $lastName) {
+      avatarName = $name[0] + $lastName[0];
     }
     return avatarName.toUpperCase();
   }
@@ -67,13 +73,65 @@ export function Popup(): JSX.Element {
 
   function handleConfirm(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
-    if (name) {
+    // if (name) {
+    //   if (isCreateGame) {
+    //     Controller.createRoom(socket, popupData).then((responseObject) => {
+    //       if (responseObject.status === 200) {
+    //         console.log(responseObject);
+    //         history.push(`/game/${responseObject.roomObj?.roomID}`);
+    //         dispatch(IDGameAction(responseObject.roomObj?.roomID as string));
+    //         dispatch(isPopupAction(false));
+    //         dispatch(clearPopupAction());
+    //       } else {
+    //         console.log('error: ', responseObject);
+    //       }
+    //     });
+    //   } else {
+    //     Controller.login(socket, popupData, room).then((responseObject) => {
+    //       if (responseObject.status === 200) {
+    //         console.log(responseObject);
+    //         history.push(`/game/${responseObject.roomObj?.roomID}`);
+    //         dispatch(isPopupAction(false));
+    //         dispatch(clearPopupAction());
+    //       } else {
+    //         console.log('error: ', responseObject);
+    //       }
+    //     });
+    //   }
+    // } else {
+    //   setIsError(true);
+    // }
+    if ($name) {
       if (isCreateGame) {
         Controller.createRoom(socket, popupData).then((responseObject) => {
           if (responseObject.status === 200) {
             console.log(responseObject);
             history.push(`/game/${responseObject.roomObj?.roomID}`);
+            let roomID = '';
+            if (responseObject.roomObj?.roomID) {
+              roomID = responseObject.roomObj?.roomID;
+            }
             dispatch(IDGameAction(responseObject.roomObj?.roomID as string));
+            dispatch(isPopupAction(false));
+            dispatch(clearPopupAction());
+            dispatch(setUser({
+              name: $name,
+              surname: $lastName,
+              id: responseObject.userID,
+              image: avatar,
+              role: UserRole.DEALER,
+              jobPosition: $jobPosition,
+              room: roomID
+            }))
+          } else {
+            console.log('error: ', responseObject);
+          }
+        });
+      } else if (user.user.id.length === 0) {
+        Controller.login(socket, popupData, room).then(responseObject => {
+          if (responseObject.status === 200) {
+            console.log(responseObject);
+            history.push(`/game/${responseObject.roomObj?.roomID}`);
             dispatch(isPopupAction(false));
             dispatch(clearPopupAction());
           } else {
@@ -81,16 +139,7 @@ export function Popup(): JSX.Element {
           }
         });
       } else {
-        Controller.login(socket, popupData, room).then((responseObject) => {
-          if (responseObject.status === 200) {
-            console.log(responseObject);
-            history.push(`/game/${responseObject.roomObj?.roomID}`);
-            dispatch(isPopupAction(false));
-            dispatch(clearPopupAction());
-          } else {
-            console.log('error: ', responseObject);
-          }
-        });
+        history.push(`/game/${room}`);
       }
     } else {
       setIsError(true);
@@ -102,10 +151,12 @@ export function Popup(): JSX.Element {
   }
 
   useEffect(() => {
-    socket.on('users', (users) => {
-      console.log(users);
-    });
-  }, [socket]);
+    socket.on("users", users => {
+      const usersO: User[] = users;
+      console.log(usersO);
+      dispatch(setMembers(usersO));
+    })
+  }, [socket])
 
   return (
     <div className="popup-wrapper">

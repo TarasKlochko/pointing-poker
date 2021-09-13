@@ -5,5 +5,7 @@ export interface User {
   name: string
   surname: string
   role: string
-  userPosition: string
+  jobPosition: string
+  room: string
 }
+

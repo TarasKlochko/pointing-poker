@@ -63,6 +63,10 @@
   justify-content: space-around;
   align-items: center;
   color: #000000;
+  overflow: hidden;
+  display: inline-block;
+  white-space: nowrap;
+  padding-top: 10px;
 }
 
 .scrum-master__no-buttons {

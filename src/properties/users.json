@@ -4,7 +4,8 @@
   "name": "Rick",
   "surname": "Giligan",
   "role": "dealer",
-  "userPosition": "lead softwear engineer"
+  "jobPosition": "lead softwear engineer",
+  "room": "9243dc74-d354-4d7f-9fb9-361f44f56f94"
   },
 {
   "id": "2",
@@ -12,7 +13,8 @@
   "name": "Rick",
   "surname": "Giligan",
   "role": "player",
-  "userPosition": "lead softwear engineer"
+  "jobPosition": "lead softwear engineer",
+  "room": "9243dc74-d354-4d7f-9fb9-361f44f56f94"
 },
 {
   "id": "3",
@@ -20,7 +22,8 @@
   "name": "Rick",
   "surname": "Giligan",
   "role": "observer",
-  "userPosition": "lead softwear engineer"
+  "jobPosition": "lead softwear engineer",
+  "room": "9243dc74-d354-4d7f-9fb9-361f44f56f94"
 },
 {
   "id": "4",
@@ -28,7 +31,8 @@
   "name": "Rick",
   "surname": "Giligan",
   "role": "player",
-  "userPosition": "lead softwear engineer"
+  "jobPosition": "lead softwear engineer",
+  "room": "9243dc74-d354-4d7f-9fb9-361f44f56f94"
 },
 {
   "id": "5",
@@ -36,7 +40,8 @@
   "name": "Rick",
   "surname": "Giligan",
   "role": "player",
-  "userPosition": "lead softwear engineer"
+  "jobPosition": "lead softwear engineer",
+  "room": "9243dc74-d354-4d7f-9fb9-361f44f56f94"
 },
 {
   "id": "6",
@@ -44,7 +49,8 @@
   "name": "Rick",
   "surname": "Giligan",
   "role": "player",
-  "userPosition": "lead softwear engineer"
+  "jobPosition": "lead softwear engineer",
+  "room": "9243dc74-d354-4d7f-9fb9-361f44f56f94"
 },
 {
   "id": "7",
@@ -52,5 +58,6 @@
   "name": "Rick",
   "surname": "Giligan",
   "role": "player",
-  "userPosition": "lead softwear engineer"
+  "jobPosition": "lead softwear engineer",
+  "room": "9243dc74-d354-4d7f-9fb9-361f44f56f94"
 }]

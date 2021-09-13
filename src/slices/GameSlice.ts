@@ -4,6 +4,7 @@ import {
 import { Issue, IssuePriority } from '../model/Issue';
 import { GameState, Room } from '../model/Room';
 import { User } from '../model/User';
+import { UserRole } from '../model/UserRole';
 import issuesJSON from '../properties/users.json';
 
 const $issues: Issue[] = [{
@@ -31,12 +32,13 @@ const $issues: Issue[] = [{
 
 interface RoomState {
   room: Room
+  dealer: User
 }
 const initialState: RoomState = {
   room: {
     roomID: '',
     name: '',
-    members: issuesJSON,
+    members: [],
     state: GameState.WAITING,
     gameSettings: {
       isMasterAsPlayer: true,
@@ -51,6 +53,15 @@ const initialState: RoomState = {
       timeSec: '00',
     },
     issues: $issues,
+  },
+  dealer: {
+    id: '',
+    image: '',
+    name: '',
+    surname: '',
+    role: '',
+    jobPosition: '',
+    room: ''
   }
 
 };
@@ -61,6 +72,9 @@ export const gameSlice = createSlice({
   reducers: {
     setMembers: (state, action: PayloadAction<User[]>): void => {
       state.room.members = action.payload;
+      action.payload.forEach((user) => {
+        if(user.role === UserRole.DEALER) state.dealer = user;
+      })
     },
     addIssue: (state, action: PayloadAction<Issue>): void => {
       state.room.issues.push(action.payload);
