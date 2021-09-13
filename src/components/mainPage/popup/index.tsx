@@ -69,11 +69,11 @@ export function Popup(): JSX.Element {
     event.preventDefault();
     if (name) {
       if (isCreateGame) {
-        Controller.createRoom(socket, popupData).then(responseObject => {
+        Controller.createRoom(socket, popupData).then((responseObject) => {
           if (responseObject.status === 200) {
             console.log(responseObject);
-            history.push(`/game/${responseObject.roomObj?.id}`);
-            dispatch(IDGameAction(responseObject.roomObj?.id as string));
+            history.push(`/game/${responseObject.roomObj?.roomID}`);
+            dispatch(IDGameAction(responseObject.roomObj?.roomID as string));
             dispatch(isPopupAction(false));
             dispatch(clearPopupAction());
           } else {
@@ -81,17 +81,17 @@ export function Popup(): JSX.Element {
           }
         });
       } else {
-        Controller.login(socket, popupData, room).then(responseObject => {
+        Controller.login(socket, popupData, room).then((responseObject) => {
           if (responseObject.status === 200) {
             console.log(responseObject);
-            history.push(`/game/${responseObject.roomObj?.id}`);
+            history.push(`/game/${responseObject.roomObj?.roomID}`);
             dispatch(isPopupAction(false));
             dispatch(clearPopupAction());
           } else {
             console.log('error: ', responseObject);
           }
         });
-      };
+      }
     } else {
       setIsError(true);
     }
@@ -102,10 +102,10 @@ export function Popup(): JSX.Element {
   }
 
   useEffect(() => {
-    socket.on("users", users => {
+    socket.on('users', (users) => {
       console.log(users);
-    })
-  },[socket])
+    });
+  }, [socket]);
 
   return (
     <div className="popup-wrapper">
