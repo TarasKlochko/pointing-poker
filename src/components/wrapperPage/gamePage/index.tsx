@@ -1,32 +1,23 @@
-import React, { useEffect, useState } from 'react';
-import { Controller } from '../../../api/Controller';
+import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { MemberCardKind } from '../../../model/MemberCardKind';
 import { GameState } from '../../../model/Room';
-import { addIssue, changeGameState, upDateIssue } from '../../../slices/GameSlice';
+import { changeGameState, upDateIssue } from '../../../slices/GameSlice';
 import GameCard from '../../common/gameCard';
 import MemberCard from '../../common/memberCard';
 import CardIssue from './cardIssue';
 import './gamePage.css';
-import { Issue } from '../../../model/Issue';
 import Timer from '../../common/timer';
 
 export default function GamePage(): JSX.Element {
   const game = useAppSelector((state) => state.game);
   const gameSettings = useAppSelector((state) => state.gameSettings);
   const [isRunRound, setIsRunRound] = useState(false);
-  // const [isTimer, setIsTimer] = useState(false);
   const [isTimerOver, setIsTimerOver] = useState(false);
   const [currentIssue, setCurrentIssue] = useState(-1);
   const isTimer = useAppSelector((state) => state.gameSettings.isTimer);
   const issues = useAppSelector((state) => state.game.room.issues);
-  const socket = useAppSelector((state) => state.socket.socket);
   const dispatch = useAppDispatch();
-  // useEffect(() => {
-  //   if (!isTimer) {
-  //     setCurrentIssue(0);
-  //   }
-  // }, []);
 
   function handleStopGame() {
     console.log('Stop Game');
@@ -89,7 +80,6 @@ export default function GamePage(): JSX.Element {
                 />
               ))}
             </div>
-
             <div className="issues__control-wrap">
               {isTimer && <Timer min={gameSettings.timeMin} sec={gameSettings.timeSec} start={false} />}
               <div className="issues__control-timer" onClick={handleTimerOver}></div>
