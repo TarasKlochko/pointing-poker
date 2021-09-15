@@ -3,15 +3,14 @@ import React, { useLayoutEffect, useRef, useState } from 'react';
 import { ReactComponent as EditIcon } from '../../../../assets/pencil.svg';
 import './lobby-name.css';
 import { UserRole } from '../../../../model/UserRole';
-import { useAppSelector } from '../../../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../../../app/hooks';
+import { setName } from '../../../../slices/GameSlice';
 
-export interface LobbyNameProps {
-  name: string
-}
-
-export default function LobbyName(props: LobbyNameProps): JSX.Element {
+export default function LobbyName(): JSX.Element {
+  const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user);
   const inputEl = useRef<HTMLInputElement>(null);
+  const name = useAppSelector((state) => state.game.room.name);
 
   useLayoutEffect(() => {
     const handleFocus = (): void => {
@@ -37,11 +36,9 @@ export default function LobbyName(props: LobbyNameProps): JSX.Element {
     }
   };
 
-  const [name, setName] = useState<string>(props.name);
-
   const onChangeHandler = (e: React.FormEvent) => {
     const input = (e.target as HTMLInputElement).value;
-    setName(input);
+    dispatch(setName(input));
   }
 
   const dealerEl = <div className="lobby-name">

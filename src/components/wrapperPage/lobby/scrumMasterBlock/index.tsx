@@ -35,7 +35,6 @@ export default function ScrumMasterBlock(): JSX.Element {
       console.log(newRoom);
       console.log('update');
       dispatch(setRoomState(newRoom));
-      // Here will be save data in state and redirecxt on game page
     });
   }, [socket])
 
@@ -71,12 +70,8 @@ export default function ScrumMasterBlock(): JSX.Element {
     Controller.updateRoom(socket, room);
   }
 
-
-
   const exitGame = (): void => {
-    console.log('exit')
     Controller.deleteUser(socket, user.user.id);
-
     setOpen(false);
     history.push(`/`);
   }
