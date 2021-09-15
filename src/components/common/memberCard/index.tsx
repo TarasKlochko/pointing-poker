@@ -6,6 +6,8 @@ import './member.css';
 import playerLogoI from '../../../assets/playerLogo.svg';
 import { User } from '../../../model/User';
 import { useAppSelector } from '../../../app/hooks';
+import { Controller } from '../../../api/Controller';
+import YesNoDialog from '../common-dialogs/YesNoDialog';
 
 export interface MemberCardProps {
   user: User
@@ -15,6 +17,8 @@ export interface MemberCardProps {
 
 export default function MemberCard(props: MemberCardProps): JSX.Element {
   const user = useAppSelector((state) => state.user);
+  const socket = useAppSelector((state) => state.socket.socket);
+  const [open, setOpen] = React.useState(false);
   let classes = ''
 
   if (props.classList) {
@@ -23,9 +27,22 @@ export default function MemberCard(props: MemberCardProps): JSX.Element {
     })
   }
 
+  const openDialog = (): void => {
+    setOpen(true);
+  }
+
+  const closeDialog = (): void => {
+    setOpen(false);
+  }
+
+  const kickPlayer = () => {
+    Controller.deleteUser(socket, props.user.id);
+    setOpen(false);
+  }
+
   const playerLogo: JSX.Element = <img src={playerLogoI} alt="player logo"
     className={props.kind === MemberCardKind.SIMPLE ? 'member__simple-user-logo' : 'member__chat-user-logo'}></img>
-  const kickButton: JSX.Element = <button className={props.kind === MemberCardKind.SIMPLE ?
+  const kickButton: JSX.Element = <button onClick={openDialog} className={props.kind === MemberCardKind.SIMPLE ?
     'member__simple-user-kick-button' : 'member__chat-user-kick-button'} title="kick player">
     {playerLogo}
   </button>
@@ -39,8 +56,10 @@ export default function MemberCard(props: MemberCardProps): JSX.Element {
       <div className="member-info-block__simple-position">{props.user.jobPosition}</div>
     </div>
     <div className="member__simple-image-wrapper">
-      {props.user.role === UserRole.PLAYER && user.user.role !== UserRole.OBSERVER
-        && props.user.id !== user.user.id ? kickButton : ''}
+      {user.user.role === UserRole.DEALER && props.user.role === UserRole.PLAYER ? kickButton : ''}
+      <YesNoDialog content={`Do you really want to kick ${props.user.name} ${props.user.surname}`} open={open}
+        yesClickHandle={kickPlayer} noClickHandle={closeDialog}
+        title={'Kick player?'}></YesNoDialog>
     </div>
   </div>
 
@@ -53,8 +72,10 @@ export default function MemberCard(props: MemberCardProps): JSX.Element {
       <div className="member-info-block__chat-position">{props.user.jobPosition}</div>
     </div>
     <div className="member__chat-image-wrapper">
-      {props.user.role === UserRole.PLAYER && user.user.role !== UserRole.OBSERVER
-        && props.user.id !== user.user.id ? kickButton : ''}
+      {user.user.role === UserRole.DEALER && props.user.role === UserRole.PLAYER ? kickButton : ''}
+      <YesNoDialog content={'Kick player'} open={open}
+        yesClickHandle={kickPlayer} noClickHandle={closeDialog}
+        title={`Do you really want to kick ${props.user.name} ${props.user.surname}`}></YesNoDialog>
     </div>
   </div>
 

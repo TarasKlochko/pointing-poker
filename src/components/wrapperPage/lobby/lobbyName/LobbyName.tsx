@@ -2,19 +2,15 @@ import { IconButton } from '@material-ui/core';
 import React, { useLayoutEffect, useRef, useState } from 'react';
 import { ReactComponent as EditIcon } from '../../../../assets/pencil.svg';
 import './lobby-name.css';
-import usersJSON from '../../../../properties/users.json';
-import { User } from '../../../../model/User';
 import { UserRole } from '../../../../model/UserRole';
-
-const users: User[] = usersJSON;
-
-const currentUser = users[0];
+import { useAppSelector } from '../../../../app/hooks';
 
 export interface LobbyNameProps {
   name: string
 }
 
 export default function LobbyName(props: LobbyNameProps): JSX.Element {
+  const user = useAppSelector((state) => state.user);
   const inputEl = useRef<HTMLInputElement>(null);
 
   useLayoutEffect(() => {
@@ -61,6 +57,6 @@ export default function LobbyName(props: LobbyNameProps): JSX.Element {
     <h3 className="lobby-name__name lobby-name__others">{name}</h3>
   </div>
 
-  const resEl = currentUser.role === UserRole.DEALER? dealerEl : othersEl
+  const resEl = user.user.role === UserRole.DEALER? dealerEl : othersEl
   return resEl
 }

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import { useAppSelector } from '../../app/hooks';
 import { GameState } from '../../model/Room';
 import GamePage from './gamePage';
@@ -7,6 +8,10 @@ import ResultPage from './resultPage';
 
 export default function WrapperPage(): JSX.Element {
   const game = useAppSelector((state) => state.game);
+  const user = useAppSelector((state) => state.user);
+  const history = useHistory();
+
+  if(user.kicked) history.push(`/`);
 
   let page: JSX.Element = <></>;
   switch (game.room.state) {
@@ -22,6 +27,6 @@ export default function WrapperPage(): JSX.Element {
     default:
       <LobbyPage></LobbyPage>
   }
-  
+
   return <div>{page}</div>
 }

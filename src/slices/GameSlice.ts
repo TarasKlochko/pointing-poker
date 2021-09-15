@@ -1,11 +1,11 @@
 import {
   createSlice, PayloadAction, Reducer,
 } from '@reduxjs/toolkit';
+import { GameSettings } from '../components/wrapperPage/lobby/settingsBlock/settingBlog.slice';
 import { Issue, IssuePriority } from '../model/Issue';
 import { GameState, Room } from '../model/Room';
 import { User } from '../model/User';
 import { UserRole } from '../model/UserRole';
-import issuesJSON from '../properties/users.json';
 
 const $issues: Issue[] = [{
   id: '1',
@@ -37,7 +37,7 @@ interface RoomState {
 const initialState: RoomState = {
   room: {
     roomID: '',
-    name: '',
+    name: 'Lobby Name',
     members: [],
     state: GameState.WAITING,
     gameSettings: {
@@ -70,10 +70,22 @@ export const gameSlice = createSlice({
   name: 'members',
   initialState,
   reducers: {
+    setRoomState: (state, action: PayloadAction<Room>): void => {
+      state.room = action.payload;
+    },
+    setSettings: (state, action: PayloadAction<GameSettings>): void => {
+      state.room.gameSettings = action.payload;
+    },
+    setName: (state, action: PayloadAction<string>): void => {
+      state.room.name = action.payload;
+    },
+    setRoomId: (state, action: PayloadAction<string>): void => {
+      state.room.roomID = action.payload;
+    },
     setMembers: (state, action: PayloadAction<User[]>): void => {
       state.room.members = action.payload;
       action.payload.forEach((user) => {
-        if(user.role === UserRole.DEALER) state.dealer = user;
+        if (user.role === UserRole.DEALER) state.dealer = user;
       })
     },
     addIssue: (state, action: PayloadAction<Issue>): void => {
@@ -81,14 +93,14 @@ export const gameSlice = createSlice({
     },
     removeIssue: (state, action: PayloadAction<Issue>): void => {
       state.room.issues.forEach((issue, index) => {
-        if(action.payload.id === issue.id){
-          state.room.issues.splice(index,1);
+        if (action.payload.id === issue.id) {
+          state.room.issues.splice(index, 1);
         }
       })
     },
     upDateIssue: (state, action: PayloadAction<Issue>): void => {
       state.room.issues.forEach((issue, index) => {
-        if(action.payload.id === issue.id){
+        if (action.payload.id === issue.id) {
           state.room.issues[index].link = action.payload.link
           state.room.issues[index].name = action.payload.name
           state.room.issues[index].priority = action.payload.priority
@@ -103,6 +115,7 @@ export const gameSlice = createSlice({
 
 const { actions, reducer } = gameSlice;
 
-export const { setMembers, addIssue, removeIssue, upDateIssue, changeGameState } = actions;
+export const { setMembers, addIssue, removeIssue, upDateIssue, changeGameState,
+  setRoomId, setName, setSettings, setRoomState } = actions;
 
 export default reducer as Reducer<RoomState>;
