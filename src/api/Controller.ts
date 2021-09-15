@@ -1,4 +1,5 @@
 import { Socket } from 'socket.io-client';
+import { Room } from '../model/Room';
 import { UserRole } from '../model/UserRole';
 
 export interface PopupData {
@@ -10,12 +11,9 @@ export interface PopupData {
 }
 
 export interface Response {
-  roomObj?: {
-    roomID: string; 
-    state: string; 
-  };
+  roomObj?: Room;
   message?: string;
-  userID: string;
+  userID?: string;
   status: number;
 }
 
@@ -82,6 +80,36 @@ export class Controller {
   /**
    * @param socket
    * @param userID
+   * @returns {@link Response}
+   */
+
+  public static deleteRoom(socket: Socket, roomID: string): Promise<Response> {
+    return new Promise((resolve) => {
+      socket.emit('deleteRoom', { roomID }, (response: string) => {
+        const responseObject: Response = JSON.parse(response);
+        resolve(responseObject);
+      });
+    });
+  }
+
+  /**
+   * @param socket
+   * @param roomID
+   * @returns {@link Response}
+   */
+
+  public static updateRoom(socket: Socket, room: Room): Promise<Response> {
+    return new Promise((resolve) => {
+      socket.emit('updateRoom', { room }, (response: string) => {
+        const responseObject: Response = JSON.parse(response);
+        resolve(responseObject);
+      });
+    });
+  }
+
+  /**
+   * @param socket
+   * @param roomID
    * @returns {@link Response}
    */
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '@material-ui/core';
 import { MemberCardKind } from '../../../../model/MemberCardKind';
 import MemberCard from '../../../common/memberCard';
@@ -7,15 +7,18 @@ import { useButtonStyles } from '../../../../styles/ButtonStyles';
 import { UserRole } from '../../../../model/UserRole';
 import { useAppDispatch, useAppSelector } from '../../../../app/hooks';
 import { changeGameState } from '../../../../slices/GameSlice';
-import { GameState } from '../../../../model/Room';
+import { GameState, Room } from '../../../../model/Room';
+import { Controller } from '../../../../api/Controller';
 
 
 export default function ScrumMasterBlock(): JSX.Element {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user);
   const game = useAppSelector((state) => state.game);
+  const roomId = useAppSelector((state) => state.createGame.id)
   const [copyVisible, setCopyVisible] = useState<boolean>(false);
   const createGame = useAppSelector((state) => state.createGame);
+  const socket = useAppSelector((state) => state.socket.socket);
   const classes = useButtonStyles();
 
   const adress = `http://localhost:3000/#/connect/${createGame.id}`;
@@ -29,8 +32,43 @@ export default function ScrumMasterBlock(): JSX.Element {
   }
 
   const startGame = (): void => {
-     dispatch(changeGameState(GameState.PLAYING));
+    const room: Room = {
+      roomID: game.room.roomID,
+      gameSettings: game.room.gameSettings,
+      issues: game.room.issues,
+      members: game.room.members,
+      name: game.room.name,
+      state: GameState.PLAYING
+    };
+    console.log(room);
+    Controller.updateRoom(socket, room).then(response => {
+      if (response.status !== 200) {
+        console.log(response.message);
+      } else {
+        console.log(response);
+        // response consist only status 200
+      }
+    });
   }
+
+  const cancelGame = (): void => {
+    Controller.deleteRoom(socket, roomId).then(response => {
+      if (response.status !== 200) {
+        console.log(response.message);
+      }
+    });
+  }
+
+  useEffect(() => {
+    socket.on("cancelGame", () => {
+      console.log('Game was deleted!');
+      // Here will be redirect on main page
+    });
+    socket.on("updatedRoom", (newRoom) => {
+      console.log(newRoom);
+      // Here will be save data in state and redirecxt on game page
+    });
+  }, [socket])
 
   return <div className="scrum-master">
     <h5 className="scrum-master__title">Scram master:</h5>
@@ -57,7 +95,7 @@ export default function ScrumMasterBlock(): JSX.Element {
         }
         {
           user.user.role === UserRole.DEALER ? <Button className={`${classes.whiteButton} ${classes.marginButton}`}
-            onClick={(): void => console.log('click')}
+            onClick={cancelGame}
             variant="contained" color="primary">Cancel Game</Button> :
             <Button className={`${classes.whiteButton} ${classes.marginButton}`}
               onClick={(): void => console.log('click')}

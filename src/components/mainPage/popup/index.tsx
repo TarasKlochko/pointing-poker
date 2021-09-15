@@ -98,7 +98,7 @@ export function Popup(): JSX.Element {
             dispatch(IDGameAction(responseObject.roomObj?.roomID as string));
             dispatch(isPopupAction(false));
             dispatch(clearPopupAction());
-            createUserState(responseObject.userID, roomID, UserRole.DEALER)
+            createUserState(responseObject.userID!, roomID, UserRole.DEALER)
           } else {
             console.log('error: ', responseObject);
           }
@@ -114,7 +114,7 @@ export function Popup(): JSX.Element {
             if (responseObject.roomObj?.roomID) {
               roomID = responseObject.roomObj?.roomID;
             }
-            createUserState(responseObject.userID, roomID, UserRole.PLAYER)
+            createUserState(responseObject.userID!, roomID, UserRole.PLAYER)
           } else {
             console.log('error: ', responseObject);
           }
