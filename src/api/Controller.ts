@@ -14,6 +14,10 @@ export interface Response {
   roomObj?: Room;
   message?: string;
   userID?: string;
+  timer?: {
+    minutes: number;
+    seconds: number;
+  };
   status: number;
 }
 
@@ -101,6 +105,21 @@ export class Controller {
   public static updateRoom(socket: Socket, room: Room): Promise<Response> {
     return new Promise((resolve) => {
       socket.emit('updateRoom', { room }, (response: string) => {
+        const responseObject: Response = JSON.parse(response);
+        resolve(responseObject);
+      });
+    });
+  }
+
+  /**
+   * @param socket
+   * @param room
+   * @returns {@link Response}
+   */
+
+  public static startTimer(socket: Socket, roomID: string): Promise<Response> {
+    return new Promise((resolve) => {
+      socket.emit('startTimer', { roomID }, (response: string) => {
         const responseObject: Response = JSON.parse(response);
         resolve(responseObject);
       });
