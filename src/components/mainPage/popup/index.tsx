@@ -15,9 +15,10 @@ import {
 import { IDGameAction } from '../createGame.slice';
 import { Controller, PopupData } from '../../../api/Controller';
 import { User } from '../../../model/User';
-import { setMembers } from '../../../slices/GameSlice';
+import { setMembers, setRoomID, setRoomName } from '../../../slices/GameSlice';
 import { setUser } from '../../../slices/UserSlice';
 import { UserRole } from '../../../model/UserRole';
+import { Room } from '../../../model/Room';
 
 export function Popup(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -98,6 +99,8 @@ export function Popup(): JSX.Element {
             dispatch(IDGameAction(responseObject.roomObj?.roomID as string));
             dispatch(isPopupAction(false));
             dispatch(clearPopupAction());
+            dispatch(setRoomID(roomID));
+            dispatch(setRoomName(responseObject.roomObj!.name));
             createUserState(responseObject.userID!, roomID, UserRole.DEALER)
           } else {
             console.log('error: ', responseObject);
@@ -114,6 +117,8 @@ export function Popup(): JSX.Element {
             if (responseObject.roomObj?.roomID) {
               roomID = responseObject.roomObj?.roomID;
             }
+            dispatch(setRoomID(roomID));
+            dispatch(setRoomName(responseObject.roomObj!.name));
             createUserState(responseObject.userID!, roomID, UserRole.PLAYER)
           } else {
             console.log('error: ', responseObject);
@@ -132,11 +137,16 @@ export function Popup(): JSX.Element {
   }
 
   useEffect(() => {
-    socket.on("users", users => {
+    socket.on('users', users => {
       const usersO: User[] = users;
       console.log(usersO);
       dispatch(setMembers(usersO));
-    })
+    });
+    socket.on('updatedRoom', newRoom => {
+      const newName = newRoom.name;
+      console.log(newName);
+      dispatch(setRoomName(newName));
+    });
   }, [socket])
 
   return (
