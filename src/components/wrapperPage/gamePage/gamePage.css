@@ -1,0 +1,151 @@
+.game {
+  width: 1200px;
+  margin: 0 auto;
+  display: flex;
+}
+.game__main {
+  border-right: 1px solid #000;
+}
+.main {
+  flex: 0 0 67.5%;
+  padding: 15px;
+}
+.main__title {
+  font-family: 'Ruda';
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 30px;
+  text-align: center;
+  color: #000000;
+}
+.main__top {
+  margin-top: 20px;
+  margin-bottom: 70px;
+}
+.top {
+  width: 700px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  column-gap: 15px;
+}
+.top__master-wrap {
+}
+.top__master-title {
+  font-family: 'Ruda';
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 15px;
+  color: rgba(0, 0, 0, 0.6);
+}
+.top__button {
+  width: 189px;
+  height: 47px;
+  font-family: 'Ruda';
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #2b3a67;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  background: rgb(255, 255, 255);
+  border: 1px solid #496a81;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.main__issues {
+  margin-bottom: 25px;
+}
+.issues {
+}
+.issuses__title {
+  font-family: 'Ruda';
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 30px;
+  color: #000000;
+}
+.issues__wrap {
+  margin-top: 15px;
+  width: 700px;
+  display: flex;
+  justify-content: left;
+  align-items: flex-start;
+  column-gap: 35px;
+}
+.issues__card-wrap {
+  display: flex;
+  flex-direction: column;
+  row-gap: 5px;
+}
+.issues__control-wrap {
+  display: flex;
+  flex-direction: column;
+}
+.issues__control-timer {
+  width: 150px;
+  height: 63px;
+  background: rgb(83, 60, 60);
+}
+.issues__control-buttons-wrap {
+  margin-top: 27px;
+  display: flex;
+  align-items: center;
+  column-gap: 15px;
+}
+.issues__control-button {
+  width: 189px;
+  height: 47px;
+  background: #2b3a67;
+  border: 1px solid #496a81;
+  box-sizing: border-box;
+  border-radius: 3px;
+  font-family: 'Ruda';
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+}
+
+.main__statistic {
+  margin-bottom: 25px;
+}
+.statistic {
+}
+.statistic__title {
+  font-family: 'Ruda';
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 30px;
+  color: #000000;
+}
+.statistic__wrap {
+  margin-top: 15px;
+  display: flex;
+  justify-content: flex-start;
+  column-gap: 10px;
+  row-gap: 10px;
+}
+.statistic__card-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.statistic__score {
+  font-family: 'Ruda';
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 30px;
+  display: flex;
+  align-items: center;
+  color: #000000;
+}
+.game__score {
+}
