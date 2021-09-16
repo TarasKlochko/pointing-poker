@@ -1,27 +1,52 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from '@material-ui/core';
+import { useHistory } from 'react-router-dom';
 import { MemberCardKind } from '../../../../model/MemberCardKind';
 import MemberCard from '../../../common/memberCard';
 import './scrum-master.css';
 import { useButtonStyles } from '../../../../styles/ButtonStyles';
 import { UserRole } from '../../../../model/UserRole';
 import { useAppDispatch, useAppSelector } from '../../../../app/hooks';
-import { changeGameState } from '../../../../slices/GameSlice';
+import { changeGameState, setName, setRoomId, setRoomState, setSettings } from '../../../../slices/GameSlice';
 import { GameState, Room } from '../../../../model/Room';
 import { Controller } from '../../../../api/Controller';
-
+import YesNoDialog from '../../../common/common-dialogs/YesNoDialog';
 
 export default function ScrumMasterBlock(): JSX.Element {
   const dispatch = useAppDispatch();
-  const user = useAppSelector((state) => state.user);
-  const game = useAppSelector((state) => state.game);
   const roomId = useAppSelector((state) => state.createGame.id)
+  const user = useAppSelector((state) => state.user);
+  const settings = useAppSelector((state) => state.gameSettings);
+  const game = useAppSelector((state) => state.game);
+  const socket = useAppSelector((state) => state.socket.socket);
+  const history = useHistory();
+  const [open, setOpen] = React.useState(false);
   const [copyVisible, setCopyVisible] = useState<boolean>(false);
   const createGame = useAppSelector((state) => state.createGame);
-  const socket = useAppSelector((state) => state.socket.socket);
   const classes = useButtonStyles();
 
   const adress = `http://localhost:3000/#/connect/${createGame.id}`;
+
+  useEffect(() => {
+    socket.on("cancelGame", () => {
+      history.push(`/`);
+    });
+    socket.on("updatedRoom", (newRoom) => {
+      console.log(newRoom);
+      console.log('update');
+      dispatch(setRoomState(newRoom));
+    });
+  }, [socket])
+
+
+
+  const cancelGame = (): void => {
+    Controller.deleteRoom(socket, roomId).then(response => {
+      if (response.status !== 200) {
+        console.log(response.message);
+      }
+    });
+  }
 
   const copyHandler = (): void => {
     navigator.clipboard.writeText(adress)
@@ -32,43 +57,32 @@ export default function ScrumMasterBlock(): JSX.Element {
   }
 
   const startGame = (): void => {
+    dispatch(changeGameState(GameState.PLAYING));
+    dispatch(setSettings(settings));
     const room: Room = {
       roomID: game.room.roomID,
-      gameSettings: game.room.gameSettings,
-      issues: game.room.issues,
-      members: game.room.members,
       name: game.room.name,
-      state: GameState.PLAYING
-    };
-    console.log(room);
-    Controller.updateRoom(socket, room).then(response => {
-      if (response.status !== 200) {
-        console.log(response.message);
-      } else {
-        console.log(response);
-        // response consist only status 200
-      }
-    });
+      state: GameState.PLAYING,
+      issues: game.room.issues,
+      gameSettings: settings,
+      members: game.room.members
+    }
+    Controller.updateRoom(socket, room);
   }
 
-  const cancelGame = (): void => {
-    Controller.deleteRoom(socket, roomId).then(response => {
-      if (response.status !== 200) {
-        console.log(response.message);
-      }
-    });
+  const exitGame = (): void => {
+    Controller.deleteUser(socket, user.user.id);
+    setOpen(false);
+    history.push(`/`);
   }
 
-  useEffect(() => {
-    socket.on("cancelGame", () => {
-      console.log('Game was deleted!');
-      // Here will be redirect on main page
-    });
-    socket.on("updatedRoom", (newRoom) => {
-      console.log(newRoom);
-      // Here will be save data in state and redirecxt on game page
-    });
-  }, [socket])
+  const closeDialog = () => {
+    setOpen(false);
+  }
+
+  const openDialog = () => {
+    setOpen(true);
+  }
 
   return <div className="scrum-master">
     <h5 className="scrum-master__title">Scram master:</h5>
@@ -98,10 +112,12 @@ export default function ScrumMasterBlock(): JSX.Element {
             onClick={cancelGame}
             variant="contained" color="primary">Cancel Game</Button> :
             <Button className={`${classes.whiteButton} ${classes.marginButton}`}
-              onClick={(): void => console.log('click')}
-              variant="contained" color="primary">Exit</Button>
+              onClick={openDialog} variant="contained" color="primary">Exit</Button>
         }
       </div>
     }
+    <YesNoDialog content={`Do you really want to exit game?`} open={open}
+      yesClickHandle={exitGame} noClickHandle={closeDialog}
+      title={'Exit game?'}></YesNoDialog>
   </div>
 }

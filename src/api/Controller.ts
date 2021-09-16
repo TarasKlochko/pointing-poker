@@ -13,11 +13,7 @@ export interface PopupData {
 export interface Response {
   roomObj?: Room;
   message?: string;
-  userID?: string;
-  timer?: {
-    minutes: number;
-    seconds: number;
-  };
+  userID: string;
   status: number;
 }
 
@@ -106,6 +102,8 @@ export class Controller {
     return new Promise((resolve) => {
       socket.emit('updateRoom', { room }, (response: string) => {
         const responseObject: Response = JSON.parse(response);
+        console.log('responce')
+        console.log(responseObject);
         resolve(responseObject);
       });
     });

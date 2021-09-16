@@ -1,27 +1,16 @@
 import { IconButton } from '@material-ui/core';
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useLayoutEffect, useRef, useState } from 'react';
 import { ReactComponent as EditIcon } from '../../../../assets/pencil.svg';
 import './lobby-name.css';
-import usersJSON from '../../../../properties/users.json';
-import { User } from '../../../../model/User';
 import { UserRole } from '../../../../model/UserRole';
 import { useAppDispatch, useAppSelector } from '../../../../app/hooks';
-import { setRoomName } from '../../../../slices/GameSlice';
-import { Controller } from '../../../../api/Controller';
-
-const users: User[] = usersJSON;
-
-const currentUser = users[0];
+import { setName } from '../../../../slices/GameSlice';
 
 export default function LobbyName(): JSX.Element {
-  const inputEl = useRef<HTMLInputElement>(null);
   const dispatch = useAppDispatch();
-  const name = useAppSelector(state => state.game.room.name);
-  const room = useAppSelector(state => state.game.room);
-  const user = useAppSelector(state => state.user.user);
-  const socket = useAppSelector(state => state.socket.socket);
-
-  const [nameState, setName] = useState(name);
+  const user = useAppSelector((state) => state.user);
+  const inputEl = useRef<HTMLInputElement>(null);
+  const name = useAppSelector((state) => state.game.room.name);
 
   useLayoutEffect(() => {
     const handleFocus = (): void => {
@@ -49,37 +38,22 @@ export default function LobbyName(): JSX.Element {
 
   const onChangeHandler = (e: React.FormEvent) => {
     const input = (e.target as HTMLInputElement).value;
-    setName(input);
+    dispatch(setName(input));
   }
-
-  const saveNameHandler = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      dispatch(setRoomName(nameState));
-    }
-  }
-
-  useEffect(() => {
-    Controller.updateRoom(socket, room).then(response => {
-      if (response.status !== 200) {
-        console.log(response);
-      }
-    })
-  }, [name]);
 
   const dealerEl = <div className="lobby-name">
-    <input value={nameState} ref={inputEl} type="text"
+    <input value={name} ref={inputEl} type="text"
       onChange={onChangeHandler}
-      onKeyPress={saveNameHandler}
       className={`lobby-name__name`}></input>
-    {user.role === UserRole.DEALER && <IconButton onClick={onButtonClick}>
+    <IconButton onClick={onButtonClick}>
       <EditIcon />
-    </IconButton>}
+    </IconButton>
   </div>
 
   const othersEl = <div className="lobby-name">
     <h3 className="lobby-name__name lobby-name__others">{name}</h3>
   </div>
 
-  const resEl = currentUser.role === UserRole.DEALER? dealerEl : othersEl
+  const resEl = user.user.role === UserRole.DEALER? dealerEl : othersEl
   return resEl
 }
