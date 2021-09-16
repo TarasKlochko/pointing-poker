@@ -4,7 +4,9 @@ import {
 import { User } from "../model/User";
 
 interface UserState {
-  user: User
+  user: User,
+  kicked: boolean,
+  kickedRoom: string,
 }
 
 const initialState = {
@@ -16,7 +18,10 @@ const initialState = {
     role: '',
     jobPosition: '',
     room: ''
-  }
+  },
+  kicked: false,
+  kickedRoom: '',
+
 }
 
 export const userSlice = createSlice({
@@ -33,12 +38,33 @@ export const userSlice = createSlice({
       state.user.role = action.payload.role;
       state.user.jobPosition = action.payload.jobPosition;
       state.user.room = action.payload.room;
+      if(action.payload.room !== state.kickedRoom) {
+        state.kicked = false
+      }
+    },
+    ifKicked: (state, action: PayloadAction<User[]>): void => {
+      if (state.user.id.length > 1) {
+        let kickedLet = true
+        action.payload.forEach((user) => {
+          if (user.id === state.user.id) {
+            kickedLet = false
+          }
+        });
+        if (kickedLet) {
+          state.kicked = kickedLet;
+          state.kickedRoom = state.user.room;
+          state.user = initialState.user;
+        }
+      }
+    },
+    exitUser: (state): void => {
+      state.user = initialState.user;
     }
   }
 });
 
 const { actions, reducer } = userSlice;
 
-export const { setUser } = actions;
+export const { setUser, ifKicked, exitUser } = actions;
 
 export default reducer as Reducer<UserState>;

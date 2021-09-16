@@ -15,8 +15,8 @@ import {
 import { IDGameAction } from '../createGame.slice';
 import { Controller, PopupData } from '../../../api/Controller';
 import { User } from '../../../model/User';
-import { setMembers } from '../../../slices/GameSlice';
-import { setUser } from '../../../slices/UserSlice';
+import { setMembers, setRoomId } from '../../../slices/GameSlice';
+import { ifKicked, setUser } from '../../../slices/UserSlice';
 import { UserRole } from '../../../model/UserRole';
 
 export function Popup(): JSX.Element {
@@ -96,6 +96,7 @@ export function Popup(): JSX.Element {
               roomID = responseObject.roomObj?.roomID;
             }
             dispatch(IDGameAction(responseObject.roomObj?.roomID as string));
+            dispatch(setRoomId(responseObject.roomObj?.roomID as string));
             dispatch(isPopupAction(false));
             dispatch(clearPopupAction());
             createUserState(responseObject.userID!, roomID, UserRole.DEALER)
@@ -104,21 +105,23 @@ export function Popup(): JSX.Element {
           }
         });
       } else if (user.user.id.length === 0) {
-        Controller.login(socket, popupData, room).then(responseObject => {
-          if (responseObject.status === 200) {
-            console.log(responseObject);
-            history.push(`/game/${responseObject.roomObj?.roomID}`);
-            dispatch(isPopupAction(false));
-            dispatch(clearPopupAction());
-            let roomID = '';
-            if (responseObject.roomObj?.roomID) {
-              roomID = responseObject.roomObj?.roomID;
+        if (room !== user.kickedRoom) {
+          Controller.login(socket, popupData, room).then(responseObject => {
+            if (responseObject.status === 200) {
+              console.log(responseObject);
+              dispatch(isPopupAction(false));
+              dispatch(clearPopupAction());
+              let roomID = '';
+              if (responseObject.roomObj?.roomID) {
+                roomID = responseObject.roomObj?.roomID;
+              }
+              createUserState(responseObject.userID, roomID, UserRole.PLAYER)
+              history.push(`/game/${responseObject.roomObj?.roomID}`);
+            } else {
+              console.log('error: ', responseObject);
             }
-            createUserState(responseObject.userID!, roomID, UserRole.PLAYER)
-          } else {
-            console.log('error: ', responseObject);
-          }
-        });
+          });
+        } else console.log('already kicked');
       } else {
         history.push(`/game/${room}`);
       }
@@ -132,10 +135,11 @@ export function Popup(): JSX.Element {
   }
 
   useEffect(() => {
-    socket.on("users", users => {
+    socket.on("users", (users): void => {
       const usersO: User[] = users;
       console.log(usersO);
       dispatch(setMembers(usersO));
+      dispatch(ifKicked(usersO));
     })
   }, [socket])
 

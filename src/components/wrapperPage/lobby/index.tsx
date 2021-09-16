@@ -18,8 +18,7 @@ export default function LobbyPage(): JSX.Element {
 
   return <div className="lobby-page">
     <div className="lobby-page-wrapper">
-      <LobbyName
-        name={'Lobby name'}></LobbyName>
+      <LobbyName></LobbyName>
       <ScrumMasterBlock></ScrumMasterBlock>
       <MembersBlock members={game.room.members}></MembersBlock>
       {
