@@ -3,11 +3,12 @@ import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { MemberCardKind } from '../../../model/MemberCardKind';
 import { GameState } from '../../../model/Room';
 import { changeGameState, upDateIssue } from '../../../slices/GameSlice';
-import GameCard from '../../common/gameCard';
 import MemberCard from '../../common/memberCard';
 import CardIssue from './cardIssue';
 import './gamePage.css';
 import Timer from '../../common/timer';
+import { UserRole } from '../../../model/UserRole';
+import Statistics from './statistics';
 
 export default function GamePage(): JSX.Element {
   const game = useAppSelector((state) => state.game);
@@ -17,13 +18,16 @@ export default function GamePage(): JSX.Element {
   const [currentIssue, setCurrentIssue] = useState(-1);
   const isTimer = useAppSelector((state) => state.gameSettings.isTimer);
   const issues = useAppSelector((state) => state.game.room.issues);
+  const user = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
 
   function handleStopGame() {
     console.log('Stop Game');
     dispatch(changeGameState(GameState.RESULT));
   }
-
+  function handleExit() {
+    console.log('Exit');
+  }
   function handleRunRound() {
     console.log('Run Round');
     setIsRunRound(true);
@@ -61,9 +65,20 @@ export default function GamePage(): JSX.Element {
             <h3 className="top__master-title">Scrum master:</h3>
             <MemberCard user={game.dealer} kind={MemberCardKind.SIMPLE} />
           </div>
-          <button className="top__button" onClick={handleStopGame}>
-            Stop Game
-          </button>
+          {user.user.role === UserRole.PLAYER && isTimer && (
+            <Timer min={gameSettings.timeMin} sec={gameSettings.timeSec} start={false} />
+          )}
+
+          {user.user.role === UserRole.DEALER && (
+            <button className="top__button" onClick={handleStopGame}>
+              Stop Game
+            </button>
+          )}
+          {user.user.role === UserRole.PLAYER && (
+            <button className="top__button" onClick={handleExit}>
+              Exit
+            </button>
+          )}
         </div>
         <div className="main__issues issues">
           <h2 className="issuses__title">Issues:</h2>
@@ -80,48 +95,35 @@ export default function GamePage(): JSX.Element {
                 />
               ))}
             </div>
-            <div className="issues__control-wrap">
-              {isTimer && <Timer min={gameSettings.timeMin} sec={gameSettings.timeSec} start={false} />}
-              <div className="issues__control-timer" onClick={handleTimerOver}></div>
-              <div className="issues__control-buttons-wrap">
-                {!isRunRound && (
-                  <button className="issues__control-button" onClick={handleRunRound}>
-                    {isTimer ? 'Run Round' : 'Run'}
-                  </button>
-                )}
-                {isTimerOver && (
-                  <>
-                    <button className="issues__control-button" onClick={handleRestartRound}>
-                      {isTimer ? 'Restart Round' : 'Restart'}
+            {user.user.role === UserRole.PLAYER && <Statistics values={'15'} percentage={'15.5%'} />}
+            {user.user.role === UserRole.DEALER && (
+              <div className="issues__control-wrap">
+                {isTimer && <Timer min={gameSettings.timeMin} sec={gameSettings.timeSec} start={false} />}
+                <div className="issues__control-timer" onClick={handleTimerOver}></div>
+                <div className="issues__control-buttons-wrap">
+                  {!isRunRound && (
+                    <button className="issues__control-button" onClick={handleRunRound}>
+                      {isTimer ? 'Run Round' : 'Run'}
                     </button>
-                    {currentIssue < game.room.issues.length - 1 && (
-                      <button className="issues__control-button" onClick={handleNextIssue}>
-                        Next ISSUE
+                  )}
+                  {isTimerOver && (
+                    <>
+                      <button className="issues__control-button" onClick={handleRestartRound}>
+                        {isTimer ? 'Restart Round' : 'Restart'}
                       </button>
-                    )}
-                  </>
-                )}
+                      {currentIssue < game.room.issues.length - 1 && (
+                        <button className="issues__control-button" onClick={handleNextIssue}>
+                          Next ISSUE
+                        </button>
+                      )}
+                    </>
+                  )}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
-        <div className="main__statistic statistic">
-          <h2 className="statistic__title">Statistics:</h2>
-          <div className="statistic__wrap">
-            <div className="statistic__card-wrap">
-              <GameCard value={'10'} scopeTypeShort={gameSettings.scopeTipeShort} statistic={true} />
-              <div className="statistic__score">15.3%</div>
-            </div>
-            <div className="statistic__card-wrap">
-              <GameCard value={'WWWW'} scopeTypeShort={gameSettings.scopeTipeShort} statistic={true} />
-              <div className="statistic__score">15.3%</div>
-            </div>
-            <div className="statistic__card-wrap">
-              <GameCard value={'15'} scopeTypeShort={gameSettings.scopeTipeShort} statistic={true} />
-              <div className="statistic__score">15.3%</div>
-            </div>
-          </div>
-        </div>
+        {user.user.role === UserRole.DEALER && <Statistics values={'15'} percentage={'15.5%'} />}
       </div>
       <div className="game__score"></div>
     </section>
