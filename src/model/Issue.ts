@@ -5,8 +5,10 @@ export enum IssuePriority {
 }
 
 export interface Issue {
-  id: string
-  priority: IssuePriority
-  name: string
-  link: string
+  id: string;
+  priority: IssuePriority;
+  name: string;
+  link: string;
+  score?: string;
+  statistic?: { value: string; percentage: string }[];
 }
