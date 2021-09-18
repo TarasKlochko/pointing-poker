@@ -1,5 +1,6 @@
 import { Socket } from 'socket.io-client';
 import { Room } from '../model/Room';
+import { User } from '../model/User';
 import { UserRole } from '../model/UserRole';
 
 export interface PopupData {
@@ -13,6 +14,9 @@ export interface PopupData {
 export interface Response {
   roomObj?: Room;
   message?: string;
+  user: User;
+  users: User[];
+  dealer: User;
   userID: string;
   status: number;
 }
@@ -114,4 +118,31 @@ export class Controller {
    * @param roomID
    * @returns {@link Response}
    */
+
+  public static getUser(socket: Socket, userID: string ): Promise<Response> {
+    return new Promise((resolve) => {
+      socket.emit('getUser', { userID }, (response: string) => {
+        const responseObject: Response = JSON.parse(response);
+        resolve(responseObject);
+      });
+    });
+  }
+
+  public static getDataForReload(socket: Socket, roomID: string, userID: string ): Promise<Response> {
+    return new Promise((resolve) => {
+      socket.emit('getDataForReload', { roomID, userID }, (response: string) => {
+        const responseObject: Response = JSON.parse(response);
+        resolve(responseObject);
+      });
+    });
+  }
+
+  public static getUsers(socket: Socket, roomID: string ): Promise<Response> {
+    return new Promise((resolve) => {
+      socket.emit('getUsers', { roomID }, (response: string) => {
+        const responseObject: Response = JSON.parse(response);
+        resolve(responseObject);
+      });
+    });
+  }
 }
