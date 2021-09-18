@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction, Reducer } from '@reduxjs/toolkit';
 import { GameSettings } from '../components/wrapperPage/lobby/settingsBlock/settingBlog.slice';
 import { Issue, IssuePriority } from '../model/Issue';
+import { MemberVote, MemberVoteStatus } from '../model/MemberVote';
 import { GameState, Room } from '../model/Room';
 import { User } from '../model/User';
 import { UserRole } from '../model/UserRole';
@@ -43,6 +44,7 @@ const $issues: Issue[] = [
 interface RoomState {
   room: Room;
   dealer: User;
+  memberVote: MemberVote;
 }
 const initialState: RoomState = {
   room: {
@@ -73,6 +75,9 @@ const initialState: RoomState = {
     jobPosition: '',
     room: '',
   },
+  memberVote: {
+    status: MemberVoteStatus.BEFORE_START,
+  }
 };
 
 export const gameSlice = createSlice({
