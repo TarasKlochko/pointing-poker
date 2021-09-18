@@ -102,7 +102,7 @@ export const gameSlice = createSlice({
         if (user.role === UserRole.DEALER) state.dealer = user;
       });
     },
-    setFullData: (state, action: PayloadAction<RoomState>): void => {
+    setFullData: (state, action: PayloadAction<{room: Room, dealer: User}>): void => {
       state.room = action.payload.room;
       state.dealer = action.payload.dealer;
     },
