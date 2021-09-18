@@ -16,7 +16,7 @@ export default function GamePage(): JSX.Element {
   const [isRunRound, setIsRunRound] = useState(false);
   const [isTimerOver, setIsTimerOver] = useState(false);
   const [currentIssue, setCurrentIssue] = useState(-1);
-  const isTimer = useAppSelector((state) => state.gameSettings.isTimer);
+  const isTimer = useAppSelector((state) => state.game.room.gameSettings.isTimer);
   const issues = useAppSelector((state) => state.game.room.issues);
   const user = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
@@ -80,9 +80,11 @@ export default function GamePage(): JSX.Element {
             </button>
           )}
         </div>
-        <div className="main__issues issues">
-          <h2 className="issuses__title">Issues:</h2>
-          <div className="issues__wrap">
+
+        <div className="main__central-wrap">
+          <div className="main__issues issues">
+            <h2 className="issuses__title">Issues:</h2>
+
             <div className="issues__card-wrap">
               {issues.map((issue, index) => (
                 <CardIssue
@@ -95,36 +97,37 @@ export default function GamePage(): JSX.Element {
                 />
               ))}
             </div>
-            {user.user.role === UserRole.PLAYER && <Statistics values={'15'} percentage={'15.5%'} />}
-            {user.user.role === UserRole.DEALER && (
-              <div className="issues__control-wrap">
-                {isTimer && <Timer min={gameSettings.timeMin} sec={gameSettings.timeSec} start={false} />}
-                <div className="issues__control-timer" onClick={handleTimerOver}></div>
-                <div className="issues__control-buttons-wrap">
-                  {!isRunRound && (
-                    <button className="issues__control-button" onClick={handleRunRound}>
-                      {isTimer ? 'Run Round' : 'Run'}
-                    </button>
-                  )}
-                  {isTimerOver && (
-                    <>
-                      <button className="issues__control-button" onClick={handleRestartRound}>
-                        {isTimer ? 'Restart Round' : 'Restart'}
-                      </button>
-                      {currentIssue < game.room.issues.length - 1 && (
-                        <button className="issues__control-button" onClick={handleNextIssue}>
-                          Next ISSUE
-                        </button>
-                      )}
-                    </>
-                  )}
-                </div>
-              </div>
-            )}
           </div>
+          {user.user.role === UserRole.DEALER && (
+            <div className="issues__control-wrap">
+              {isTimer && <Timer min={gameSettings.timeMin} sec={gameSettings.timeSec} start={false} />}
+              <div className="issues__control-timer" onClick={handleTimerOver}></div>
+              <div className="issues__control-buttons-wrap">
+                {!isRunRound && (
+                  <button className="issues__control-button" onClick={handleRunRound}>
+                    {isTimer ? 'Run Round' : 'Run'}
+                  </button>
+                )}
+                {isTimerOver && (
+                  <>
+                    <button className="issues__control-button" onClick={handleRestartRound}>
+                      {isTimer ? 'Restart Round' : 'Restart'}
+                    </button>
+                    {currentIssue < game.room.issues.length - 1 && (
+                      <button className="issues__control-button" onClick={handleNextIssue}>
+                        Next ISSUE
+                      </button>
+                    )}
+                  </>
+                )}
+              </div>
+            </div>
+          )}
+          {user.user.role === UserRole.PLAYER && <Statistics values={'15'} percentage={'15.5%'} />}
         </div>
         {user.user.role === UserRole.DEALER && <Statistics values={'15'} percentage={'15.5%'} />}
       </div>
+
       <div className="game__score"></div>
     </section>
   );
