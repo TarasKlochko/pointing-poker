@@ -59,7 +59,7 @@ export default function ScrumMasterBlock(): JSX.Element {
 
   const startGame = (): void => {
     dispatch(changeGameState(GameState.PLAYING));
-   // dispatch(setSettings(settings));
+    // dispatch(setSettings(settings));
     const room: Room = {
       roomID: game.room.roomID,
       name: game.room.name,

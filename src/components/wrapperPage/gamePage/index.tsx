@@ -133,7 +133,7 @@ export default function GamePage(): JSX.Element {
           && <Statistics values={'15'} percentage={'15.5%'} />}
         {
           user.user.role === UserRole.DEALER || user.user.role === UserRole.PLAYER?
-          <PlayCards></PlayCards> : <></>
+            <PlayCards></PlayCards> : <></>
         }
       </div>
       <div className="game__score">

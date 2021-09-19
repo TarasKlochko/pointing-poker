@@ -29,10 +29,10 @@ export default function PlayCards(): JSX.Element {
           </div>
           {
             el === chosenValue ? <div className="setting__card-value-vote-chosen">
-            <div className="setting__card-value-vote-chosen-icon">
-              <img src={chosenIcon} alt="your choose" className="setting__chosen-card-value-img" />
-            </div>
-          </div> : <></>
+              <div className="setting__card-value-vote-chosen-icon">
+                <img src={chosenIcon} alt="your choose" className="setting__chosen-card-value-img" />
+              </div>
+            </div> : <></>
           }
         </div>
       ))}
