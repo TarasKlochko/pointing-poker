@@ -14,5 +14,6 @@ export interface Room {
 export enum GameState {
   WAITING = 'WAITING',
   PLAYING = 'PLAYING',
-  RESULT = 'RESULT'
+  RESULT = 'RESULT',
+  NONE = '',
 }

@@ -15,10 +15,10 @@ import {
 import { IDGameAction } from '../createGame.slice';
 import { Controller, PopupData } from '../../../api/Controller';
 import { User } from '../../../model/User';
-import { setMembers, setRoomId } from '../../../slices/GameSlice';
+import { changeGameState, setMembers, setRoomId, setRoomState } from '../../../slices/GameSlice';
 import { ifKicked, setUser } from '../../../slices/UserSlice';
 import { UserRole } from '../../../model/UserRole';
-import { Room } from '../../../model/Room';
+import { GameState, Room } from '../../../model/Room';
 
 export function Popup(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -73,6 +73,7 @@ export function Popup(): JSX.Element {
   }
 
   const createUserState = (userId: string, roomId: string, userRole: string): void => {
+    localStorage.setItem('userID', userId);
     dispatch(setUser({
       name: $name,
       surname: $lastName,
@@ -96,8 +97,10 @@ export function Popup(): JSX.Element {
             if (responseObject.roomObj?.roomID) {
               roomID = responseObject.roomObj?.roomID;
             }
+            localStorage.setItem('roomID', roomID);
             dispatch(IDGameAction(responseObject.roomObj?.roomID as string));
             dispatch(setRoomId(responseObject.roomObj?.roomID as string));
+            dispatch(changeGameState(responseObject.roomObj?.state as GameState));
             dispatch(isPopupAction(false));
             dispatch(clearPopupAction());
             createUserState(responseObject.userID!, roomID, UserRole.DEALER)
@@ -116,6 +119,7 @@ export function Popup(): JSX.Element {
               if (responseObject.roomObj?.roomID) {
                 roomID = responseObject.roomObj?.roomID;
               }
+              localStorage.setItem('roomID', roomID);
               createUserState(responseObject.userID, roomID, UserRole.PLAYER)
               history.push(`/game/${responseObject.roomObj?.roomID}`);
             } else {
@@ -142,7 +146,7 @@ export function Popup(): JSX.Element {
       dispatch(setMembers(usersO));
       dispatch(ifKicked(usersO));
     })
-  }, [socket])
+  }, [socket]);
 
   return (
     <div className="popup-wrapper">

@@ -3,11 +3,12 @@ import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { MemberCardKind } from '../../../model/MemberCardKind';
 import { GameState } from '../../../model/Room';
 import { changeGameState, upDateIssue } from '../../../slices/GameSlice';
-import GameCard from '../../common/gameCard';
 import MemberCard from '../../common/memberCard';
 import CardIssue from './cardIssue';
 import './gamePage.css';
 import Timer from '../../common/timer';
+import { UserRole } from '../../../model/UserRole';
+import Statistics from './statistics';
 
 export default function GamePage(): JSX.Element {
   const game = useAppSelector((state) => state.game);
@@ -15,15 +16,18 @@ export default function GamePage(): JSX.Element {
   const [isRunRound, setIsRunRound] = useState(false);
   const [isTimerOver, setIsTimerOver] = useState(false);
   const [currentIssue, setCurrentIssue] = useState(-1);
-  const isTimer = useAppSelector((state) => state.gameSettings.isTimer);
+  const isTimer = useAppSelector((state) => state.game.room.gameSettings.isTimer);
   const issues = useAppSelector((state) => state.game.room.issues);
+  const user = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
 
   function handleStopGame() {
     console.log('Stop Game');
     dispatch(changeGameState(GameState.RESULT));
   }
-
+  function handleExit() {
+    console.log('Exit');
+  }
   function handleRunRound() {
     console.log('Run Round');
     setIsRunRound(true);
@@ -61,13 +65,26 @@ export default function GamePage(): JSX.Element {
             <h3 className="top__master-title">Scrum master:</h3>
             <MemberCard user={game.dealer} kind={MemberCardKind.SIMPLE} />
           </div>
-          <button className="top__button" onClick={handleStopGame}>
-            Stop Game
-          </button>
+          {user.user.role === UserRole.PLAYER && isTimer && (
+            <Timer min={gameSettings.timeMin} sec={gameSettings.timeSec} start={false} />
+          )}
+
+          {user.user.role === UserRole.DEALER && (
+            <button className="top__button" onClick={handleStopGame}>
+              Stop Game
+            </button>
+          )}
+          {user.user.role === UserRole.PLAYER && (
+            <button className="top__button" onClick={handleExit}>
+              Exit
+            </button>
+          )}
         </div>
-        <div className="main__issues issues">
-          <h2 className="issuses__title">Issues:</h2>
-          <div className="issues__wrap">
+
+        <div className="main__central-wrap">
+          <div className="main__issues issues">
+            <h2 className="issuses__title">Issues:</h2>
+
             <div className="issues__card-wrap">
               {issues.map((issue, index) => (
                 <CardIssue
@@ -80,6 +97,8 @@ export default function GamePage(): JSX.Element {
                 />
               ))}
             </div>
+          </div>
+          {user.user.role === UserRole.DEALER && (
             <div className="issues__control-wrap">
               {isTimer && <Timer min={gameSettings.timeMin} sec={gameSettings.timeSec} start={false} />}
               <div className="issues__control-timer" onClick={handleTimerOver}></div>
@@ -103,26 +122,12 @@ export default function GamePage(): JSX.Element {
                 )}
               </div>
             </div>
-          </div>
+          )}
+          {user.user.role === UserRole.PLAYER && <Statistics values={'15'} percentage={'15.5%'} />}
         </div>
-        <div className="main__statistic statistic">
-          <h2 className="statistic__title">Statistics:</h2>
-          <div className="statistic__wrap">
-            <div className="statistic__card-wrap">
-              <GameCard value={'10'} scopeTypeShort={gameSettings.scopeTipeShort} statistic={true} />
-              <div className="statistic__score">15.3%</div>
-            </div>
-            <div className="statistic__card-wrap">
-              <GameCard value={'WWWW'} scopeTypeShort={gameSettings.scopeTipeShort} statistic={true} />
-              <div className="statistic__score">15.3%</div>
-            </div>
-            <div className="statistic__card-wrap">
-              <GameCard value={'15'} scopeTypeShort={gameSettings.scopeTipeShort} statistic={true} />
-              <div className="statistic__score">15.3%</div>
-            </div>
-          </div>
-        </div>
+        {user.user.role === UserRole.DEALER && <Statistics values={'15'} percentage={'15.5%'} />}
       </div>
+
       <div className="game__score"></div>
     </section>
   );

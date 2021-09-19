@@ -1,45 +1,57 @@
-import {
-  createSlice, PayloadAction, Reducer,
-} from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, Reducer } from '@reduxjs/toolkit';
 import { GameSettings } from '../components/wrapperPage/lobby/settingsBlock/settingBlog.slice';
 import { Issue, IssuePriority } from '../model/Issue';
+import { MemberVote, MemberVoteStatus } from '../model/MemberVote';
 import { GameState, Room } from '../model/Room';
 import { User } from '../model/User';
 import { UserRole } from '../model/UserRole';
 
-const $issues: Issue[] = [{
-  id: '1',
-  name: 'issue1',
-  link: 'link1',
-  priority: IssuePriority.LOW
-}, {
-  id: '2',
-  name: 'issue2',
-  link: 'link2',
-  priority: IssuePriority.MIDDLE
-},
-{
-  id: '3',
-  name: 'issue3',
-  link: 'link3',
-  priority: IssuePriority.HIGHT
-}, {
-  id: '4',
-  name: 'issue4',
-  link: 'link4',
-  priority: IssuePriority.MIDDLE
-}];
+const $issues: Issue[] = [
+  {
+    id: '1',
+    name: 'issue1',
+    link: 'link1',
+    priority: IssuePriority.LOW,
+    score: '-',
+    statistic: [],
+  },
+  {
+    id: '2',
+    name: 'issue2',
+    link: 'link2',
+    priority: IssuePriority.MIDDLE,
+    score: '-',
+    statistic: [],
+  },
+  {
+    id: '3',
+    name: 'issue3',
+    link: 'link3',
+    priority: IssuePriority.HIGHT,
+    score: '-',
+    statistic: [],
+  },
+  {
+    id: '4',
+    name: 'issue4',
+    link: 'link4',
+    priority: IssuePriority.MIDDLE,
+    score: '-',
+    statistic: [],
+  },
+];
 
 interface RoomState {
-  room: Room
-  dealer: User
+  room: Room;
+  dealer: User;
+  memberVote: MemberVote;
 }
 const initialState: RoomState = {
   room: {
     roomID: '',
     name: 'Lobby Name',
     members: [],
-    state: GameState.WAITING,
+    state: GameState.NONE,
     gameSettings: {
       isMasterAsPlayer: true,
       cardValues: ['0', '1', '2', '3', '5', '8', '13', '21', '34', '55', '89'],
@@ -61,9 +73,11 @@ const initialState: RoomState = {
     surname: '',
     role: '',
     jobPosition: '',
-    room: ''
+    room: '',
+  },
+  memberVote: {
+    status: MemberVoteStatus.BEFORE_START,
   }
-
 };
 
 export const gameSlice = createSlice({
@@ -86,7 +100,11 @@ export const gameSlice = createSlice({
       state.room.members = action.payload;
       action.payload.forEach((user) => {
         if (user.role === UserRole.DEALER) state.dealer = user;
-      })
+      });
+    },
+    setFullData: (state, action: PayloadAction<{room: Room, dealer: User}>): void => {
+      state.room = action.payload.room;
+      state.dealer = action.payload.dealer;
     },
     addIssue: (state, action: PayloadAction<Issue>): void => {
       state.room.issues.push(action.payload);
@@ -96,16 +114,16 @@ export const gameSlice = createSlice({
         if (action.payload.id === issue.id) {
           state.room.issues.splice(index, 1);
         }
-      })
+      });
     },
     upDateIssue: (state, action: PayloadAction<Issue>): void => {
       state.room.issues.forEach((issue, index) => {
         if (action.payload.id === issue.id) {
-          state.room.issues[index].link = action.payload.link
-          state.room.issues[index].name = action.payload.name
-          state.room.issues[index].priority = action.payload.priority
+          state.room.issues[index].link = action.payload.link;
+          state.room.issues[index].name = action.payload.name;
+          state.room.issues[index].priority = action.payload.priority;
         }
-      })
+      });
     },
     changeGameState: (state, action: PayloadAction<GameState>): void => {
       state.room.state = action.payload;
@@ -115,7 +133,15 @@ export const gameSlice = createSlice({
 
 const { actions, reducer } = gameSlice;
 
-export const { setMembers, addIssue, removeIssue, upDateIssue, changeGameState,
-  setRoomId, setName, setSettings, setRoomState } = actions;
-
-export default reducer as Reducer<RoomState>;
+export const {
+  setMembers,
+  addIssue,
+  removeIssue,
+  upDateIssue,
+  changeGameState,
+  setRoomId,
+  setName,
+  setSettings,
+  setRoomState,
+  setFullData,
+} = actions;
