@@ -51,7 +51,7 @@ const initialState: RoomState = {
     roomID: '',
     name: 'Lobby Name',
     members: [],
-    state: GameState.WAITING,
+    state: GameState.NONE,
     gameSettings: {
       isMasterAsPlayer: true,
       cardValues: ['0', '1', '2', '3', '5', '8', '13', '21', '34', '55', '89'],
@@ -102,6 +102,10 @@ export const gameSlice = createSlice({
         if (user.role === UserRole.DEALER) state.dealer = user;
       });
     },
+    setFullData: (state, action: PayloadAction<{room: Room, dealer: User}>): void => {
+      state.room = action.payload.room;
+      state.dealer = action.payload.dealer;
+    },
     addIssue: (state, action: PayloadAction<Issue>): void => {
       state.room.issues.push(action.payload);
     },
@@ -139,6 +143,5 @@ export const {
   setName,
   setSettings,
   setRoomState,
+  setFullData,
 } = actions;
-
-export default reducer as Reducer<RoomState>;
