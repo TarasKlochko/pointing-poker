@@ -92,7 +92,6 @@ export function Popup(): JSX.Element {
         Controller.createRoom(socket, popupData).then((responseObject) => {
           if (responseObject.status === 200) {
             console.log(responseObject);
-            history.push(`/game/${responseObject.roomObj?.roomID}`);
             let roomID = '';
             if (responseObject.roomObj?.roomID) {
               roomID = responseObject.roomObj?.roomID;
@@ -101,9 +100,10 @@ export function Popup(): JSX.Element {
             dispatch(IDGameAction(responseObject.roomObj?.roomID as string));
             dispatch(setRoomId(responseObject.roomObj?.roomID as string));
             dispatch(changeGameState(responseObject.roomObj?.state as GameState));
+            createUserState(responseObject.userID!, roomID, UserRole.DEALER);
             dispatch(isPopupAction(false));
             dispatch(clearPopupAction());
-            createUserState(responseObject.userID!, roomID, UserRole.DEALER)
+            history.push(`/game/${responseObject.roomObj?.roomID}`);
           } else {
             console.log('error: ', responseObject);
           }

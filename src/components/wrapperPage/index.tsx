@@ -4,7 +4,7 @@ import { Controller } from '../../api/Controller';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { GameState, Room } from '../../model/Room';
 import { User } from '../../model/User';
-import { setFullData, setMembers } from '../../slices/GameSlice';
+import { setFullData, setMembers, setMemberVote, setRoomState } from '../../slices/GameSlice';
 import { setUser, ifKicked } from '../../slices/UserSlice';
 import GamePage from './gamePage';
 import LobbyPage from './lobby';
@@ -23,14 +23,20 @@ export default function WrapperPage(): JSX.Element {
     if (userID !== null && roomID !== null) {
       if (user.user.id.length === 0) {
         Controller.getDataForReload(socket, roomID, userID).then(response => {
-          dispatch(setUser(response.user!))
+          if(response.status === 200) {
+            dispatch(setUser(response.user!));
+          } else
+            history.push('/');
         })
       }
       if (game.room.roomID.length === 0) {
         Controller.getDataForReload(socket, roomID, userID).then(response => {
           const room: Room = { ...response.roomObj!, members: response.users! };
           const dealer: User = response.dealer!;
-          dispatch(setFullData({ room, dealer }))
+          if(response.status === 200)
+            dispatch(setFullData({room, dealer}))
+          else
+            history.push('/');
         })
       }
     }
@@ -42,6 +48,11 @@ export default function WrapperPage(): JSX.Element {
       console.log(usersO);
       dispatch(setMembers(usersO));
       dispatch(ifKicked(usersO));
+    });
+    socket.on("getVoteResults", (roomObj): void => {
+      const {roomID, state, name, issues, gameSettings, members, memberVote} = roomObj;
+      dispatch(setRoomState({roomID, state, gameSettings, members, name, issues} as Room));
+      dispatch(setMemberVote(memberVote));
     })
   }, [socket]);
 
