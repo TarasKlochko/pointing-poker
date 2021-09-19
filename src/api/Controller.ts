@@ -115,6 +115,21 @@ export class Controller {
 
   /**
    * @param socket
+   * @param room
+   * @returns {@link Response}
+   */
+
+  public static startTimer(socket: Socket, roomID: string): Promise<Response> {
+    return new Promise((resolve) => {
+      socket.emit('startTimer', { roomID }, (response: string) => {
+        const responseObject: Response = JSON.parse(response);
+        resolve(responseObject);
+      });
+    });
+  }
+
+  /**
+   * @param socket
    * @param roomID
    * @returns {@link Response}
    */
@@ -140,6 +155,15 @@ export class Controller {
   public static getUsers(socket: Socket, roomID: string ): Promise<Response> {
     return new Promise((resolve) => {
       socket.emit('getUsers', { roomID }, (response: string) => {
+        const responseObject: Response = JSON.parse(response);
+        resolve(responseObject);
+      });
+    });
+  }
+
+  public static sendUserVote(socket: Socket, userID: string, value: string ): Promise<Response> {
+    return new Promise((resolve) => {
+      socket.emit('sendUserVote', { userID, value }, (response: string) => {
         const responseObject: Response = JSON.parse(response);
         resolve(responseObject);
       });
