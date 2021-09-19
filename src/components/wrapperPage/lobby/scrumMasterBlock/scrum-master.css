@@ -32,10 +32,10 @@
   justify-content: space-between;
 }
 
-.scrum-master__label-block{
-   margin-top: 7px;   
+.scrum-master__label-block {
+  margin-top: 7px;
 }
-.scrum-master__label-block__label{
+.scrum-master__label-block__label {
   font-family: Roboto;
   font-style: normal;
   font-weight: bold;
@@ -46,18 +46,18 @@
   color: #000000;
 }
 
-.scrum-master__label-block__input-block-input{
+.scrum-master__label-block__input-block-input {
   height: 47px;
   width: 275px;
-  background: #FFFFFF;
-  border: 1px solid #EEEEEE;
+  background: #ffffff;
+  border: 1px solid #eeeeee;
   box-sizing: border-box;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 0px 0px 0px 10px;
   font-family: Roboto;
   font-style: normal;
   font-weight: 300;
-  font-size: 24px;
+  font-size: 20px;
   line-height: 28px;
   display: flex;
   justify-content: space-around;
@@ -66,7 +66,7 @@
   overflow: hidden;
   display: inline-block;
   white-space: nowrap;
-  padding-top: 10px;
+  padding: 10px 0 0 10px;
 }
 
 .scrum-master__no-buttons {
