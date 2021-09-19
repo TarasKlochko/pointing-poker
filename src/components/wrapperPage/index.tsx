@@ -4,7 +4,7 @@ import { Controller } from '../../api/Controller';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { GameState, Room } from '../../model/Room';
 import { User } from '../../model/User';
-import { setFullData, setMembers } from '../../slices/GameSlice';
+import { setFullData, setMembers, setMemberVote, setRoomState } from '../../slices/GameSlice';
 import { setUser, ifKicked } from '../../slices/UserSlice';
 import GamePage from './gamePage';
 import LobbyPage from './lobby';
@@ -60,6 +60,11 @@ export default function WrapperPage(): JSX.Element {
       console.log(usersO);
       dispatch(setMembers(usersO));
       dispatch(ifKicked(usersO));
+    });
+    socket.on("getVoteResults", (roomObj): void => {
+      const {roomID, state, name, issues, gameSettings, members, memberVote} = roomObj;
+      dispatch(setRoomState({roomID, state, gameSettings, members, name, issues} as Room));
+      dispatch(setMemberVote(memberVote));
     })
   }, [socket]);
 

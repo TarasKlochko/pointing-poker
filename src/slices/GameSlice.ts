@@ -128,6 +128,9 @@ export const gameSlice = createSlice({
     changeGameState: (state, action: PayloadAction<GameState>): void => {
       state.room.state = action.payload;
     },
+    setMemberVote: (state, action: PayloadAction<MemberVote>): void => {
+      state.memberVote = action.payload;
+    },
   },
 });
 
@@ -144,4 +147,5 @@ export const {
   setSettings,
   setRoomState,
   setFullData,
+  setMemberVote,
 } = actions;

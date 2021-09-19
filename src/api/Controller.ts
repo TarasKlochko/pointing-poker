@@ -160,4 +160,13 @@ export class Controller {
       });
     });
   }
+
+  public static sendUserVote(socket: Socket, userID: string, value: string ): Promise<Response> {
+    return new Promise((resolve) => {
+      socket.emit('sendUserVote', { userID, value }, (response: string) => {
+        const responseObject: Response = JSON.parse(response);
+        resolve(responseObject);
+      });
+    });
+  }
 }
