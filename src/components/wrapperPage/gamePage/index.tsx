@@ -9,6 +9,9 @@ import './gamePage.css';
 import Timer from '../../common/timer';
 import { UserRole } from '../../../model/UserRole';
 import Statistics from './statistics';
+import VoteBlock from './voteBlock/VoteBlock';
+import { MemberVoteStatus } from '../../../model/MemberVote';
+import PlayCards from '../../common/playCard';
 
 export default function GamePage(): JSX.Element {
   const game = useAppSelector((state) => state.game);
@@ -123,12 +126,19 @@ export default function GamePage(): JSX.Element {
               </div>
             </div>
           )}
-          {user.user.role === UserRole.PLAYER && <Statistics values={'15'} percentage={'15.5%'} />}
+          {user.user.role === UserRole.PLAYER && game.memberVote.status === MemberVoteStatus.FINISHED
+            && <Statistics values={'15'} percentage={'15.5%'} />}
         </div>
-        {user.user.role === UserRole.DEALER && <Statistics values={'15'} percentage={'15.5%'} />}
+        {user.user.role === UserRole.DEALER && game.memberVote.status === MemberVoteStatus.FINISHED
+          && <Statistics values={'15'} percentage={'15.5%'} />}
+        {
+          user.user.role === UserRole.DEALER || user.user.role === UserRole.PLAYER?
+          <PlayCards></PlayCards> : <></>
+        }
       </div>
-
-      <div className="game__score"></div>
+      <div className="game__score">
+        <VoteBlock></VoteBlock>
+      </div>
     </section>
   );
 }

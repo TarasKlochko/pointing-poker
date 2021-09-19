@@ -1,5 +1,3 @@
-import { Issue } from "./Issue";
-import { User } from "./User";
 
 export interface MemberVote {
   status: MemberVoteStatus;
@@ -10,7 +8,9 @@ export interface MemberVote {
 }
 
 export enum MemberVoteStatus {
-  BEFORE_START, IN_PROGRESS, FINISHED
+  BEFORE_START = 'before start', 
+  IN_PROGRESS = 'in progress',
+  FINISHED = 'finished',
 }
 
 export interface MemberVoteTicket {

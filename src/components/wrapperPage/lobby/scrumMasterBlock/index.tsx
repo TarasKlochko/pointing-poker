@@ -32,6 +32,7 @@ export default function ScrumMasterBlock(): JSX.Element {
       history.push(`/`);
     });
     socket.on("updatedRoom", (newRoom) => {
+      console.log('before update game');
       console.log(newRoom);
       console.log('update');
       dispatch(setRoomState(newRoom));
@@ -58,7 +59,7 @@ export default function ScrumMasterBlock(): JSX.Element {
 
   const startGame = (): void => {
     dispatch(changeGameState(GameState.PLAYING));
-    dispatch(setSettings(settings));
+   // dispatch(setSettings(settings));
     const room: Room = {
       roomID: game.room.roomID,
       name: game.room.name,

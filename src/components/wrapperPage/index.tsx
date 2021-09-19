@@ -17,7 +17,35 @@ export default function WrapperPage(): JSX.Element {
   const history = useHistory();
   const socket = useAppSelector(state => state.socket.socket);
 
-  if(user.kicked) history.push(`/`);
+  useEffect(() => {
+    const userID = localStorage.getItem('userID');
+    const roomID = localStorage.getItem('roomID');
+    if (userID !== null && roomID !== null) {
+      if (user.user.id.length === 0) {
+        Controller.getDataForReload(socket, roomID, userID).then(response => {
+          dispatch(setUser(response.user!))
+        })
+      }
+      if (game.room.roomID.length === 0) {
+        Controller.getDataForReload(socket, roomID, userID).then(response => {
+          const room: Room = { ...response.roomObj!, members: response.users! };
+          const dealer: User = response.dealer!;
+          dispatch(setFullData({ room, dealer }))
+        })
+      }
+    }
+  });
+
+  useEffect(() => {
+    socket.on("users", (users): void => {
+      const usersO: User[] = users;
+      console.log(usersO);
+      dispatch(setMembers(usersO));
+      dispatch(ifKicked(usersO));
+    })
+  }, [socket]);
+
+  if (user.kicked) history.push(`/`);
 
   let page: JSX.Element = <></>;
   switch (game.room.state) {
@@ -34,34 +62,6 @@ export default function WrapperPage(): JSX.Element {
       page = <></>;
       break;
   }
-
-  useEffect(() => {
-    const userID = localStorage.getItem('userID');
-    const roomID = localStorage.getItem('roomID');
-    if (userID !== null && roomID !== null) {
-      if(user.user.id.length === 0) {
-        Controller.getDataForReload(socket, roomID, userID).then(response => {
-          dispatch(setUser(response.user!))
-        })
-      }
-      if(game.room.roomID.length === 0) {
-        Controller.getDataForReload(socket, roomID, userID).then(response => {
-          const room: Room = {...response.roomObj!, members: response.users!};
-          const dealer: User = response.dealer!;
-          dispatch(setFullData({room, dealer}))
-        })
-      }
-    }
-  });
-
-  useEffect(() => {
-    socket.on("users", (users): void => {
-      const usersO: User[] = users;
-      console.log(usersO);
-      dispatch(setMembers(usersO));
-      dispatch(ifKicked(usersO));
-    })
-  }, [socket]);
 
   return <div>{page}</div>
 }

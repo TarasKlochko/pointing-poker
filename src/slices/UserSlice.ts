@@ -29,17 +29,19 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     setUser: (state, action: PayloadAction<User>): void => {
-      state.user.id = action.payload.id;
-      if (action.payload.image) {
-        state.user.image = action.payload.image;
-      }
-      state.user.name = action.payload.name;
-      state.user.surname = action.payload.surname;
-      state.user.role = action.payload.role;
-      state.user.jobPosition = action.payload.jobPosition;
-      state.user.room = action.payload.room;
-      if(action.payload.room !== state.kickedRoom) {
-        state.kicked = false
+      if(action.payload !== undefined) {
+        state.user.id = action.payload.id;
+        if (action.payload.image) {
+          state.user.image = action.payload.image;
+        }
+        state.user.name = action.payload.name;
+        state.user.surname = action.payload.surname;
+        state.user.role = action.payload.role;
+        state.user.jobPosition = action.payload.jobPosition;
+        state.user.room = action.payload.room;
+        if(action.payload.room !== state.kickedRoom) {
+          state.kicked = false
+        }
       }
     },
     ifKicked: (state, action: PayloadAction<User[]>): void => {
