@@ -1,6 +1,3 @@
-import { Issue } from "./Issue";
-import { User } from "./User";
-
 export interface MemberVote {
   status: MemberVoteStatus;
   currentIssue?: number;
