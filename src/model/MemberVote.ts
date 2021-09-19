@@ -3,9 +3,10 @@ import { User } from "./User";
 
 export interface MemberVote {
   status: MemberVoteStatus;
-  currentIssue?: Issue;
-  memberVoteTickets?: MemberVoteTicket[]; 
-  timer?: Timer // if we really need this?
+  currentIssue?: number;
+  memberVoteResult?: MemberVoteTicket[]; 
+  chosenValue?: string;
+  timer?: Timer;
 }
 
 export enum MemberVoteStatus {
@@ -13,9 +14,8 @@ export enum MemberVoteStatus {
 }
 
 export interface MemberVoteTicket {
-  user: User;
+  userId: string;
   value: string;
-  percentage: string;
 }
 
 export interface Timer {
