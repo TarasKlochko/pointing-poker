@@ -41,14 +41,20 @@ export default function WrapperPage(): JSX.Element {
     if (userID !== null && roomID !== null) {
       if(user.user.id.length === 0) {
         Controller.getDataForReload(socket, roomID, userID).then(response => {
-          dispatch(setUser(response.user!))
+          if(response.status === 200) {
+            dispatch(setUser(response.user!));
+          } else
+            history.push('/');
         })
       }
       if(game.room.roomID.length === 0) {
         Controller.getDataForReload(socket, roomID, userID).then(response => {
           const room: Room = {...response.roomObj!, members: response.users!};
           const dealer: User = response.dealer!;
-          dispatch(setFullData({room, dealer}))
+          if(response.status === 200)
+            dispatch(setFullData({room, dealer}))
+          else
+            history.push('/');
         })
       }
     }
