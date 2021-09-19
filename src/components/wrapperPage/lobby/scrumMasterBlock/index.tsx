@@ -25,6 +25,7 @@ export default function ScrumMasterBlock(): JSX.Element {
   const classes = useButtonStyles();
   const domain = window.location.origin;
   const adress = `${domain}/#/connect/${game.room.roomID}`;
+  const [isIssueError, setIsIssueError] = useState(false);
 
   useEffect(() => {
     socket.on('cancelGame', () => {
@@ -36,6 +37,12 @@ export default function ScrumMasterBlock(): JSX.Element {
       dispatch(setRoomState(newRoom));
     });
   }, [socket]);
+
+  useEffect(() => {
+    if (game.room.issues.length) {
+      setIsIssueError(false);
+    }
+  }, [game.room.issues]);
 
   const cancelGame = (): void => {
     Controller.deleteRoom(socket, roomId).then((response) => {
@@ -54,17 +61,21 @@ export default function ScrumMasterBlock(): JSX.Element {
   };
 
   const startGame = (): void => {
-    dispatch(changeGameState(GameState.PLAYING));
-    dispatch(setSettings(settings));
-    const room: Room = {
-      roomID: game.room.roomID,
-      name: game.room.name,
-      state: GameState.PLAYING,
-      issues: game.room.issues,
-      gameSettings: settings,
-      members: game.room.members,
-    };
-    Controller.updateRoom(socket, room);
+    if (game.room.issues.length) {
+      dispatch(changeGameState(GameState.PLAYING));
+      dispatch(setSettings(settings));
+      const room: Room = {
+        roomID: game.room.roomID,
+        name: game.room.name,
+        state: GameState.PLAYING,
+        issues: game.room.issues,
+        gameSettings: settings,
+        members: game.room.members,
+      };
+      Controller.updateRoom(socket, room);
+    } else {
+      setIsIssueError(true);
+    }
   };
 
   const exitGame = (): void => {
@@ -103,9 +114,9 @@ export default function ScrumMasterBlock(): JSX.Element {
       ) : (
         <div className="scrum-master__no-label-block"></div>
       )}
-
       {
         <div className="scrum-master__start-exit-buttons-wrapper">
+          {isIssueError && <p className="scrum-master__issue-error">Please create issue</p>}
           {user.user.role === UserRole.DEALER ? (
             <Button className={classes.blueButton} onClick={startGame} variant="contained" color="primary">
               Start Game

@@ -24,8 +24,17 @@
   display: flex;
   align-items: center;
 }
-
+.scrum-master__issue-error {
+  position: absolute;
+  top: -27px;
+  color: red;
+  font-family: Ruda;
+  font-size: 20px;
+  text-transform: uppercase;
+  text-decoration: underline;
+}
 .scrum-master__start-exit-buttons-wrapper {
+  position: relative;
   margin-top: 40px;
   display: flex;
   flex-wrap: wrap;
