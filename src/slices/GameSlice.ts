@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction, Reducer } from '@reduxjs/toolkit';
 import { GameSettings } from '../components/wrapperPage/lobby/settingsBlock/settingBlog.slice';
-import { Issue, IssuePriority } from '../model/Issue';
+import { Issue } from '../model/Issue';
 import { MemberVote, MemberVoteStatus } from '../model/MemberVote';
 import { GameState, Room } from '../model/Room';
 import { User } from '../model/User';
@@ -42,6 +42,8 @@ const initialState: RoomState = {
   },
   memberVote: {
     status: MemberVoteStatus.BEFORE_START,
+    memberVoteResult: [],
+    chosenValue: ''
   }
 };
 
@@ -93,6 +95,9 @@ export const gameSlice = createSlice({
     changeGameState: (state, action: PayloadAction<GameState>): void => {
       state.room.state = action.payload;
     },
+    setChosenValue: (state, action: PayloadAction<string>): void => {
+      state.memberVote.chosenValue = action.payload;
+    },
     setMemberVote: (state, action: PayloadAction<MemberVote>): void => {
       state.memberVote = action.payload;
     },
@@ -112,5 +117,7 @@ export const {
   setSettings,
   setRoomState,
   setFullData,
+  setChosenValue,
   setMemberVote,
 } = actions;
+

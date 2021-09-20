@@ -17,29 +17,11 @@ export default function WrapperPage(): JSX.Element {
   const history = useHistory();
   const socket = useAppSelector(state => state.socket.socket);
 
-  if(user.kicked) history.push(`/`);
-
-  let page: JSX.Element = <></>;
-  switch (game.room.state) {
-    case GameState.WAITING:
-      page = <LobbyPage></LobbyPage>
-      break;
-    case GameState.PLAYING:
-      page = <GamePage></GamePage>
-      break;
-    case GameState.RESULT:
-      page = <ResultPage></ResultPage>
-      break;
-    default:
-      page = <></>;
-      break;
-  }
-
   useEffect(() => {
     const userID = localStorage.getItem('userID');
     const roomID = localStorage.getItem('roomID');
     if (userID !== null && roomID !== null) {
-      if(user.user.id.length === 0) {
+      if (user.user.id.length === 0) {
         Controller.getDataForReload(socket, roomID, userID).then(response => {
           if(response.status === 200) {
             dispatch(setUser(response.user!));
@@ -47,9 +29,9 @@ export default function WrapperPage(): JSX.Element {
             history.push('/');
         })
       }
-      if(game.room.roomID.length === 0) {
+      if (game.room.roomID.length === 0) {
         Controller.getDataForReload(socket, roomID, userID).then(response => {
-          const room: Room = {...response.roomObj!, members: response.users!};
+          const room: Room = { ...response.roomObj!, members: response.users! };
           const dealer: User = response.dealer!;
           if(response.status === 200)
             dispatch(setFullData({room, dealer}))
@@ -73,6 +55,24 @@ export default function WrapperPage(): JSX.Element {
       dispatch(setMemberVote(memberVote));
     })
   }, [socket]);
+
+  if (user.kicked) history.push(`/`);
+
+  let page: JSX.Element = <></>;
+  switch (game.room.state) {
+    case GameState.WAITING:
+      page = <LobbyPage></LobbyPage>
+      break;
+    case GameState.PLAYING:
+      page = <GamePage></GamePage>
+      break;
+    case GameState.RESULT:
+      page = <ResultPage></ResultPage>
+      break;
+    default:
+      page = <></>;
+      break;
+  }
 
   return <div>{page}</div>
 }

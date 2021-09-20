@@ -1,3 +1,4 @@
+
 export interface MemberVote {
   status: MemberVoteStatus;
   currentIssue?: number;
@@ -7,7 +8,9 @@ export interface MemberVote {
 }
 
 export enum MemberVoteStatus {
-  BEFORE_START, IN_PROGRESS, FINISHED
+  BEFORE_START = 'before start', 
+  IN_PROGRESS = 'in progress',
+  FINISHED = 'finished',
 }
 
 export interface MemberVoteTicket {

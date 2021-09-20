@@ -337,9 +337,11 @@ export default function SettingsBlock(): JSX.Element {
             {cardValues &&
               cardValues.map((el, index) => (
                 <div className="setting__card-value" key={index}>
-                  <span className="setting__card-value-type">{scopeTipeShort}</span>
+                  <span className="setting__card-value-type">{el === 'coffee' || el === '?'
+                    || el === '∞' ? '' : scopeTipeShort}</span>
                   {el === 'coffee' ? <img src={coffee} alt="df" className="setting__card-value-img" /> : el}
-                  <span className="setting__card-value-type">{scopeTipeShort}</span>
+                  <span className="setting__card-value-type">{el === 'coffee' || el === '?'
+                    || el === '∞' ? '' : scopeTipeShort}</span>
                 </div>
               ))}
           </div>
