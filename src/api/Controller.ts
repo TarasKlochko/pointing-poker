@@ -169,4 +169,13 @@ export class Controller {
       });
     });
   }
+
+  public static saveStat(socket: Socket, roomID: string): Promise<Response> {
+    return new Promise((resolve) => {
+      socket.emit('saveStat', { roomID }, (response: string) => {
+        const responseObject: Response = JSON.parse(response);
+        resolve(responseObject);
+      });
+    });
+  }
 }
