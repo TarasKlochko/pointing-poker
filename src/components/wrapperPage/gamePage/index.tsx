@@ -132,7 +132,7 @@ export default function GamePage(): JSX.Element {
         {user.user.role === UserRole.DEALER && game.memberVote.status === MemberVoteStatus.FINISHED
           && <Statistics values={'15'} percentage={'15.5%'} />}
         {
-          user.user.role === UserRole.DEALER || user.user.role === UserRole.PLAYER?
+          (user.user.role === UserRole.DEALER && game.room.gameSettings.isMasterAsPlayer) || user.user.role === UserRole.PLAYER?
             <PlayCards></PlayCards> : <></>
         }
       </div>

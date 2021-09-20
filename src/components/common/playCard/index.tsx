@@ -4,15 +4,20 @@ import coffee from '../../../assets/coffee.png';
 import chosenIcon from '../../../assets/chosen-icon.svg';
 import './play-card.css';
 import { setChosenValue } from '../../../slices/GameSlice';
+import { Controller } from '../../../api/Controller';
 
 export default function PlayCards(): JSX.Element {
   const scopeTipeShort = useAppSelector((state) => state.game.room.gameSettings.scopeTipeShort);
   const values = useAppSelector((state) => state.game.room.gameSettings.cardValues);
   const chosenValue = useAppSelector((state) => state.game.memberVote.chosenValue);
+  const socket = useAppSelector((state) => state.socket.socket);
+  const user = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
 
   const onClickHandler = (value: string) => {
     dispatch(setChosenValue(value));
+    console.log('sent');
+    Controller.sendUserVote(socket, user.user.id, value)
   }
 
 
