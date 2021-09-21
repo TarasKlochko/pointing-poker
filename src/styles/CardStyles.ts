@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/core";
+import { makeStyles } from '@material-ui/core';
 
 export const useCardsStyles = makeStyles(() => ({
   createIssueButton: {
@@ -18,12 +18,23 @@ export const useCardsStyles = makeStyles(() => ({
     lineHeight: '18px',
     color: '#000000',
     marginBottom: 10,
-    "@media (max-width: 950px)": {
+    '@media (max-width: 950px)': {
       margin: 'auto',
       marginBottom: 10,
-    }
+    },
   },
-
+  createIssueButtonGame: {
+    width: '250px',
+    height: '70px',
+    fontSize: '20px',
+    textTransform: 'none',
+    paddingRight: '30px',
+    marginTop: '20px',
+    backgroundColor: '#fafaa9',
+    '&:hover': {
+      backgroundColor: '#ecec3c',
+    },
+  },
   cardFont: {
     marginTop: 10,
     fontFamily: 'Roboto',
@@ -31,7 +42,7 @@ export const useCardsStyles = makeStyles(() => ({
     fontWeight: 400,
     fontSize: '20px',
     lineHeight: '18px',
-    color: '#000000'
+    color: '#000000',
   },
 
   priorityFont: {
@@ -41,7 +52,7 @@ export const useCardsStyles = makeStyles(() => ({
     fontWeight: 300,
     fontSize: '10px',
     lineHeight: '12px',
-    color: '#000000'
+    color: '#000000',
   },
 
   currentFont: {
@@ -51,7 +62,7 @@ export const useCardsStyles = makeStyles(() => ({
     fontWeight: 'bold',
     fontSize: '12px',
     lineHeight: '14px',
-    color: '#000000'
+    color: '#000000',
   },
 
   cardContent: {
@@ -60,5 +71,5 @@ export const useCardsStyles = makeStyles(() => ({
 
   issueCardWrapper: {
     paddingRight: 0,
-  }
+  },
 }));

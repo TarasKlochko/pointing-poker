@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { MemberCardKind } from '../../../model/MemberCardKind';
-import { GameState } from '../../../model/Room';
+import { GameState, Room } from '../../../model/Room';
 import { changeGameState, upDateIssue } from '../../../slices/GameSlice';
 import MemberCard from '../../common/memberCard';
 import CardIssue from './cardIssue';
@@ -9,6 +9,9 @@ import './gamePage.css';
 import Timer from '../../common/timer';
 import { UserRole } from '../../../model/UserRole';
 import Statistics from './statistics';
+import CreateIssueButton from '../../common/issue/CreateIssueButton';
+import { Issue } from '../../../model/Issue';
+import { Controller } from '../../../api/Controller';
 import VoteBlock from './voteBlock/VoteBlock';
 import { MemberVoteStatus } from '../../../model/MemberVote';
 import PlayCards from '../../common/playCard';
@@ -23,14 +26,18 @@ export default function GamePage(): JSX.Element {
   const issues = useAppSelector((state) => state.game.room.issues);
   const user = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
+  const [issuesArr, setIssues] = useState<Issue[]>(issues);
+  const socket = useAppSelector((state) => state.socket.socket);
 
   function handleStopGame() {
     console.log('Stop Game');
     dispatch(changeGameState(GameState.RESULT));
   }
+
   function handleExit() {
     console.log('Exit');
   }
+
   function handleRunRound() {
     console.log('Run Round');
     setIsRunRound(true);
@@ -38,6 +45,7 @@ export default function GamePage(): JSX.Element {
       setCurrentIssue(0);
     }
   }
+
   function handleRestartRound() {
     console.log('Restart Round');
     setIsTimerOver(false);
@@ -58,6 +66,22 @@ export default function GamePage(): JSX.Element {
   function handleTimerOver() {
     setIsTimerOver(!isTimerOver);
   }
+
+  function handleCreateIssue(issue: Issue) {
+    setIssues((prevState) => [...prevState, issue]);
+  }
+
+  useEffect(() => {
+    const NewRoom: Room = {
+      roomID: game.room.roomID,
+      name: game.room.name,
+      state: game.room.state,
+      issues: issuesArr,
+      gameSettings: game.room.gameSettings,
+      members: game.room.members,
+    };
+    Controller.updateRoom(socket, NewRoom);
+  }, [issuesArr]);
 
   return (
     <section className="game">
@@ -99,6 +123,7 @@ export default function GamePage(): JSX.Element {
                   key={issue.id}
                 />
               ))}
+              {user.user.role === UserRole.DEALER && <CreateIssueButton onClickHandler={handleCreateIssue} />}
             </div>
           </div>
           {user.user.role === UserRole.DEALER && (
@@ -126,15 +151,14 @@ export default function GamePage(): JSX.Element {
               </div>
             </div>
           )}
-          {user.user.role === UserRole.PLAYER && game.memberVote.status === MemberVoteStatus.FINISHED
-            && <Statistics values={'15'} percentage={'15.5%'} />}
+          {user.user.role === UserRole.PLAYER && game.memberVote.status === MemberVoteStatus.FINISHED && (
+            <Statistics values={'15'} percentage={'15.5%'} />
+          )}
         </div>
-        {user.user.role === UserRole.DEALER && game.memberVote.status === MemberVoteStatus.FINISHED
-          && <Statistics values={'15'} percentage={'15.5%'} />}
-        {
-          (user.user.role === UserRole.DEALER && game.room.gameSettings.isMasterAsPlayer) || user.user.role === UserRole.PLAYER?
-            <PlayCards></PlayCards> : <></>
-        }
+        {user.user.role === UserRole.DEALER && game.memberVote.status === MemberVoteStatus.FINISHED && (
+          <Statistics values={'15'} percentage={'15.5%'} />
+        )}
+        {user.user.role === UserRole.DEALER || user.user.role === UserRole.PLAYER ? <PlayCards></PlayCards> : <></>}
       </div>
       <div className="game__score">
         <VoteBlock></VoteBlock>

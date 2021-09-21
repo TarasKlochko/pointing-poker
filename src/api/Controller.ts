@@ -163,12 +163,22 @@ export class Controller {
 
   public static sendUserVote(socket: Socket, userID: string, value: string ): Promise<Response> {
     return new Promise((resolve) => {
+      console.log('before send');
       console.log(userID);
       console.log(value);
       socket.emit('sendUserVote', { userID, value }, (response: string) => {  
         console.log(response);      
         const responseObject: Response = JSON.parse(response);
         console.log(responseObject);
+        resolve(responseObject);
+      });
+    });
+  }
+
+  public static saveStat(socket: Socket, roomID: string): Promise<Response> {
+    return new Promise((resolve) => {
+      socket.emit('saveStat', { roomID }, (response: string) => {
+        const responseObject: Response = JSON.parse(response);
         resolve(responseObject);
       });
     });
