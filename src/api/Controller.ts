@@ -1,4 +1,5 @@
 import { Socket } from 'socket.io-client';
+import { MemberVote } from '../model/MemberVote';
 import { Room } from '../model/Room';
 import { User } from '../model/User';
 import { UserRole } from '../model/UserRole';
@@ -173,6 +174,15 @@ export class Controller {
   public static saveStat(socket: Socket, roomID: string): Promise<Response> {
     return new Promise((resolve) => {
       socket.emit('saveStat', { roomID }, (response: string) => {
+        const responseObject: Response = JSON.parse(response);
+        resolve(responseObject);
+      });
+    });
+  }
+
+  public static updateMemberVote(socket: Socket, roomID: string, memberVote: MemberVote): Promise<Response> {
+    return new Promise((resolve) => {
+      socket.emit('updateMemberVote', { roomID, memberVote }, (response: string) => {
         const responseObject: Response = JSON.parse(response);
         resolve(responseObject);
       });
