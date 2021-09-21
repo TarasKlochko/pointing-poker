@@ -31,10 +31,10 @@ export default function ScrumMasterBlock(): JSX.Element {
     socket.on('cancelGame', () => {
       history.push(`/`);
     });
-    socket.on('updatedRoom', (newRoom) => {
-      console.log(newRoom);
+    socket.on('updatedRoom', (roomObj) => {
+      console.log(roomObj);
       console.log('update');
-      dispatch(setRoomState(newRoom));
+      dispatch(setRoomState(roomObj));
     });
   }, [socket]);
 

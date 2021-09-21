@@ -36,3 +36,18 @@
   align-items: center;
   color: #000000;
 }
+.export-button {
+  width: 150px;
+  height: 40px;
+  background: rgb(10, 141, 228);
+  cursor: pointer;
+  margin: 15px;
+  border-radius: 5px;
+  font-family: 'Roboto';
+  color: beige;
+  font-size: 20px;
+  transition: all 0.3s;
+}
+.export-button:hover {
+  background: rgb(17, 160, 255);
+}
