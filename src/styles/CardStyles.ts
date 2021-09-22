@@ -17,10 +17,8 @@ export const useCardsStyles = makeStyles(() => ({
     fontSize: '20px',
     lineHeight: '18px',
     color: '#000000',
-    marginBottom: 10,
     '@media (max-width: 950px)': {
-      margin: 'auto',
-      marginBottom: 10,
+      // margin: 'auto',
     },
   },
   createIssueButtonGame: {

@@ -6,6 +6,7 @@ import { UserRole } from '../../../../model/UserRole';
 import CreateIssueButton from '../../../common/issue/CreateIssueButton';
 import { useAppDispatch, useAppSelector } from '../../../../app/hooks';
 import { addIssue } from '../../../../slices/GameSlice';
+import IssueFromFile from './issueFromFile';
 
 export interface IssuesBlockProps {
   issues: Issue[];
@@ -30,6 +31,7 @@ export default function IssuesBlock(): JSX.Element {
       <div className="common-card-block">
         {issueItems}
         <CreateIssueButton onClickHandler={createIssueHandler}></CreateIssueButton>
+        <IssueFromFile />
       </div>
     </div>
   );

@@ -16,6 +16,10 @@
   margin-top: 55px;
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  column-gap: 5px;
+  row-gap: 5px;
 }
 
 .hidden {
@@ -25,12 +29,12 @@
 
 @media (max-width: 950px) {
   .common-card-block {
-    margin: auto;
+    /* margin: auto; */
     margin-top: 20px;
   }
 
   .margin-ato {
-    margin: auto;
+    /* margin: auto; */
   }
 }
 

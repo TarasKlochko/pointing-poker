@@ -14,16 +14,16 @@
 .chat-member-wrapper {
   width: 200px;
   height: 50px;
-  background: #FFFFFF;
-    box-shadow: 0px 4px 4px rgb(0 0 0 / 25%);
-    border-radius: 4px;
-    margin-bottom: 10px;
+  background: #ffffff;
+  box-shadow: 0px 4px 4px rgb(0 0 0 / 25%);
+  border-radius: 4px;
+  margin-bottom: 10px;
 }
 
-.member-info-block__simple-name, 
+.member-info-block__simple-name,
 .member-info-block__simple-position,
 .member-info-block__simple-current-user,
-.member-info-block__chat-name, 
+.member-info-block__chat-name,
 .member-info-block__chat-position,
 .member-info-block__chat-current-user {
   font-family: Roboto;
@@ -45,7 +45,7 @@
 
 .member-info-block__simple-position {
   font-size: 10px;
-  line-height: 16px; 
+  line-height: 16px;
 }
 
 .member-info-block__simple-current-user {
@@ -66,7 +66,7 @@
 
 .member__simple-image-wrapper {
   width: 50px;
-  height: 50px; 
+  height: 50px;
 }
 
 .member__chat-image-wrapper {
@@ -87,10 +87,10 @@
   height: 48px;
   border-radius: 50%;
   background-color: rgba(248, 241, 241, 0);
-  -webkit-transition: all .2s;
-  -moz-transition: all .2s;
-  -o-transition: all .2s;
-  transition: all .2s;
+  -webkit-transition: all 0.2s;
+  -moz-transition: all 0.2s;
+  -o-transition: all 0.2s;
+  transition: all 0.2s;
 }
 
 .member__chat-user-kick-button {
@@ -108,9 +108,9 @@
   transform: scale(1.2);
 }
 
-.member-card__simple-image-block, 
+.member-card__simple-image-block,
 .member-card__chat-image-block {
-  background: #60DABF;
+  background: #60dabf;
   box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 50%;
   width: 50px;
@@ -121,14 +121,14 @@
   font-size: 24px;
   line-height: 30px;
   text-align: center;
-  color: #FFFFFF;
+  color: #ffffff;
   padding-top: 9px;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 
 .member-card__chat-image-block {
   width: 25px;
-  height: 25px; 
+  height: 25px;
   font-size: 12px;
   line-height: 15px;
   padding-top: 6px;
@@ -137,17 +137,17 @@
 .member-card__simple-face-image-block {
   border-radius: 50%;
   width: 50px;
-  height: 50px; 
+  height: 50px;
 }
 
 .member-card__chat-face-image-block {
   width: 25px;
-  height: 25px; 
+  height: 25px;
   border-radius: 50%;
 }
 
-@media (max-width: 950px) {
+/* @media (max-width: 950px) {
   .simple-member-wrapper {
     margin: auto;
   }
-}
+} */
