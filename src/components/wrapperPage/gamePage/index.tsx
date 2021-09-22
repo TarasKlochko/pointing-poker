@@ -15,6 +15,7 @@ import { Controller } from '../../../api/Controller';
 import VoteBlock from './voteBlock/VoteBlock';
 import { MemberVoteStatus } from '../../../model/MemberVote';
 import PlayCards from '../../common/playCard';
+import AdmitRejectNewMember from './admitRejectNewMember';
 
 export default function GamePage(): JSX.Element {
   const game = useAppSelector((state) => state.game);
@@ -163,6 +164,7 @@ export default function GamePage(): JSX.Element {
       <div className="game__score">
         <VoteBlock></VoteBlock>
       </div>
+      {user.user.role === UserRole.DEALER && <AdmitRejectNewMember />}
     </section>
   );
 }
