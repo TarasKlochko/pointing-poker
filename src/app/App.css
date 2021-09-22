@@ -22,7 +22,7 @@
   visibility: hidden;
   opacity: 0;
 }
-  
+
 @media (max-width: 950px) {
   .common-card-block {
     margin: auto;
@@ -31,5 +31,15 @@
 
   .margin-ato {
     margin: auto;
+  }
+}
+
+.app-main {
+  min-height: calc(100vh - 70px - 75px);
+}
+
+@media (max-width: 950px) {
+  .app-main {
+    min-height: calc(100vh - 70px - 160px);
   }
 }
