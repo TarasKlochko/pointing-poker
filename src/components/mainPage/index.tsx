@@ -5,6 +5,7 @@ import { isObsorverShow, isPopupAction } from './popup/popupSlice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { createGameAction, IDGameAction } from './createGame.slice';
 import { Controller } from '../../api/Controller';
+import DeleteInfoPopup from './deleteInfoPopup';
 
 export default function MainPage(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -25,7 +26,7 @@ export default function MainPage(): JSX.Element {
 
   function handleClickConnect() {
     if (id) {
-      Controller.checkRoom(socket, id).then(responseObject => {
+      Controller.checkRoom(socket, id).then((responseObject) => {
         if (responseObject.status === 200) {
           console.log(responseObject);
           dispatch(createGameAction(false));
@@ -69,6 +70,7 @@ export default function MainPage(): JSX.Element {
         </button>
       </div>
       {isPopup && <Popup></Popup>}
+      <DeleteInfoPopup />
     </section>
   );
 }
