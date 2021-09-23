@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useAppSelector } from '../../../../app/hooks';
 import { MemberCardKind } from '../../../../model/MemberCardKind';
 import { MemberVoteStatus, MemberVoteTicket } from '../../../../model/MemberVote';
+import { Room } from '../../../../model/Room';
 import { VoteUtil } from '../../../../utils/VoteUtil';
 import MemberCard from '../../../common/memberCard';
 import './vote-block.css';
@@ -12,6 +13,13 @@ export default function VoteBlock(): JSX.Element {
   const members = useAppSelector((state) => state.game.room.members);
   const settings = useAppSelector((state) => state.game.room.gameSettings);
   const shortType = useAppSelector((state) => state.game.room.gameSettings.scopeTipeShort);
+  const socket = useAppSelector((state) => state.socket.socket);
+
+  useEffect(() => {
+    socket.on("getVoteResults", (roomObj): void => {
+      console.log(roomObj.memberVote.status);
+    })
+  }, [socket]);
 
   const membersVoteResult = VoteUtil.getVoteResult(members, shortType, membersVote.status, settings, membersVote.memberVoteResult);
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { MemberCardKind } from '../../../model/MemberCardKind';
 import { GameState, Room } from '../../../model/Room';
-import { changeGameState, upDateIssue } from '../../../slices/GameSlice';
+import { changeGameState, setMemberVote, upDateIssue } from '../../../slices/GameSlice';
 import MemberCard from '../../common/memberCard';
 import CardIssue from './cardIssue';
 import './gamePage.css';
@@ -13,16 +13,15 @@ import CreateIssueButton from '../../common/issue/CreateIssueButton';
 import { Issue } from '../../../model/Issue';
 import { Controller } from '../../../api/Controller';
 import VoteBlock from './voteBlock/VoteBlock';
-import { MemberVoteStatus } from '../../../model/MemberVote';
 import PlayCards from '../../common/playCard';
 import AdmitRejectNewMember from './admitRejectNewMember';
+import { MemberVote, MemberVoteStatus } from '../../../model/MemberVote';
 
 export default function GamePage(): JSX.Element {
   const game = useAppSelector((state) => state.game);
   const gameSettings = useAppSelector((state) => state.gameSettings);
-  const [isRunRound, setIsRunRound] = useState(false);
+  const currentIssue = useAppSelector((state) => state.game.memberVote.currentIssue);
   const [isTimerOver, setIsTimerOver] = useState(false);
-  const [currentIssue, setCurrentIssue] = useState(-1);
   const isTimer = useAppSelector((state) => state.game.room.gameSettings.isTimer);
   const issues = useAppSelector((state) => state.game.room.issues);
   const user = useAppSelector((state) => state.user);
@@ -40,28 +39,22 @@ export default function GamePage(): JSX.Element {
   }
 
   function handleRunRound() {
-    console.log('Run Round');
-    setIsRunRound(true);
-    if (currentIssue < 0) {
-      setCurrentIssue(0);
-    }
+    Controller.startRound(socket, game.room.roomID, currentIssue + 1);
   }
 
   function handleRestartRound() {
     console.log('Restart Round');
     setIsTimerOver(false);
-    // clean issue statistic/score
     const changeIssue = { ...game.room.issues[currentIssue] };
     changeIssue.name = 'issue5';
     dispatch(upDateIssue(changeIssue));
+    Controller.startRound(socket, game.room.roomID, currentIssue);
   }
 
   function handleNextIssue() {
     console.log('Next issue');
     setIsTimerOver(false);
-    if (currentIssue < game.room.issues.length - 1) {
-      setCurrentIssue(currentIssue + 1);
-    }
+    Controller.startRound(socket, game.room.roomID, currentIssue + 1);
   }
 
   function handleTimerOver() {
@@ -71,6 +64,13 @@ export default function GamePage(): JSX.Element {
   function handleCreateIssue(issue: Issue) {
     setIssues((prevState) => [...prevState, issue]);
   }
+
+  useEffect(() => {
+    socket.on("getVoteResults", (roomObj): void => {
+      console.log('update');
+      console.log(roomObj);
+    })
+  }, [socket]);
 
   useEffect(() => {
     const NewRoom: Room = {
@@ -120,7 +120,7 @@ export default function GamePage(): JSX.Element {
                   priority={issue.priority}
                   link={issue.link}
                   score={'-'}
-                  current={currentIssue === index}
+                  current={game.memberVote.currentIssue === index}
                   key={issue.id}
                 />
               ))}
@@ -132,12 +132,12 @@ export default function GamePage(): JSX.Element {
               {isTimer && <Timer min={gameSettings.timeMin} sec={gameSettings.timeSec} start={false} />}
               <div className="issues__control-timer" onClick={handleTimerOver}></div>
               <div className="issues__control-buttons-wrap">
-                {!isRunRound && (
+                {game.memberVote.status === MemberVoteStatus.BEFORE_START  && (
                   <button className="issues__control-button" onClick={handleRunRound}>
                     {isTimer ? 'Run Round' : 'Run'}
                   </button>
                 )}
-                {isTimerOver && (
+                {game.memberVote.status === MemberVoteStatus.FINISHED && (
                   <>
                     <button className="issues__control-button" onClick={handleRestartRound}>
                       {isTimer ? 'Restart Round' : 'Restart'}
@@ -159,7 +159,9 @@ export default function GamePage(): JSX.Element {
         {user.user.role === UserRole.DEALER && game.memberVote.status === MemberVoteStatus.FINISHED && (
           <Statistics values={'15'} percentage={'15.5%'} />
         )}
-        {user.user.role === UserRole.DEALER || user.user.role === UserRole.PLAYER ? <PlayCards></PlayCards> : <></>}
+        {((user.user.role === UserRole.DEALER && game.room.gameSettings.isMasterAsPlayer)
+          || user.user.role === UserRole.PLAYER) && game.memberVote.status === MemberVoteStatus.IN_PROGRESS 
+          ? <PlayCards></PlayCards> : <></>}
       </div>
       <div className="game__score">
         <VoteBlock></VoteBlock>

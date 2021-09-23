@@ -1,7 +1,7 @@
 
 export interface MemberVote {
   status: MemberVoteStatus;
-  currentIssue?: number;
+  currentIssue: number;
   memberVoteResult?: MemberVoteTicket[]; 
   chosenValue?: string;
   timer?: Timer;

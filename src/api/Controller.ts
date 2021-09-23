@@ -186,9 +186,22 @@ export class Controller {
   }
 
   public static updateMemberVote(socket: Socket, roomID: string, memberVote: MemberVote): Promise<Response> {
+    console.log('in');
+    console.log(memberVote);
     return new Promise((resolve) => {
       socket.emit('updateMemberVote', { roomID, memberVote }, (response: string) => {
-        const responseObject: Response = JSON.parse(response);
+        const responseObject: Response = JSON.parse(response);  
+        console.log(responseObject)
+        resolve(responseObject);
+      });
+    });
+  }
+
+  public static startRound(socket: Socket, roomID: string, currentIssue: number): Promise<Response> {
+    return new Promise((resolve) => {
+      socket.emit('startRound', { roomID, currentIssue }, (response: string) => {
+        const responseObject: Response = JSON.parse(response);  
+        console.log(responseObject)
         resolve(responseObject);
       });
     });

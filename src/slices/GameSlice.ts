@@ -43,6 +43,7 @@ const initialState: RoomState = {
   memberVote: {
     status: MemberVoteStatus.BEFORE_START,
     memberVoteResult: [],
+    currentIssue: -1,
     chosenValue: ''
   }
 };
