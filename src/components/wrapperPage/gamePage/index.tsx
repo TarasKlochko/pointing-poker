@@ -30,7 +30,15 @@ export default function GamePage(): JSX.Element {
   const socket = useAppSelector((state) => state.socket.socket);
 
   function handleStopGame() {
-    console.log('Stop Game');
+    const NewRoom: Room = {
+      roomID: game.room.roomID,
+      name: game.room.name,
+      state: GameState.RESULT,
+      issues: issuesArr,
+      gameSettings: game.room.gameSettings,
+      members: game.room.members,
+    };
+    //  Controller.updateRoom(socket, NewRoom);
     dispatch(changeGameState(GameState.RESULT));
   }
 
@@ -99,7 +107,7 @@ export default function GamePage(): JSX.Element {
 
           {user.user.role === UserRole.DEALER && (
             <button className="top__button" onClick={handleStopGame}>
-              Stop Game
+              {currentIssue < game.room.issues.length - 1 ? 'Stop Game' : 'Show Results'}
             </button>
           )}
           {user.user.role === UserRole.PLAYER && (
@@ -132,7 +140,7 @@ export default function GamePage(): JSX.Element {
               {isTimer && <Timer min={gameSettings.timeMin} sec={gameSettings.timeSec} start={false} />}
               <div className="issues__control-timer" onClick={handleTimerOver}></div>
               <div className="issues__control-buttons-wrap">
-                {game.memberVote.status === MemberVoteStatus.BEFORE_START  && (
+                {game.memberVote.status === MemberVoteStatus.BEFORE_START && (
                   <button className="issues__control-button" onClick={handleRunRound}>
                     {isTimer ? 'Run Round' : 'Run'}
                   </button>
@@ -160,7 +168,7 @@ export default function GamePage(): JSX.Element {
           <Statistics values={'15'} percentage={'15.5%'} />
         )}
         {((user.user.role === UserRole.DEALER && game.room.gameSettings.isMasterAsPlayer)
-          || user.user.role === UserRole.PLAYER) && game.memberVote.status === MemberVoteStatus.IN_PROGRESS 
+          || user.user.role === UserRole.PLAYER) && game.memberVote.status === MemberVoteStatus.IN_PROGRESS
           ? <PlayCards></PlayCards> : <></>}
       </div>
       <div className="game__score">

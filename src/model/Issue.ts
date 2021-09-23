@@ -10,5 +10,10 @@ export interface Issue {
   name: string;
   link: string;
   score?: string;
-  statistic?: { value: string; percentage: string }[];
+  statistic?: IssueStatistic[];
+}
+
+export interface IssueStatistic {
+  value: string,
+  percentage: string
 }
