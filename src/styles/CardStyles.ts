@@ -41,6 +41,9 @@ export const useCardsStyles = makeStyles(() => ({
     fontSize: '20px',
     lineHeight: '18px',
     color: '#000000',
+    width: '115px',
+    height: '17px',
+    overflow: 'hidden',
   },
 
   priorityFont: {
