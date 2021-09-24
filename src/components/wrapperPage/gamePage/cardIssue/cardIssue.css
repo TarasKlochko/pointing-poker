@@ -21,16 +21,23 @@
   font-weight: 700;
   font-size: 12px;
   line-height: 14px;
+  margin-bottom: -5px;
 }
 .card-isssue__wrap {
+  position: relative;
+  top: 3px;
   padding-right: 10px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 .card-isssue__text {
+  width: 150px;
+  height: 27px;
   font-weight: 300;
-  font-size: 27px;
-  line-height: 20px;
+  font-size: 25px;
+  line-height: 26px;
+  overflow: hidden;
 }
 .card-isssue__score {
 }
