@@ -102,7 +102,7 @@ export default function GamePage(): JSX.Element {
             <MemberCard user={game.dealer} kind={MemberCardKind.SIMPLE} />
           </div>
           {user.user.role === UserRole.PLAYER && isTimer && (
-            <Timer min={gameSettings.timeMin} sec={gameSettings.timeSec} start={false} />
+            <Timer/>
           )}
 
           {user.user.role === UserRole.DEALER && (
@@ -137,8 +137,7 @@ export default function GamePage(): JSX.Element {
           </div>
           {user.user.role === UserRole.DEALER && (
             <div className="issues__control-wrap">
-              {isTimer && <Timer min={gameSettings.timeMin} sec={gameSettings.timeSec} start={false} />}
-              <div className="issues__control-timer" onClick={handleTimerOver}></div>
+              {isTimer && <Timer/>}
               <div className="issues__control-buttons-wrap">
                 {game.memberVote.status === MemberVoteStatus.BEFORE_START && (
                   <button className="issues__control-button" onClick={handleRunRound}>
