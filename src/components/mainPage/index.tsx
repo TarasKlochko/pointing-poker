@@ -12,6 +12,7 @@ export default function MainPage(): JSX.Element {
   const isPopup = useAppSelector((state) => state.popup.isPopup);
   const [isErrorID, setIsError] = useState(false);
   const id = useAppSelector((state) => state.createGame.id);
+  const isKicked = useAppSelector((state) => state.user.kicked)
 
   const socket = useAppSelector((state) => state.socket.socket);
 
@@ -70,7 +71,7 @@ export default function MainPage(): JSX.Element {
         </button>
       </div>
       {isPopup && <Popup></Popup>}
-      <DeleteInfoPopup />
+      {isKicked && <DeleteInfoPopup />}
     </section>
   );
 }
