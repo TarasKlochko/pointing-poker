@@ -18,7 +18,8 @@ import { User } from '../../../model/User';
 import { changeGameState, setFullData, setMembers, setRoomId } from '../../../slices/GameSlice';
 import { ifKicked, setUser } from '../../../slices/UserSlice';
 import { UserRole } from '../../../model/UserRole';
-import { GameState } from '../../../model/Room';
+import { GameState, Room } from '../../../model/Room';
+import DeleteInfoPopup from '../deleteInfoPopup';
 
 export function Popup(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -34,6 +35,7 @@ export function Popup(): JSX.Element {
   const popupData: PopupData = useAppSelector((state) => state.popup.popupData);
   const socket = useAppSelector((state) => state.socket.socket);
   const [isError, setIsError] = useState(false);
+  const [alreadeCicked, setAlreadeCicked] = useState(false);
 
   const history = useHistory();
 
@@ -91,7 +93,6 @@ export function Popup(): JSX.Element {
       if (isCreateGame) {
         Controller.createRoom(socket, popupData).then((responseObject) => {
           if (responseObject.status === 200) {
-            console.log(responseObject);
             let roomID = '';
             if (responseObject.roomObj?.roomID) {
               roomID = responseObject.roomObj?.roomID;
@@ -112,7 +113,6 @@ export function Popup(): JSX.Element {
         if (room !== user.kickedRoom) {
           Controller.login(socket, popupData, room).then(responseObject => {
             if (responseObject.status === 200) {
-              console.log(responseObject);
               dispatch(isPopupAction(false));
               dispatch(clearPopupAction());
               let roomID = '';
@@ -132,7 +132,7 @@ export function Popup(): JSX.Element {
               console.log('error: ', responseObject);
             }
           });
-        } else console.log('already kicked');
+        } else setAlreadeCicked(true);
       } else {
         history.push(`/game/${room}`);
       }
@@ -148,7 +148,6 @@ export function Popup(): JSX.Element {
   useEffect(() => {
     socket.on("users", (users): void => {
       const usersO: User[] = users;
-      console.log(usersO);
       dispatch(setMembers(usersO));
       dispatch(ifKicked(usersO));
     })

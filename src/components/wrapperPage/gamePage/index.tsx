@@ -15,7 +15,7 @@ import { Controller } from '../../../api/Controller';
 import VoteBlock from './voteBlock/VoteBlock';
 import PlayCards from '../../common/playCard';
 import AdmitRejectNewMember from './admitRejectNewMember';
-import { MemberVote, MemberVoteStatus } from '../../../model/MemberVote';
+import { MemberVoteStatus } from '../../../model/MemberVote';
 
 export default function GamePage(): JSX.Element {
   const game = useAppSelector((state) => state.game);
@@ -34,12 +34,11 @@ export default function GamePage(): JSX.Element {
       roomID: game.room.roomID,
       name: game.room.name,
       state: GameState.RESULT,
-      issues: issuesArr,
+      issues: game.room.issues,
       gameSettings: game.room.gameSettings,
       members: game.room.members,
     };
-    //  Controller.updateRoom(socket, NewRoom);
-    dispatch(changeGameState(GameState.RESULT));
+      Controller.updateRoom(socket, NewRoom);
   }
 
   function handleExit() {
@@ -66,6 +65,7 @@ export default function GamePage(): JSX.Element {
   }
 
   function handleTimerOver() {
+    Controller.saveStat(socket, game.room.roomID);
     setIsTimerOver(!isTimerOver);
   }
 
@@ -102,7 +102,7 @@ export default function GamePage(): JSX.Element {
             <MemberCard user={game.dealer} kind={MemberCardKind.SIMPLE} />
           </div>
           {user.user.role === UserRole.PLAYER && isTimer && (
-            <Timer min={gameSettings.timeMin} sec={gameSettings.timeSec} start={false} />
+            <Timer/>
           )}
 
           {user.user.role === UserRole.DEALER && (
@@ -137,8 +137,7 @@ export default function GamePage(): JSX.Element {
           </div>
           {user.user.role === UserRole.DEALER && (
             <div className="issues__control-wrap">
-              {isTimer && <Timer min={gameSettings.timeMin} sec={gameSettings.timeSec} start={false} />}
-              <div className="issues__control-timer" onClick={handleTimerOver}></div>
+              {isTimer && <Timer/>}
               <div className="issues__control-buttons-wrap">
                 {game.memberVote.status === MemberVoteStatus.BEFORE_START && (
                   <button className="issues__control-button" onClick={handleRunRound}>
