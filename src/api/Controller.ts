@@ -107,8 +107,6 @@ export class Controller {
     return new Promise((resolve) => {
       socket.emit('updateRoom', { room }, (response: string) => {
         const responseObject: Response = JSON.parse(response);
-        console.log('responce')
-        console.log(responseObject);
         resolve(responseObject);
       });
     });
@@ -164,9 +162,6 @@ export class Controller {
 
   public static sendUserVote(socket: Socket, userID: string, value: string ): Promise<Response> {
     return new Promise((resolve) => {
-      console.log('before send');
-      console.log(userID);
-      console.log(value);
       socket.emit('sendUserVote', { userID, value }, (response: string) => {  
         console.log(response);      
         const responseObject: Response = JSON.parse(response);
@@ -186,12 +181,9 @@ export class Controller {
   }
 
   public static updateMemberVote(socket: Socket, roomID: string, memberVote: MemberVote): Promise<Response> {
-    console.log('in');
-    console.log(memberVote);
     return new Promise((resolve) => {
       socket.emit('updateMemberVote', { roomID, memberVote }, (response: string) => {
         const responseObject: Response = JSON.parse(response);  
-        console.log(responseObject)
         resolve(responseObject);
       });
     });
@@ -201,7 +193,6 @@ export class Controller {
     return new Promise((resolve) => {
       socket.emit('startRound', { roomID, currentIssue }, (response: string) => {
         const responseObject: Response = JSON.parse(response);  
-        console.log(responseObject)
         resolve(responseObject);
       });
     });

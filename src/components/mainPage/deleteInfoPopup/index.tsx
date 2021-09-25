@@ -6,7 +6,6 @@ export default function DeleteInfoPopup() {
 
   function handleClose() {
     setIsOpenPopup(false);
-    console.log('Close');
   }
 
   return (

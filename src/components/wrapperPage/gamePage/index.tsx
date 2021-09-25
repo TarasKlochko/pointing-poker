@@ -15,7 +15,7 @@ import { Controller } from '../../../api/Controller';
 import VoteBlock from './voteBlock/VoteBlock';
 import PlayCards from '../../common/playCard';
 import AdmitRejectNewMember from './admitRejectNewMember';
-import { MemberVote, MemberVoteStatus } from '../../../model/MemberVote';
+import { MemberVoteStatus } from '../../../model/MemberVote';
 
 export default function GamePage(): JSX.Element {
   const game = useAppSelector((state) => state.game);
@@ -34,12 +34,11 @@ export default function GamePage(): JSX.Element {
       roomID: game.room.roomID,
       name: game.room.name,
       state: GameState.RESULT,
-      issues: issuesArr,
+      issues: game.room.issues,
       gameSettings: game.room.gameSettings,
       members: game.room.members,
     };
-    //  Controller.updateRoom(socket, NewRoom);
-    dispatch(changeGameState(GameState.RESULT));
+      Controller.updateRoom(socket, NewRoom);
   }
 
   function handleExit() {
@@ -66,6 +65,7 @@ export default function GamePage(): JSX.Element {
   }
 
   function handleTimerOver() {
+    Controller.saveStat(socket, game.room.roomID);
     setIsTimerOver(!isTimerOver);
   }
 
