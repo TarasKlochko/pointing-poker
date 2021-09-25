@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Checker } from '../../../common/checker';
 import './settingsBlock.css';
 import coffee from '../../../../assets/coffee.png';
@@ -15,6 +15,8 @@ import {
   timeMinAction,
   timeSecAction,
 } from './settingBlog.slice';
+import { Controller } from '../../../../api/Controller';
+import { setSettings } from '../../../../slices/GameSlice';
 
 export default function SettingsBlock(): JSX.Element {
   const fibonacci = ['0', '1', '2', '3', '5', '8', '13', '21', '34', '55', '89'];
@@ -30,6 +32,9 @@ export default function SettingsBlock(): JSX.Element {
   const isTimer = useAppSelector((state) => state.gameSettings.isTimer);
   const timeMin = useAppSelector((state) => state.gameSettings.timeMin);
   const timeSec = useAppSelector((state) => state.gameSettings.timeSec);
+  const gameSettings = useAppSelector((state) => state.gameSettings);
+  const room = useAppSelector((state) => state.game.room);
+  const socket = useAppSelector((state) => state.socket.socket);
   const [scopeTipe, setScopeTipe] = useState('');
   const [cardCoverAll, setCardCoverAll] = useState<string[]>([]);
   const [isCustomCardsInput, setIsCustomCardsInput] = useState(false);
@@ -186,6 +191,16 @@ export default function SettingsBlock(): JSX.Element {
   function handleSimbols(event: React.KeyboardEvent<HTMLInputElement>) {
     return ['e', 'E', '+', '-', ',', '.'].includes(event.key) && event.preventDefault();
   }
+
+  useEffect(() => {
+    if(room.gameSettings.isAutoNewPlayer !== isAutoNewPlayer) {
+      Controller.updateGameSettings(socket, room.roomID, gameSettings).then(response => {
+        if(response.status !== 200){
+          console.log(response.message);
+        }
+      })
+    }
+  }, [gameSettings])
 
   return (
     <div className="setting">

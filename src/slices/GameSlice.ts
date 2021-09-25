@@ -70,9 +70,14 @@ export const gameSlice = createSlice({
         if (user.role === UserRole.DEALER) state.dealer = user;
       });
     },
-    setFullData: (state, action: PayloadAction<{room: Room, dealer: User}>): void => {
+    setFullData: (state, action: PayloadAction<{room: Room, dealer?: User, memberVote?: MemberVote}>): void => {
       state.room = action.payload.room;
-      state.dealer = action.payload.dealer;
+      if(action.payload.dealer){
+        state.dealer = action.payload.dealer;
+      }
+      if(action.payload.memberVote){
+        state.memberVote = action.payload.memberVote;
+      }
     },
     addIssue: (state, action: PayloadAction<Issue>): void => {
       state.room.issues.push(action.payload);

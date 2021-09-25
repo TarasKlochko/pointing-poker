@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Controller } from '../../api/Controller';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { MemberVote } from '../../model/MemberVote';
 import { GameState, Room } from '../../model/Room';
 import { User } from '../../model/User';
 import { setFullData, setMembers, setMemberVote, setRoomState } from '../../slices/GameSlice';
@@ -33,9 +34,14 @@ export default function WrapperPage(): JSX.Element {
         Controller.getDataForReload(socket, roomID, userID).then(response => {
           const room: Room = { ...response.roomObj!, members: response.users! };
           const dealer: User = response.dealer!;
-          if(response.status === 200)
-            dispatch(setFullData({room, dealer}))
-          else
+          const memberVote: MemberVote = response.memberVote!;
+          if(response.status === 200){
+            if(memberVote){
+              dispatch(setFullData({room, dealer, memberVote}))
+            } else {
+              dispatch(setFullData({room, dealer}))
+            }
+          }else
             history.push('/');
         })
       }

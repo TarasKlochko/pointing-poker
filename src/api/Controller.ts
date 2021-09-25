@@ -1,4 +1,5 @@
 import { Socket } from 'socket.io-client';
+import { GameSettings } from '../components/wrapperPage/lobby/settingsBlock/settingBlog.slice';
 import { MemberVote } from '../model/MemberVote';
 import { Room } from '../model/Room';
 import { User } from '../model/User';
@@ -13,13 +14,14 @@ export interface PopupData {
 }
 
 export interface Response {
-  roomObj?: Room;
-  message?: string;
+  roomObj: Room;
+  message: string;
   user: User;
   users: User[];
   dealer: User;
   userID: string;
   status: number;
+  memberVote: MemberVote;
 }
 
 export class Controller {
@@ -107,8 +109,15 @@ export class Controller {
     return new Promise((resolve) => {
       socket.emit('updateRoom', { room }, (response: string) => {
         const responseObject: Response = JSON.parse(response);
-        console.log('responce')
-        console.log(responseObject);
+        resolve(responseObject);
+      });
+    });
+  }
+
+  public static updateGameSettings(socket: Socket, roomID: string, gameSettings: GameSettings): Promise<Response> {
+    return new Promise((resolve) => {
+      socket.emit('updateSettings', { roomID, gameSettings }, (response: string) => {
+        const responseObject: Response = JSON.parse(response);
         resolve(responseObject);
       });
     });
@@ -164,13 +173,8 @@ export class Controller {
 
   public static sendUserVote(socket: Socket, userID: string, value: string ): Promise<Response> {
     return new Promise((resolve) => {
-      console.log('before send');
-      console.log(userID);
-      console.log(value);
       socket.emit('sendUserVote', { userID, value }, (response: string) => {  
-        console.log(response);      
         const responseObject: Response = JSON.parse(response);
-        console.log(responseObject);
         resolve(responseObject);
       });
     });
@@ -186,12 +190,9 @@ export class Controller {
   }
 
   public static updateMemberVote(socket: Socket, roomID: string, memberVote: MemberVote): Promise<Response> {
-    console.log('in');
-    console.log(memberVote);
     return new Promise((resolve) => {
       socket.emit('updateMemberVote', { roomID, memberVote }, (response: string) => {
         const responseObject: Response = JSON.parse(response);  
-        console.log(responseObject)
         resolve(responseObject);
       });
     });
@@ -201,7 +202,6 @@ export class Controller {
     return new Promise((resolve) => {
       socket.emit('startRound', { roomID, currentIssue }, (response: string) => {
         const responseObject: Response = JSON.parse(response);  
-        console.log(responseObject)
         resolve(responseObject);
       });
     });

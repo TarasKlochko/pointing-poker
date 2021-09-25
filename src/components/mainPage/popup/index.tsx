@@ -15,10 +15,10 @@ import {
 import { IDGameAction } from '../createGame.slice';
 import { Controller, PopupData } from '../../../api/Controller';
 import { User } from '../../../model/User';
-import { changeGameState, setMembers, setRoomId, setRoomState } from '../../../slices/GameSlice';
+import { changeGameState, setFullData, setMembers, setRoomId } from '../../../slices/GameSlice';
 import { ifKicked, setUser } from '../../../slices/UserSlice';
 import { UserRole } from '../../../model/UserRole';
-import { GameState, Room } from '../../../model/Room';
+import { GameState } from '../../../model/Room';
 
 export function Popup(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -121,6 +121,12 @@ export function Popup(): JSX.Element {
               }
               localStorage.setItem('roomID', roomID);
               createUserState(responseObject.userID, roomID, UserRole.PLAYER)
+              const {memberVote, roomObj} = responseObject;
+              if(memberVote){
+                dispatch(setFullData({memberVote, room: roomObj}))
+              } else {
+                dispatch(setFullData({room: roomObj}))
+              }
               history.push(`/game/${responseObject.roomObj?.roomID}`);
             } else {
               console.log('error: ', responseObject);
