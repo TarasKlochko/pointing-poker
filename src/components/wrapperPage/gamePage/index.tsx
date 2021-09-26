@@ -38,7 +38,7 @@ export default function GamePage(): JSX.Element {
       gameSettings: game.room.gameSettings,
       members: game.room.members,
     };
-      Controller.updateRoom(socket, NewRoom);
+    Controller.updateRoom(socket, NewRoom);
   }
 
   function handleExit() {

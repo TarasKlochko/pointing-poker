@@ -7,7 +7,7 @@ import './scrum-master.css';
 import { useButtonStyles } from '../../../../styles/ButtonStyles';
 import { UserRole } from '../../../../model/UserRole';
 import { useAppDispatch, useAppSelector } from '../../../../app/hooks';
-import { changeGameState, setName, setRoomId, setRoomState, setSettings } from '../../../../slices/GameSlice';
+import { changeGameState, setMemberVote, setName, setRoomId, setRoomState, setSettings } from '../../../../slices/GameSlice';
 import { GameState, Room } from '../../../../model/Room';
 import { Controller } from '../../../../api/Controller';
 import YesNoDialog from '../../../common/common-dialogs/YesNoDialog';
@@ -30,11 +30,6 @@ export default function ScrumMasterBlock(): JSX.Element {
   useEffect(() => {
     socket.on('cancelGame', () => {
       history.push(`/`);
-    });
-    socket.on('updatedRoom', (roomObj) => {
-      console.log(roomObj);
-      console.log('update');
-      dispatch(setRoomState(roomObj));
     });
   }, [socket]);
 

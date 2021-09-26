@@ -206,4 +206,13 @@ export class Controller {
       });
     });
   }
+
+  public static completeUser(socket: Socket, roomID: string, currentIssue: number): Promise<Response> {
+    return new Promise((resolve) => {
+      socket.emit('completeUser', { roomID, currentIssue }, (response: string) => {
+        const responseObject: Response = JSON.parse(response);  
+        resolve(responseObject);
+      });
+    });
+  }
 }

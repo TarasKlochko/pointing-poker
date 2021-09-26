@@ -19,7 +19,7 @@ export interface MemberVoteTicket {
 }
 
 export interface Timer {
-  min: string; 
-  sec: string; 
+  min: number; 
+  sec: number; 
   start: boolean;
 }

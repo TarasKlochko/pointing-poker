@@ -128,7 +128,15 @@ export function Popup(): JSX.Element {
                 dispatch(setFullData({room: roomObj}))
               }
               history.push(`/game/${responseObject.roomObj?.roomID}`);
-            } else {
+            // } else if(responseObject.status === 202) {
+            //   socket.on("getConfirmation", (confirm): void => {
+            //      if(confirm){
+
+            //      } else {
+            //       console.log('Not confirm!');
+            //     // }
+            //   })
+            // } else  {
               console.log('error: ', responseObject);
             }
           });

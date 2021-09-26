@@ -61,8 +61,6 @@ export default function WrapperPage(): JSX.Element {
       dispatch(setMemberVote(memberVote));
     });
     socket.on('updatedRoom', (roomObj) => {
-      console.log(roomObj);
-      console.log('update');
       const {gameSettings, issues, members, name, roomID, state, memberVote} = roomObj;
       const room:Room = {
         gameSettings,
@@ -72,8 +70,8 @@ export default function WrapperPage(): JSX.Element {
         roomID,
         state
       }
-      dispatch(setRoomState(room));
       dispatch(setMemberVote(memberVote));
+      dispatch(setRoomState(room));
     });
   }, [socket]);
 
