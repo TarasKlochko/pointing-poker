@@ -1,30 +1,33 @@
 import React, { useState } from 'react';
 import { Button, Dialog, DialogActions, DialogTitle, DialogContent, DialogContentText } from '@material-ui/core';
 import './admitRejectNewMember.css';
+import { User } from '../../../../model/User';
+import { Controller } from '../../../../api/Controller';
+import { useAppSelector } from '../../../../app/hooks';
 
-export default function AdmitRejectNewMember() {
+interface AdmitRejectNewMemberProps {
+  user: User;
+}
+
+export default function AdmitRejectNewMember(props: AdmitRejectNewMemberProps): JSX.Element {
+  const socket = useAppSelector(state => state.socket.socket);
   const [isOpenPopup, setIsOpenPopup] = useState(true);
-
-  function handleClose() {
-    setIsOpenPopup(false);
-    console.log('Close');
-  }
 
   function handleAdmit() {
     setIsOpenPopup(false);
-    console.log('Admit');
+    Controller.completeUser(socket, props.user.id, true)
   }
 
   function handleReject() {
     setIsOpenPopup(false);
-    console.log('Reject');
+    Controller.completeUser(socket, props.user.id, false)
   }
 
   return (
-    <Dialog open={isOpenPopup} onClose={handleClose} aria-labelledby="form-dialog-title">
+    <Dialog open={isOpenPopup} aria-labelledby="form-dialog-title">
       <DialogTitle id="form-dialog-title">New member</DialogTitle>
       <DialogContent>
-        <DialogContentText>A new member wants to join this game</DialogContentText>
+        <DialogContentText>{`A ${props.user.name} wants to join this game`}</DialogContentText>
       </DialogContent>
       <DialogActions className="dialog-actions">
         <div className="dialog-actions__btn-wrap">

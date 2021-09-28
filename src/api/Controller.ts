@@ -207,9 +207,9 @@ export class Controller {
     });
   }
 
-  public static completeUser(socket: Socket, roomID: string, currentIssue: number): Promise<Response> {
+  public static completeUser(socket: Socket, userID: string, isConfirm: boolean): Promise<Response> {
     return new Promise((resolve) => {
-      socket.emit('completeUser', { roomID, currentIssue }, (response: string) => {
+      socket.emit('completeUser', { userID, isConfirm }, (response: string) => {
         const responseObject: Response = JSON.parse(response);  
         resolve(responseObject);
       });
