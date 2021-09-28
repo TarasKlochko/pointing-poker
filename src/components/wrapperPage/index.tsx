@@ -49,12 +49,16 @@ export default function WrapperPage(): JSX.Element {
         })
       }
     }
+    if(user.user?.role === UserRole.DEALER) {
+      socket.on('confirmUser', (newUser) => {
+        setWaitingList([...waitingList, newUser]);
+      });
+    }
   });
 
   useEffect(() => {
     socket.on("users", (users): void => {
       const usersO: User[] = users;
-      console.log(usersO);
       dispatch(setMembers(usersO));
       dispatch(ifKicked(usersO));
     });
@@ -76,11 +80,6 @@ export default function WrapperPage(): JSX.Element {
       dispatch(setMemberVote(memberVote));
       dispatch(setRoomState(room));
     });
-    if(user.user.role === UserRole.DEALER) {
-      socket.on('confirmUser', (newUser) => {
-        setWaitingList([...waitingList, newUser]);
-      });
-    }
   }, [socket]);
 
   if (user.kicked) history.push(`/`);
