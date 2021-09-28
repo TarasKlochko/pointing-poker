@@ -173,7 +173,6 @@ export default function GamePage(): JSX.Element {
       <div className="game__score">
         <VoteBlock></VoteBlock>
       </div>
-      {user.user.role === UserRole.DEALER && <AdmitRejectNewMember />}
     </section>
   );
 }

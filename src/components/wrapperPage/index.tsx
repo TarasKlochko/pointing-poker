@@ -1,13 +1,15 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Controller } from '../../api/Controller';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { MemberVote } from '../../model/MemberVote';
 import { GameState, Room } from '../../model/Room';
 import { User } from '../../model/User';
+import { UserRole } from '../../model/UserRole';
 import { setFullData, setMembers, setMemberVote, setRoomState } from '../../slices/GameSlice';
 import { setUser, ifKicked } from '../../slices/UserSlice';
 import GamePage from './gamePage';
+import AdmitRejectNewMember from './gamePage/admitRejectNewMember';
 import LobbyPage from './lobby';
 import ResultPage from './resultPage';
 
@@ -16,6 +18,7 @@ export default function WrapperPage(): JSX.Element {
   const game = useAppSelector((state) => state.game);
   const user = useAppSelector((state) => state.user);
   const history = useHistory();
+  const [waitingList, setWaitingList] = useState([] as User[]);
   const socket = useAppSelector(state => state.socket.socket);
 
   useEffect(() => {
@@ -73,6 +76,11 @@ export default function WrapperPage(): JSX.Element {
       dispatch(setMemberVote(memberVote));
       dispatch(setRoomState(room));
     });
+    if(user.user.role === UserRole.DEALER) {
+      socket.on('confirmUser', (newUser) => {
+        setWaitingList([...waitingList, newUser]);
+      });
+    }
   }, [socket]);
 
   if (user.kicked) history.push(`/`);
@@ -93,5 +101,8 @@ export default function WrapperPage(): JSX.Element {
       break;
   }
 
-  return <div>{page}</div>
+  return <div>
+    <>{page}</>
+    {user.user.role === UserRole.DEALER && waitingList.map(elem => <AdmitRejectNewMember key={elem.id} user={elem}/>)}
+  </div>
 }

@@ -13,7 +13,7 @@ import {
   observerAction,
 } from './popupSlice';
 import { IDGameAction } from '../createGame.slice';
-import { Controller, PopupData } from '../../../api/Controller';
+import { Controller, PopupData, Response } from '../../../api/Controller';
 import { User } from '../../../model/User';
 import { changeGameState, setFullData, setMembers, setRoomId } from '../../../slices/GameSlice';
 import { ifKicked, setUser } from '../../../slices/UserSlice';
@@ -128,15 +128,30 @@ export function Popup(): JSX.Element {
                 dispatch(setFullData({room: roomObj}))
               }
               history.push(`/game/${responseObject.roomObj?.roomID}`);
-            // } else if(responseObject.status === 202) {
-            //   socket.on("getConfirmation", (confirm): void => {
-            //      if(confirm){
-
-            //      } else {
-            //       console.log('Not confirm!');
-            //     // }
-            //   })
-            // } else  {
+            } else if(responseObject.status === 202) {
+              socket.on("isConfirm", (response): void => {
+                dispatch(isPopupAction(false));
+                dispatch(clearPopupAction());
+                const {status, ...fields} = JSON.parse(response) as Response;
+                console.log(response);
+                if(status === 200) {
+                  let roomID = '';
+                  if (fields.roomObj.roomID) {
+                    roomID = fields.roomObj.roomID;
+                  }
+                  localStorage.setItem('roomID', roomID);
+                  createUserState(fields.userID, roomID, UserRole.PLAYER)
+                  const {memberVote, roomObj} = fields;
+                  if(memberVote){
+                    dispatch(setFullData({memberVote, room: roomObj}))
+                  } else {
+                    dispatch(setFullData({room: roomObj}))
+                  }
+                } else {
+                  console.log('Not confirm!');
+                }
+              })
+            } else  {
               console.log('error: ', responseObject);
             }
           });
