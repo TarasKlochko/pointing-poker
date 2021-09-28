@@ -7,10 +7,12 @@ import './scrum-master.css';
 import { useButtonStyles } from '../../../../styles/ButtonStyles';
 import { UserRole } from '../../../../model/UserRole';
 import { useAppDispatch, useAppSelector } from '../../../../app/hooks';
-import { changeGameState, setMemberVote, setName, setRoomId, setRoomState, setSettings } from '../../../../slices/GameSlice';
+import { changeGameState, initialState, setFullData, setSettings } from '../../../../slices/GameSlice';
 import { GameState, Room } from '../../../../model/Room';
 import { Controller } from '../../../../api/Controller';
 import YesNoDialog from '../../../common/common-dialogs/YesNoDialog';
+import { resetSettingsAction } from '../settingsBlock/settingBlog.slice';
+import { IDGameAction } from '../../../mainPage/createGame.slice';
 
 export default function ScrumMasterBlock(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -40,9 +42,19 @@ export default function ScrumMasterBlock(): JSX.Element {
   }, [game.room.issues]);
 
   const cancelGame = (): void => {
+    console.log('room delete');
+
     Controller.deleteRoom(socket, roomId).then((response) => {
       if (response.status !== 200) {
-        console.log(response.message);
+        console.log('room deleteee', response.message);
+        dispatch(resetSettingsAction());
+        dispatch(IDGameAction(''));
+        dispatch(setFullData(initialState));
+      } else {
+        console.log('room not delete');
+        dispatch(resetSettingsAction());
+        dispatch(IDGameAction(''));
+        dispatch(setFullData(initialState));
       }
     });
   };

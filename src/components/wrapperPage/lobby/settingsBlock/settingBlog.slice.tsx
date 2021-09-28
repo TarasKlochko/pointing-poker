@@ -62,6 +62,7 @@ export const gameSettingsSlice = createSlice({
     timeSecAction: (state, action: PayloadAction<string>) => {
       state.timeSec = action.payload;
     },
+    resetSettingsAction: () => initialState,
   },
 });
 
@@ -76,5 +77,6 @@ export const {
   isTimerAction,
   timeMinAction,
   timeSecAction,
+  resetSettingsAction,
 } = gameSettingsSlice.actions;
 export default gameSettingsSlice.reducer;

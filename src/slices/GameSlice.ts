@@ -44,8 +44,8 @@ const initialState: RoomState = {
     status: MemberVoteStatus.BEFORE_START,
     memberVoteResult: [],
     currentIssue: -1,
-    chosenValue: ''
-  }
+    chosenValue: '',
+  },
 };
 
 export const gameSlice = createSlice({
@@ -70,12 +70,12 @@ export const gameSlice = createSlice({
         if (user.role === UserRole.DEALER) state.dealer = user;
       });
     },
-    setFullData: (state, action: PayloadAction<{room: Room, dealer?: User, memberVote?: MemberVote}>): void => {
+    setFullData: (state, action: PayloadAction<{ room: Room; dealer?: User; memberVote?: MemberVote }>): void => {
       state.room = action.payload.room;
-      if(action.payload.dealer){
+      if (action.payload.dealer) {
         state.dealer = action.payload.dealer;
       }
-      if(action.payload.memberVote){
+      if (action.payload.memberVote) {
         state.memberVote = action.payload.memberVote;
       }
     },
@@ -127,3 +127,4 @@ export const {
   setMemberVote,
 } = actions;
 
+export { initialState };
