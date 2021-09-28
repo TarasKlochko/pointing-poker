@@ -67,7 +67,7 @@ export const useCardsStyles = makeStyles(() => ({
   },
 
   cardContent: {
-    padding: 0,
+    // padding: 0,
   },
 
   issueCardWrapper: {
