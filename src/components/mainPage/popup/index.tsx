@@ -76,16 +76,18 @@ export function Popup(): JSX.Element {
 
   const createUserState = (userId: string, roomId: string, userRole: string): void => {
     localStorage.setItem('userID', userId);
-    dispatch(setUser({
-      name: $name,
-      surname: $lastName,
-      id: userId,
-      image: avatar,
-      role: userRole,
-      jobPosition: $jobPosition,
-      room: roomId
-    }))
-  }
+    dispatch(
+      setUser({
+        name: $name,
+        surname: $lastName,
+        id: userId,
+        image: avatar,
+        role: userRole,
+        jobPosition: $jobPosition,
+        room: roomId,
+      }),
+    );
+  };
 
   function handleConfirm(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
@@ -111,7 +113,7 @@ export function Popup(): JSX.Element {
         });
       } else if (user.user.id.length === 0) {
         if (room !== user.kickedRoom) {
-          Controller.login(socket, popupData, room).then(responseObject => {
+          Controller.login(socket, popupData, room).then((responseObject) => {
             if (responseObject.status === 200) {
               dispatch(isPopupAction(false));
               dispatch(clearPopupAction());
@@ -120,38 +122,38 @@ export function Popup(): JSX.Element {
                 roomID = responseObject.roomObj?.roomID;
               }
               localStorage.setItem('roomID', roomID);
-              createUserState(responseObject.userID, roomID, UserRole.PLAYER)
-              const {memberVote, roomObj} = responseObject;
-              if(memberVote){
-                dispatch(setFullData({memberVote, room: roomObj}))
+              createUserState(responseObject.userID, roomID, UserRole.PLAYER);
+              const { memberVote, roomObj } = responseObject;
+              if (memberVote) {
+                dispatch(setFullData({ memberVote, room: roomObj }));
               } else {
-                dispatch(setFullData({room: roomObj}))
+                dispatch(setFullData({ room: roomObj }));
               }
               history.push(`/game/${responseObject.roomObj?.roomID}`);
-            } else if(responseObject.status === 202) {
-              socket.on("isConfirm", (response): void => {
+            } else if (responseObject.status === 202) {
+              socket.on('isConfirm', (response): void => {
                 dispatch(isPopupAction(false));
                 dispatch(clearPopupAction());
-                const {status, ...fields} = JSON.parse(response) as Response;
+                const { status, ...fields } = JSON.parse(response) as Response;
                 console.log(response);
-                if(status === 200) {
+                if (status === 200) {
                   let roomID = '';
                   if (fields.roomObj.roomID) {
                     roomID = fields.roomObj.roomID;
                   }
                   localStorage.setItem('roomID', roomID);
-                  createUserState(fields.userID, roomID, UserRole.PLAYER)
-                  const {memberVote, roomObj} = fields;
-                  if(memberVote){
-                    dispatch(setFullData({memberVote, room: roomObj}))
+                  createUserState(fields.userID, roomID, UserRole.PLAYER);
+                  const { memberVote, roomObj } = fields;
+                  if (memberVote) {
+                    dispatch(setFullData({ memberVote, room: roomObj }));
                   } else {
-                    dispatch(setFullData({room: roomObj}))
+                    dispatch(setFullData({ room: roomObj }));
                   }
                 } else {
                   console.log('Not confirm!');
                 }
-              })
-            } else  {
+              });
+            } else {
               console.log('error: ', responseObject);
             }
           });
@@ -169,11 +171,11 @@ export function Popup(): JSX.Element {
   }
 
   useEffect(() => {
-    socket.on("users", (users): void => {
+    socket.on('users', (users): void => {
       const usersO: User[] = users;
       dispatch(setMembers(usersO));
       dispatch(ifKicked(usersO));
-    })
+    });
   }, [socket]);
 
   return (
@@ -229,7 +231,7 @@ export function Popup(): JSX.Element {
               Button
             </label>
           </div>
-          <div className="popup__avatar popup__avatar_name" style={{ background: avatar ? `url(${avatar})` : '' }}>
+          <div className="popup__avatar popup__avatar_name" style={{ backgroundImage: avatar ? `url(${avatar})` : '' }}>
             {avatar ? '' : createAvatarName()}
           </div>
           <div className="popup__btn-wrap">

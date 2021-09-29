@@ -172,7 +172,10 @@ body {
   width: 83px;
   height: 83px;
   border-radius: 50%;
-  background: #60dabf;
+  background-image: #60dabf;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
   box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
   font-family: 'Roboto';
   font-weight: 700;
