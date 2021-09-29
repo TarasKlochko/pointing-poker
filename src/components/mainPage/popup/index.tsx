@@ -149,6 +149,7 @@ export function Popup(): JSX.Element {
                   } else {
                     dispatch(setFullData({ room: roomObj }));
                   }
+                  history.push(`/game/${roomObj.roomID}`);
                 } else {
                   console.log('Not confirm!');
                 }
