@@ -172,7 +172,7 @@ body {
   width: 83px;
   height: 83px;
   border-radius: 50%;
-  background-image: #60dabf;
+  background-image: linear-gradient(#60dabf, #60dabf);
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -188,6 +188,7 @@ body {
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   margin-bottom: 80px;
 }
+
 @media (max-width: 900px) {
   .popup__avatar {
     margin-bottom: calc(50px + 30 * ((100vw - 500px) / 400));
