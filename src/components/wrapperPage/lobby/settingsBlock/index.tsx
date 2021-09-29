@@ -4,7 +4,6 @@ import './settingsBlock.css';
 import coffee from '../../../../assets/coffee.png';
 import { useAppDispatch, useAppSelector } from '../../../../app/hooks';
 import {
-  cardCoverAction,
   cardValuesAction,
   isAutoCardFlippingAction,
   isAutoNewPlayerAction,
@@ -16,7 +15,6 @@ import {
   timeSecAction,
 } from './settingBlog.slice';
 import { Controller } from '../../../../api/Controller';
-import { setSettings } from '../../../../slices/GameSlice';
 
 export default function SettingsBlock(): JSX.Element {
   const fibonacci = ['0', '1', '2', '3', '5', '8', '13', '21', '34', '55', '89'];
@@ -25,7 +23,6 @@ export default function SettingsBlock(): JSX.Element {
   const isMasterAsPlayer = useAppSelector((state) => state.gameSettings.isMasterAsPlayer);
   const cardValues = useAppSelector((state) => state.gameSettings.cardValues);
   const scopeTipeShort = useAppSelector((state) => state.gameSettings.scopeTipeShort);
-  const cardCover = useAppSelector((state) => state.gameSettings.cardCover);
   const isAutoNewPlayer = useAppSelector((state) => state.gameSettings.isAutoNewPlayer);
   const isAutoCardFlipping = useAppSelector((state) => state.gameSettings.isAutoCardFlipping);
   const isChangingCard = useAppSelector((state) => state.gameSettings.isChangingCard);
@@ -36,7 +33,6 @@ export default function SettingsBlock(): JSX.Element {
   const room = useAppSelector((state) => state.game.room);
   const socket = useAppSelector((state) => state.socket.socket);
   const [scopeTipe, setScopeTipe] = useState('');
-  const [cardCoverAll, setCardCoverAll] = useState<string[]>([]);
   const [isCustomCardsInput, setIsCustomCardsInput] = useState(false);
   const [cardValuesCustom, setCardValuesCustom] = useState<string[]>([]);
   const [isChangeButton, setIsChangeButton] = useState(false);
@@ -96,33 +92,6 @@ export default function SettingsBlock(): JSX.Element {
     }
     if (timeSec.length === 1) {
       dispatch(timeSecAction(`0${timeSec}`));
-    }
-  }
-
-  function handleAddCover(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event?.currentTarget?.files![0] as File;
-
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setCardCoverAll((prevState) => [...prevState, reader.result as string]);
-      };
-      reader.readAsDataURL(file);
-    }
-  }
-
-  function handleCover(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
-    const cardCoverEl = event.currentTarget;
-    const allCardCoverEl = document.querySelectorAll('.setting__card-cover');
-    allCardCoverEl.forEach((elem) => elem.classList.remove('setting__card-cover_active'));
-    cardCoverEl.classList.add('setting__card-cover_active');
-    const cover = getComputedStyle(cardCoverEl).backgroundImage;
-
-    if (/backSides/.test(cover)) {
-      const coverName = cover.split('backSides')[1].split('.')[0];
-      dispatch(cardCoverAction(coverName));
-    } else {
-      dispatch(cardCoverAction(cover));
     }
   }
 
@@ -193,14 +162,14 @@ export default function SettingsBlock(): JSX.Element {
   }
 
   useEffect(() => {
-    if(room.gameSettings.isAutoNewPlayer !== isAutoNewPlayer) {
-      Controller.updateGameSettings(socket, room.roomID, gameSettings).then(response => {
-        if(response.status !== 200){
+    if (room.gameSettings.isAutoNewPlayer !== isAutoNewPlayer) {
+      Controller.updateGameSettings(socket, room.roomID, gameSettings).then((response) => {
+        if (response.status !== 200) {
           console.log(response.message);
         }
-      })
+      });
     }
-  }, [gameSettings])
+  }, [gameSettings]);
 
   return (
     <div className="setting">
@@ -266,44 +235,6 @@ export default function SettingsBlock(): JSX.Element {
           </div>
         </li>
         <li className="setting__item setting__item_card">
-          <h3 className="setting__item-title">Select cover:</h3>
-          <div className="setting-card-wrap">
-            <div
-              className="setting__card-cover setting__card-cover_1 setting__card-cover_active"
-              data-name="backSides5"
-              onClick={(event) => handleCover(event)}
-            ></div>
-            <div
-              className="setting__card-cover setting__card-cover_2"
-              data-name="backSides13"
-              onClick={(event) => handleCover(event)}
-            ></div>
-            <div
-              className="setting__card-cover setting__card-cover_3"
-              data-name="backSides17"
-              onClick={(event) => handleCover(event)}
-            ></div>
-            {cardCoverAll &&
-              cardCoverAll.map((el, index) => (
-                <div
-                  className="setting__card-cover"
-                  key={index}
-                  style={{ backgroundImage: `url(${el})` }}
-                  onClick={(event) => handleCover(event)}
-                ></div>
-              ))}
-            <label className="setting__card-cover setting__card-cover_label" htmlFor="add-card">
-              <input
-                type="file"
-                id="add-card"
-                className="setting__card-cover setting__card-cover_add"
-                onChange={handleAddCover}
-              />
-              Add new cover
-            </label>
-          </div>
-        </li>
-        <li className="setting__item setting__item_card">
           <div className="setting__card-value-select-wrap">
             <h3 className="setting__item-title">Add card values:</h3>
             <select className="setting__card-value-select" onChange={(event) => hanleSelectValue(event)}>
@@ -352,11 +283,13 @@ export default function SettingsBlock(): JSX.Element {
             {cardValues &&
               cardValues.map((el, index) => (
                 <div className="setting__card-value" key={index}>
-                  <span className="setting__card-value-type">{el === 'coffee' || el === '?'
-                    || el === '∞' ? '' : scopeTipeShort}</span>
+                  <span className="setting__card-value-type">
+                    {el === 'coffee' || el === '?' || el === '∞' ? '' : scopeTipeShort}
+                  </span>
                   {el === 'coffee' ? <img src={coffee} alt="df" className="setting__card-value-img" /> : el}
-                  <span className="setting__card-value-type">{el === 'coffee' || el === '?'
-                    || el === '∞' ? '' : scopeTipeShort}</span>
+                  <span className="setting__card-value-type">
+                    {el === 'coffee' || el === '?' || el === '∞' ? '' : scopeTipeShort}
+                  </span>
                 </div>
               ))}
           </div>

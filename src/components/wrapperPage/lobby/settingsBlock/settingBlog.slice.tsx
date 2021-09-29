@@ -4,7 +4,6 @@ export type GameSettings = {
   isMasterAsPlayer: boolean;
   cardValues: string[];
   scopeTipeShort: string;
-  cardCover: string;
   isAutoNewPlayer: boolean;
   isAutoCardFlipping: boolean;
   isChangingCard: boolean;
@@ -19,7 +18,6 @@ const initialState: GameSettings = {
   isMasterAsPlayer: true,
   cardValues: fibonacci,
   scopeTipeShort: '',
-  cardCover: '5',
   isAutoNewPlayer: true,
   isAutoCardFlipping: true,
   isChangingCard: false,
@@ -40,9 +38,6 @@ export const gameSettingsSlice = createSlice({
     },
     scopeTipeShortAction: (state, action: PayloadAction<string>) => {
       state.scopeTipeShort = action.payload;
-    },
-    cardCoverAction: (state, action: PayloadAction<string>) => {
-      state.cardCover = action.payload;
     },
     isAutoNewPlayerAction: (state, action: PayloadAction<boolean>) => {
       state.isAutoNewPlayer = action.payload;
@@ -70,7 +65,6 @@ export const {
   isMasterAsPlayerAction,
   cardValuesAction,
   scopeTipeShortAction,
-  cardCoverAction,
   isAutoNewPlayerAction,
   isAutoCardFlippingAction,
   isChangingCardAction,
