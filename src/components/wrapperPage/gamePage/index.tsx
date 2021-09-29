@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { MemberCardKind } from '../../../model/MemberCardKind';
 import { GameState, Room } from '../../../model/Room';
-import { addIssue, changeGameState, setMemberVote, upDateIssue } from '../../../slices/GameSlice';
+import { upDateIssue } from '../../../slices/GameSlice';
 import MemberCard from '../../common/memberCard';
 import CardIssue from './cardIssue';
 import './gamePage.css';
@@ -14,7 +14,6 @@ import { Issue, IssueStatistic } from '../../../model/Issue';
 import { Controller } from '../../../api/Controller';
 import VoteBlock from './voteBlock/VoteBlock';
 import PlayCards from '../../common/playCard';
-import AdmitRejectNewMember from './admitRejectNewMember';
 import { MemberVoteStatus } from '../../../model/MemberVote';
 
 export default function GamePage(): JSX.Element {

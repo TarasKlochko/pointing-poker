@@ -1,5 +1,6 @@
 import { Socket } from 'socket.io-client';
 import { GameSettings } from '../components/wrapperPage/lobby/settingsBlock/settingBlog.slice';
+import { Issue } from '../model/Issue';
 import { MemberVote } from '../model/MemberVote';
 import { Room } from '../model/Room';
 import { User } from '../model/User';
@@ -117,6 +118,15 @@ export class Controller {
   public static updateGameSettings(socket: Socket, roomID: string, gameSettings: GameSettings): Promise<Response> {
     return new Promise((resolve) => {
       socket.emit('updateSettings', { roomID, gameSettings }, (response: string) => {
+        const responseObject: Response = JSON.parse(response);
+        resolve(responseObject);
+      });
+    });
+  }
+
+  public static updateIssues(socket: Socket, roomID: string, issues: Issue[]): Promise<Response> {
+    return new Promise((resolve) => {
+      socket.emit('updateIssues', { roomID, issues }, (response: string) => {
         const responseObject: Response = JSON.parse(response);
         resolve(responseObject);
       });

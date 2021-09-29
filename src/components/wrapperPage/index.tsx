@@ -100,8 +100,11 @@ export default function WrapperPage(): JSX.Element {
       break;
   }
 
-  return <div>
-    <>{page}</>
-    {user.user.role === UserRole.DEALER && waitingList.map(elem => <AdmitRejectNewMember key={elem.id} user={elem}/>)}
-  </div>
+  return (
+    <div>
+      <>{page}</>
+      {user.user.role === UserRole.DEALER &&
+        waitingList.map(elem => <AdmitRejectNewMember key={elem.id} user={elem} setWaitingList={setWaitingList} />)}
+    </div>
+  );
 }

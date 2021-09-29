@@ -7,20 +7,33 @@ import { useAppSelector } from '../../../../app/hooks';
 
 interface AdmitRejectNewMemberProps {
   user: User;
+  setWaitingList: React.Dispatch<React.SetStateAction<User[]>>;
 }
 
 export default function AdmitRejectNewMember(props: AdmitRejectNewMemberProps): JSX.Element {
   const socket = useAppSelector(state => state.socket.socket);
   const [isOpenPopup, setIsOpenPopup] = useState(true);
 
+  function deleteUserFromWaiting() {
+    props.setWaitingList(state => {
+      const index =  state.findIndex(currentUser => currentUser.id === props.user.id);
+      if (index !== -1) {
+        state.splice(index, 1);
+      }
+      return state;
+    });
+  };
+
   function handleAdmit() {
     setIsOpenPopup(false);
-    Controller.completeUser(socket, props.user.id, true)
+    Controller.completeUser(socket, props.user.id, true);
+    deleteUserFromWaiting();
   }
 
   function handleReject() {
     setIsOpenPopup(false);
-    Controller.completeUser(socket, props.user.id, false)
+    Controller.completeUser(socket, props.user.id, false);
+    deleteUserFromWaiting();
   }
 
   return (
