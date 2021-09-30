@@ -18,7 +18,7 @@
 }
 
 .main {
-  flex: 0 0 60%;
+  flex: 1 0 60%;
   padding: 15px;
 }
 
@@ -43,11 +43,18 @@
 }
 
 .top {
-  width: 700px;
+  max-width: 700px;
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
   column-gap: 15px;
+  row-gap: 15px;
+}
+
+@media (max-width: 799px) {
+  .top {
+    flex-wrap: wrap;
+  }
 }
 
 .top__master-wrap {
@@ -82,7 +89,17 @@
 .main__central-wrap {
   display: flex;
   column-gap: 35px;
-  row-gap: 35px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 730px) {
+  .main__central-wrap {
+    column-gap: 15px;
+  }
+}
+
+.main__central-wrap_dealer {
+  flex-wrap: nowrap;
 }
 
 .main__issues {
@@ -125,6 +142,13 @@
   column-gap: 15px;
 }
 
+@media (max-width: 799px) {
+  .issues__control-buttons-wrap {
+    flex-wrap: wrap;
+    row-gap: 15px;
+  }
+}
+
 .issues__control-button {
   width: 189px;
   height: 47px;
@@ -165,6 +189,7 @@
   justify-content: flex-start;
   column-gap: 10px;
   row-gap: 10px;
+  flex-wrap: wrap;
 }
 
 .statistic__card-wrap {

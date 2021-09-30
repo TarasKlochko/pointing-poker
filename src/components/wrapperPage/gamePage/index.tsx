@@ -143,7 +143,11 @@ export default function GamePage(): JSX.Element {
           )}
         </div>
 
-        <div className="main__central-wrap">
+        <div
+          className={
+            user.user.role === UserRole.DEALER ? 'main__central-wrap main__central-wrap_dealer' : 'main__central-wrap'
+          }
+        >
           <div className="main__issues issues">
             <h2 className="issuses__title">Issues:</h2>
 
