@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { MemberCardKind } from '../../../model/MemberCardKind';
 import { GameState, Room } from '../../../model/Room';
@@ -25,7 +28,7 @@ export default function GamePage(): JSX.Element {
   const user = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
   const socket = useAppSelector((state) => state.socket.socket);
-
+  const matches = useMediaQuery('(min-width:600px)');
   function handleStopGame() {
     const NewRoom: Room = {
       roomID: game.room.roomID,
@@ -115,6 +118,11 @@ export default function GamePage(): JSX.Element {
 
     return maxPerCentValues.sort().slice(-1)[0];
   }
+  const [scoreShow, setScoreShow] = useState(true);
+
+  function handleScoreBtn() {
+    setScoreShow(!scoreShow);
+  }
 
   return (
     <section className="game">
@@ -141,7 +149,11 @@ export default function GamePage(): JSX.Element {
           )}
         </div>
 
-        <div className="main__central-wrap">
+        <div
+          className={
+            user.user.role === UserRole.DEALER ? 'main__central-wrap main__central-wrap_dealer' : 'main__central-wrap'
+          }
+        >
           <div className="main__issues issues">
             <h2 className="issuses__title">Issues:</h2>
 
@@ -216,8 +228,14 @@ export default function GamePage(): JSX.Element {
           <></>
         )}
       </div>
-      <div className="game__score">
-        <VoteBlock></VoteBlock>
+      <div className={scoreShow ? 'game__score' : 'game__score game__score_hide'}>
+        <div
+          className={scoreShow ? 'game__score-btn game__score-btn_show' : 'game__score-btn game__score-btn_hide'}
+          onClick={handleScoreBtn}
+        ></div>
+        <div className="game__score-wrap">
+          <VoteBlock></VoteBlock>
+        </div>
       </div>
     </section>
   );
