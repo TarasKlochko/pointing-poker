@@ -122,10 +122,12 @@ export function Popup(): JSX.Element {
                 roomID = responseObject.roomObj?.roomID;
               }
               localStorage.setItem('roomID', roomID);
-              createUserState(responseObject.userID, roomID, UserRole.PLAYER);
-              const { memberVote, roomObj } = responseObject;
-              if (memberVote) {
-                dispatch(setFullData({ memberVote, room: roomObj }));
+              createUserState(responseObject.userID, roomID, UserRole.PLAYER)
+              const {memberVote, roomObj} = responseObject;
+              console.log('check vote');
+              console.log(memberVote);
+              if(memberVote){
+                dispatch(setFullData({memberVote, room: roomObj}))
               } else {
                 dispatch(setFullData({ room: roomObj }));
               }

@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import './issue-dialog.css';
 import { Issue, IssuePriority } from '../../../model/Issue';
 import { useButtonStyles } from '../../../styles/ButtonStyles';
+import { useAppSelector } from '../../../app/hooks';
 
 export interface IssueDialogProps {
   open: boolean;
@@ -13,6 +14,7 @@ export interface IssueDialogProps {
 
 export default function IssueDialog(props: IssueDialogProps): JSX.Element {
   const classes = useButtonStyles();
+  const issues = useAppSelector((state) => state.game.room.issues);
 
   let name: string;
   let link: string;
@@ -44,7 +46,7 @@ export default function IssueDialog(props: IssueDialogProps): JSX.Element {
   const handleClose = () => {
     if ($name.length > 0) {
       const issue = {
-        id: $id,
+        id: `${issues.length+ 1}`,
         priority: $priority,
         name: $name,
         link: $link,

@@ -44,7 +44,12 @@ const initialState: RoomState = {
     memberVoteResult: [],
     currentIssue: -1,
     chosenValue: '',
-  },
+    timer: {
+      min: 0,
+      sec: 0,
+      start: false
+    }
+  }
 };
 
 export const gameSlice = createSlice({

@@ -66,6 +66,10 @@ export default function GamePage(): JSX.Element {
     setIsTimerOver(!isTimerOver);
   }
 
+  const stopRound = () => {
+    Controller.saveStat(socket, game.room.roomID);
+  }
+
   function handleCreateIssue(issue: Issue) {
     const NewRoom: Room = {
       roomID: game.room.roomID,
@@ -121,7 +125,9 @@ export default function GamePage(): JSX.Element {
             <h3 className="top__master-title">Scrum master:</h3>
             <MemberCard user={game.dealer} kind={MemberCardKind.SIMPLE} />
           </div>
-          {user.user.role === UserRole.PLAYER && isTimer && <Timer />}
+          {user.user.role === UserRole.PLAYER && isTimer && game.memberVote.timer && (
+            <Timer />
+          )}
 
           {user.user.role === UserRole.DEALER && (
             <button className="top__button" onClick={handleStopGame}>
@@ -165,8 +171,16 @@ export default function GamePage(): JSX.Element {
           </div>
           {user.user.role === UserRole.DEALER && (
             <div className="issues__control-wrap">
-              {isTimer && <Timer />}
+              {isTimer && game.memberVote.timer && <Timer />}
               <div className="issues__control-buttons-wrap">
+                {
+                  !isTimer && !game.room.gameSettings.isAutoCardFlipping &&
+                  game.memberVote.status === MemberVoteStatus.IN_PROGRESS && (
+                    <button className="issues__control-button" onClick={stopRound}>
+                      Stop Round
+                    </button>
+                  )
+                }
                 {game.memberVote.status === MemberVoteStatus.BEFORE_START && (
                   <button className="issues__control-button" onClick={handleRunRound}>
                     {isTimer ? 'Run Round' : 'Run'}
@@ -196,7 +210,7 @@ export default function GamePage(): JSX.Element {
         )}
         {((user.user.role === UserRole.DEALER && game.room.gameSettings.isMasterAsPlayer) ||
           user.user.role === UserRole.PLAYER) &&
-        game.memberVote.status === MemberVoteStatus.IN_PROGRESS ? (
+          game.memberVote.status === MemberVoteStatus.IN_PROGRESS ? (
           <PlayCards></PlayCards>
         ) : (
           <></>

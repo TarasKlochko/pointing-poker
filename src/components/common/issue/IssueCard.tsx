@@ -8,18 +8,23 @@ import { ReactComponent as EditIcon } from '../../../assets/pencil.svg';
 import './issue-common.css';
 import IssueDialog from '../issueDialog/IssueDialog';
 import YesNoDialog from '../common-dialogs/YesNoDialog';
-import { useAppDispatch } from '../../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { removeIssue, upDateIssue } from '../../../slices/GameSlice';
+import { Controller } from '../../../api/Controller';
 
 export interface IssueCardProps {
   issue: Issue;
   userRole: UserRole;
+  deleteIssueHandler:(issues: Issue[]) => void;
 }
 
 export default function IssueeCard(props: IssueCardProps): JSX.Element {
   const dispatch = useAppDispatch();
   const [open, setOpen] = React.useState(false);
   const [deleteOpen, setDeleteOpen] = React.useState(false);
+  const issues = useAppSelector((state) => state.game.room.issues);
+  const room = useAppSelector((state) => state.game.room);
+  const socket = useAppSelector((state) => state.socket.socket);
 
   const deleteContent = `Do you realy want to delete issue: ${props.issue.name} ?`;
 
@@ -46,9 +51,17 @@ export default function IssueeCard(props: IssueCardProps): JSX.Element {
 
   const deleteDialogYesHandler = () => {
     setDeleteOpen(false);
-    dispatch(removeIssue(props.issue));
+    const issues1: Issue[] = [];
+    issues.forEach((issue, index) => {
+      if (props.issue.id !== issue.id) {
+        issues1.push(issue);
+      }
+    });
+    props.deleteIssueHandler(issues1);
+    //  dispatch(removeIssue(props.issue));
   };
 
+  
   const deleteDialogNoHandler = () => {
     setDeleteOpen(false);
   };

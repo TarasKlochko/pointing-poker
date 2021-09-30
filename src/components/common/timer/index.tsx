@@ -6,8 +6,8 @@ import './timer.css';
 export default function Timer(): JSX.Element {
   const settings = useAppSelector((state) => state.game.room.gameSettings);
   const timer = useAppSelector((state) => state.game.memberVote.timer);
-  const [minutes, setMinutes] = useState(timer ? timer!.min : parseInt(settings.timeMin, 10));
-  const [seconds, setSeconds] = useState(timer ? timer!.sec : parseInt(settings.timeSec, 10));
+  const [minutes, setMinutes] = useState(timer.min);
+  const [seconds, setSeconds] = useState(timer.sec);
   const voteStatus = useAppSelector((state) => state.game.memberVote.status);
 
 
@@ -35,3 +35,50 @@ export default function Timer(): JSX.Element {
     </div>
   );
 }
+
+
+
+
+// import React, { useEffect, useState } from 'react';
+// import { useAppSelector } from '../../../app/hooks';
+// import { MemberVoteStatus } from '../../../model/MemberVote';
+// import './timer.css';
+
+// export interface TimerProps {
+//   min: string,
+//   sec: string
+// }
+
+// export default function Timer(props: TimerProps): JSX.Element {
+//   const settings = useAppSelector((state) => state.game.room.gameSettings);
+//   const game = useAppSelector((state) => state.game);
+
+//   const [minutes, setMinutes] = useState(game.memberVote.timer.min);
+//   const [seconds, setSeconds] = useState(game.memberVote.timer.sec);
+//   const voteStatus = useAppSelector((state) => state.game.memberVote.status);
+
+//   useEffect(() => {
+//     if (voteStatus === MemberVoteStatus.IN_PROGRESS) {
+//       setTimeout(() => {
+//         if (seconds !== '00') {
+//           setSeconds((parseInt(seconds, 10) - 1).toString().padStart(2, '0'));
+//         } else if (seconds === '00' && minutes !== '0') {
+//           setMinutes((parseInt(minutes, 10) - 1).toString());
+//           setSeconds('59');
+//         }      
+//       }, 1000);}
+//       else {
+//         setMinutes(settings.timeMin);
+//         setSeconds(settings.timeSec);
+//       }
+
+//   }, [voteStatus, seconds]);
+
+//   return (
+//     <div className="timer">
+//       <span className="timer__min">{minutes}</span>
+//       <span className="timer__sep">:</span>
+//       <span className="timer__sec">{seconds}</span>
+//     </div>
+//   );
+//    }

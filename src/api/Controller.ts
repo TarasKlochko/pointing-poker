@@ -125,6 +125,7 @@ export class Controller {
   }
 
   public static updateIssues(socket: Socket, roomID: string, issues: Issue[]): Promise<Response> {
+    console.log('send');
     return new Promise((resolve) => {
       socket.emit('updateIssues', { roomID, issues }, (response: string) => {
         const responseObject: Response = JSON.parse(response);

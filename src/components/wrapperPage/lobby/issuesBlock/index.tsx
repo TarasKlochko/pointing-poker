@@ -18,9 +18,23 @@ export default function IssuesBlock(): JSX.Element {
   const [issues, setIssues] = useState(room.issues);
   const issueItems: JSX.Element[] = [];
 
+  const deleteDialogYesHandler = (issuesProps: Issue[]) => {
+    // setDeleteOpen(false);
+    // const issues1: Issue[] = [];
+    // issues.forEach((issue, index) => {
+    //   if (props.issue.id !== issue.id) {
+    //     issues1.push(issue);
+    //   }
+    // });
+    Controller.updateIssues(socket, room.roomID, issuesProps);
+    //  dispatch(removeIssue(props.issue));
+  };
+
   for (let i = 0; i < issues.length; i++) {
-    issueItems.push(<IssueeCard key={i} issue={issues[i]} userRole={UserRole.DEALER}></IssueeCard>);
+    issueItems.push(<IssueeCard deleteIssueHandler={deleteDialogYesHandler} key={i} issue={issues[i]} userRole={UserRole.DEALER}></IssueeCard>);
   }
+
+
 
   const createIssueHandler = (issue: Issue) => {
     setIssues([...issues, issue]);
