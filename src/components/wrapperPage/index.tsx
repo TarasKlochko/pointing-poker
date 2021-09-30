@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import ChatIcon from '@material-ui/icons/Chat';
+import { IconButton } from '@material-ui/core';
 import { Controller } from '../../api/Controller';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { MemberVote } from '../../model/MemberVote';
@@ -12,6 +14,9 @@ import GamePage from './gamePage';
 import AdmitRejectNewMember from './gamePage/admitRejectNewMember';
 import LobbyPage from './lobby';
 import ResultPage from './resultPage';
+import Chat from '../common/chat';
+import './wrapperPage.css';
+
 
 export default function WrapperPage(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -19,7 +24,12 @@ export default function WrapperPage(): JSX.Element {
   const user = useAppSelector((state) => state.user);
   const history = useHistory();
   const [waitingList, setWaitingList] = useState([] as User[]);
+  const [isChatOpend, setIsChatOpend] = useState(false);
   const socket = useAppSelector(state => state.socket.socket);
+
+  const changeChatViewHandler = () => {
+    setIsChatOpend(!isChatOpend);
+  }
 
   useEffect(() => {
     const userID = localStorage.getItem('userID');
@@ -100,8 +110,19 @@ export default function WrapperPage(): JSX.Element {
       break;
   }
 
-  return <div>
-    <>{page}</>
-    {user.user.role === UserRole.DEALER && waitingList.map(elem => <AdmitRejectNewMember key={elem.id} user={elem}/>)}
-  </div>
+  return (
+    <div className="page-wrapper">
+      <>
+        {page}
+        <div className="chat-view-btn-container">
+          {isChatOpend && <Chat />}
+          <IconButton size="medium" className="chat-view-btn" onClick={changeChatViewHandler}>
+            <ChatIcon color="primary" fontSize="large"/>
+          </IconButton>
+        </div>
+      </>
+      {user.user.role === UserRole.DEALER &&
+        waitingList.map(elem => <AdmitRejectNewMember key={elem.id} user={elem} setWaitingList={setWaitingList} />)}
+    </div>
+  );
 }
