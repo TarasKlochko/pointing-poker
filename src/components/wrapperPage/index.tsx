@@ -14,17 +14,18 @@ import GamePage from './gamePage';
 import AdmitRejectNewMember from './gamePage/admitRejectNewMember';
 import LobbyPage from './lobby';
 import ResultPage from './resultPage';
-import Chat from '../common/chat';
+import Chat, { Message } from '../common/chat';
 import './wrapperPage.css';
 
 
 export default function WrapperPage(): JSX.Element {
   const dispatch = useAppDispatch();
   const game = useAppSelector((state) => state.game);
-  const user = useAppSelector((state) => state.user);
+  const currentUser = useAppSelector((state) => state.user);
   const history = useHistory();
   const [waitingList, setWaitingList] = useState([] as User[]);
   const [isChatOpend, setIsChatOpend] = useState(false);
+  const [messages, setMessages] = useState([] as Message[]);
   const socket = useAppSelector(state => state.socket.socket);
 
   const changeChatViewHandler = () => {
@@ -35,7 +36,7 @@ export default function WrapperPage(): JSX.Element {
     const userID = localStorage.getItem('userID');
     const roomID = localStorage.getItem('roomID');
     if (userID !== null && roomID !== null) {
-      if (user.user.id.length === 0) {
+      if (currentUser.user.id.length === 0) {
         Controller.getDataForReload(socket, roomID, userID).then(response => {
           if(response.status === 200) {
             dispatch(setUser(response.user!));
@@ -58,11 +59,6 @@ export default function WrapperPage(): JSX.Element {
             history.push('/');
         })
       }
-    }
-    if(user.user?.role === UserRole.DEALER) {
-      socket.on('confirmUser', (newUser) => {
-        setWaitingList([...waitingList, newUser]);
-      });
     }
   });
 
@@ -90,9 +86,19 @@ export default function WrapperPage(): JSX.Element {
       dispatch(setMemberVote(memberVote));
       dispatch(setRoomState(room));
     });
+    socket.on('message', ({ user, message }) => {
+      const newMessage = { user, message, id: Date.now() } as Message;
+      setMessages(state => [...state, newMessage]);
+    });
+    if(currentUser.user.role === UserRole.DEALER) {
+      console.log('a');
+      socket.on('confirmUser', (newUser) => {
+        setWaitingList(state => [...state, newUser]);
+      });
+    }
   }, [socket]);
 
-  if (user.kicked) history.push(`/`);
+  if (currentUser.kicked) history.push(`/`);
 
   let page: JSX.Element = <></>;
   switch (game.room.state) {
@@ -115,13 +121,13 @@ export default function WrapperPage(): JSX.Element {
       <>
         {page}
         <div className="chat-view-btn-container">
-          {isChatOpend && <Chat />}
+          {isChatOpend && <Chat messages={messages} />}
           <IconButton size="medium" className="chat-view-btn" onClick={changeChatViewHandler}>
             <ChatIcon color="primary" fontSize="large"/>
           </IconButton>
         </div>
       </>
-      {user.user.role === UserRole.DEALER &&
+      {currentUser.user.role === UserRole.DEALER &&
         waitingList.map(elem => <AdmitRejectNewMember key={elem.id} user={elem} setWaitingList={setWaitingList} />)}
     </div>
   );

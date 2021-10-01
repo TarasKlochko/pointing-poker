@@ -226,4 +226,8 @@ export class Controller {
       });
     });
   }
+
+  public static sendMessage(socket: Socket, userID: string, message: string): void {
+    socket.emit('sendMessage', { message, userID })
+  }
 }

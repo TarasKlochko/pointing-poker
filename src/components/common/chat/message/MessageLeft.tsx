@@ -12,7 +12,7 @@ export function MessageLeft(props: MessageProps): JSX.Element {
   return (
     <div>
       <Avatar alt={props.user.name} src={props.user.image}></Avatar>
-      <div>
+      <div className="message-row">
         <div className="display-name">{props.user.name}</div>
         <div className="message-blue">
           <div>
