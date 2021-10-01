@@ -77,8 +77,8 @@
 }
 
 .member__simple-image-wrapper {
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
 }
 
 .member__chat-image-wrapper {
@@ -95,8 +95,8 @@
 
 .member__simple-user-kick-button,
 .member__chat-user-kick-button {
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background-color: rgba(248, 241, 241, 0);
   -webkit-transition: all 0.2s;
@@ -158,8 +158,13 @@
   border-radius: 50%;
 }
 
-/* @media (max-width: 950px) {
-  .simple-member-wrapper {
-    margin: auto;
-  }
-} */
+.member-info-block-wrap {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.member__simple-user-logo {
+  height: 100%;
+}
