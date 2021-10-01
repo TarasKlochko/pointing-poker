@@ -102,11 +102,18 @@ export default function GamePage(): JSX.Element {
     });
     statistic?.map((obj) => (Number(obj.percentage) === maxPerCent ? maxPerCentValues.push(obj.value) : ''));
     const isMaxPerCentValuesStrings = maxPerCentValues.some((el) => Number.isNaN(Number(el)));
+    console.log(isMaxPerCentValuesStrings);
 
     if (!isMaxPerCentValuesStrings) {
-      return (maxPerCentValues.reduce((res, num) => res + Number(num), 0) / maxPerCentValues.length)
-        .toFixed(2)
-        .toString();
+      let perCentValues = maxPerCentValues.reduce((res, num) => res + Number(num), 0) / maxPerCentValues.length;
+      const isNotIntegerPerCentValues = /\./.test(perCentValues.toString());
+      if (isNotIntegerPerCentValues) {
+        const numbersAfterPoint = perCentValues.toString().split('.')[1].length;
+        if (numbersAfterPoint > 2) {
+          perCentValues = Number(perCentValues.toFixed(2));
+        }
+      }
+      return perCentValues.toString();
     }
     if (maxPerCentValues.some((el) => el === 'coffee')) {
       return 'Coffee';
@@ -120,6 +127,7 @@ export default function GamePage(): JSX.Element {
 
     return maxPerCentValues.sort().slice(-1)[0];
   }
+
   const [scoreShow, setScoreShow] = useState(true);
 
   function handleScoreBtn() {
@@ -161,7 +169,7 @@ export default function GamePage(): JSX.Element {
               {issues.map((issue, index) => {
                 let issueScore = '-';
                 try {
-                  if (issue.statistic) {
+                  if (issue.statistic?.length) {
                     issueScore = calcScore(issue.statistic);
                   }
                 } catch (error) {
@@ -212,13 +220,9 @@ export default function GamePage(): JSX.Element {
               </div>
             </div>
           )}
-          {user.user.role === UserRole.PLAYER && game.memberVote.status === MemberVoteStatus.FINISHED && (
-            <Statistics values={'15'} percentage={'15.5%'} />
-          )}
+          {user.user.role === UserRole.PLAYER && game.memberVote.status === MemberVoteStatus.FINISHED && <Statistics />}
         </div>
-        {user.user.role === UserRole.DEALER && game.memberVote.status === MemberVoteStatus.FINISHED && (
-          <Statistics values={'15'} percentage={'15.5%'} />
-        )}
+        {user.user.role === UserRole.DEALER && game.memberVote.status === MemberVoteStatus.FINISHED && <Statistics />}
         {((user.user.role === UserRole.DEALER && game.room.gameSettings.isMasterAsPlayer) ||
           user.user.role === UserRole.PLAYER) &&
         game.memberVote.status === MemberVoteStatus.IN_PROGRESS ? (
