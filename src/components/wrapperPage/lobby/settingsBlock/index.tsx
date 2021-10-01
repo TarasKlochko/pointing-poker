@@ -35,7 +35,9 @@ export default function SettingsBlock(): JSX.Element {
   const [scopeTipe, setScopeTipe] = useState('');
   const [isCustomCardsInput, setIsCustomCardsInput] = useState(false);
   const [cardValuesCustom, setCardValuesCustom] = useState<string[]>([]);
+  const [cardInputValuesCustom, setCardInputValuesCustom] = useState('');
   const [isChangeButton, setIsChangeButton] = useState(false);
+  const [isChangeCard, setIsChangeCard] = useState(false);
 
   function handleIsMasterAsPlayerAction(fn: boolean) {
     dispatch(isMasterAsPlayerAction(fn));
@@ -132,12 +134,13 @@ export default function SettingsBlock(): JSX.Element {
 
   function handleValueInput(event: React.ChangeEvent<HTMLInputElement>) {
     const { value } = event.currentTarget;
+    setCardInputValuesCustom(value);
     const valueArr = Array.from(
       new Set(
         value
-          .replaceAll(' ', '')
-          .split(',')
-          .filter((el) => el !== '')
+          .trim()
+          .split(' ')
+          .filter((el) => el)
           .map((el) => el.slice(0, 4)),
       ),
     );
@@ -145,14 +148,22 @@ export default function SettingsBlock(): JSX.Element {
   }
 
   function handleAddNewCards() {
+    setCardInputValuesCustom(cardValuesCustom.join(' '));
     changeCardValues(cardValuesCustom);
     setIsCustomCardsInput(false);
     setIsChangeButton(true);
+
+    if (cardValuesCustom.length) {
+      setIsChangeCard(true);
+      setIsChangeButton(true);
+    } else {
+      setIsChangeCard(false);
+      setIsChangeButton(false);
+      setIsCustomCardsInput(true);
+    }
   }
 
   function handleChangeCards() {
-    setCardValuesCustom([]);
-    changeCardValues([]);
     setIsCustomCardsInput(true);
     setIsChangeButton(false);
   }
@@ -296,15 +307,22 @@ export default function SettingsBlock(): JSX.Element {
           {isCustomCardsInput && (
             <>
               <h3 className="setting__card-value-add-title">
-                Please enter the comma-separated values (max 4 characters)
+                {!isChangeCard
+                  ? 'Please enter values separated by spaces (max 4 characters)'
+                  : 'Please change or add new values'}
               </h3>
-              <input className="setting__card-value-add-input" type="text" onChange={handleValueInput} />
+              <input
+                className="setting__card-value-add-input"
+                type="text"
+                value={cardInputValuesCustom}
+                onChange={handleValueInput}
+              />
               <button
                 className="setting__card-value-add-button"
                 onClick={handleAddNewCards}
-                disabled={cardValuesCustom.length < 1}
+                disabled={cardValuesCustom.length < 1 && !isChangeCard}
               >
-                Add new cards
+                {isChangeCard ? 'Confirm' : 'Add new cards'}
               </button>
             </>
           )}
