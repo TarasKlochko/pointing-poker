@@ -42,19 +42,15 @@ export default function ScrumMasterBlock(): JSX.Element {
   }, [game.room.issues]);
 
   const cancelGame = (): void => {
-    console.log('room delete');
-
     Controller.deleteRoom(socket, roomId).then((response) => {
       if (response.status !== 200) {
-        console.log('room deleteee', response.message);
-        dispatch(resetSettingsAction());
-        dispatch(IDGameAction(''));
-        dispatch(setFullData(initialState));
+        console.log(response.message);
       } else {
-        console.log('room not delete');
         dispatch(resetSettingsAction());
         dispatch(IDGameAction(''));
         dispatch(setFullData(initialState));
+        localStorage.removeItem('roomID');
+        localStorage.removeItem('userID');
       }
     });
   };
