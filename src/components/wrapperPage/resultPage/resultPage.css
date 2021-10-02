@@ -1,5 +1,5 @@
 .result {
-  width: 1400px;
+  max-width: 1400px;
   margin: 0 auto;
 }
 .result__list {
@@ -21,6 +21,7 @@
   align-items: center;
   column-gap: 10px;
   row-gap: 10px;
+  flex-wrap: wrap;
 }
 .result__item-info {
   display: flex;

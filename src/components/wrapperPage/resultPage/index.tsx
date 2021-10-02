@@ -45,16 +45,26 @@ export default function ResultPage(): JSX.Element {
           <li className="result__item" key={issue.id}>
             <CardIssue issue={issue.name} priority={issue.priority} link={issue.link} score={'-'} current={false} />
             <div className="result__item-info-wrap">
-              {
-                issue.statistic ?  (
-                  issue.statistic?.map((statisticItem, key) => (
+              {issue.statistic ? (
+                issue.statistic?.map((statisticItem, key) => {
+                  let { percentage } = statisticItem;
+                  const isNotIntegerPercentage = /\./.test(percentage);
+                  if (isNotIntegerPercentage) {
+                    const numbersAfterPoint = percentage.split('.')[1].length;
+                    if (numbersAfterPoint > 2) {
+                      percentage = Number(percentage).toFixed(2);
+                    }
+                  }
+                  return (
                     <div key={key} className="result__item-info">
                       <GameCard value={statisticItem.value} scopeTypeShort={gameSettings.scopeTipeShort} />
-                      <div className="result__item-info-score">{`${statisticItem.percentage} %`}</div>
+                      <div className="result__item-info-score">{`${percentage}%`}</div>
                     </div>
-                  ))
-                ) : (<div className="result__item-info-score"> unknown </div>)
-              }
+                  );
+                })
+              ) : (
+                <div className="result__item-info-score"> unknown </div>
+              )}
             </div>
           </li>
         ))}
