@@ -28,6 +28,8 @@ export default function ScrumMasterBlock(): JSX.Element {
   const domain = window.location.origin;
   const adress = `${domain}/#/connect/${game.room.roomID}`;
   const [isIssueError, setIsIssueError] = useState(false);
+  const [isCreateGameError, setIsCreateGameError] = useState(false);
+  const [createGameErrorMessage, setCreateGameErrorMessage] = useState('');
 
   useEffect(() => {
     socket.on('cancelGame', () => {
@@ -36,10 +38,10 @@ export default function ScrumMasterBlock(): JSX.Element {
   }, [socket]);
 
   useEffect(() => {
-    if (game.room.issues.length) {
-      setIsIssueError(false);
+    if (game.room.issues.length && settings.cardValues.length) {
+      setIsCreateGameError(false);
     }
-  }, [game.room.issues]);
+  }, [game.room.issues, settings.cardValues]);
 
   const cancelGame = (): void => {
     Controller.deleteRoom(socket, roomId).then((response) => {
@@ -64,7 +66,7 @@ export default function ScrumMasterBlock(): JSX.Element {
   };
 
   const startGame = (): void => {
-    if (game.room.issues.length) {
+    if (game.room.issues.length && settings.cardValues.length) {
       dispatch(changeGameState(GameState.PLAYING));
       dispatch(setSettings(settings));
       const room: Room = {
@@ -77,7 +79,14 @@ export default function ScrumMasterBlock(): JSX.Element {
       };
       Controller.updateRoom(socket, room);
     } else {
-      setIsIssueError(true);
+      setIsCreateGameError(true);
+      if (!game.room.issues.length && !settings.cardValues.length) {
+        setCreateGameErrorMessage('Please create issue and add card value');
+      } else if (!game.room.issues.length) {
+        setCreateGameErrorMessage('Please create issue');
+      } else {
+        setCreateGameErrorMessage('Please add card value');
+      }
     }
   };
 
@@ -119,7 +128,7 @@ export default function ScrumMasterBlock(): JSX.Element {
       )}
       {
         <div className="scrum-master__start-exit-buttons-wrapper">
-          {isIssueError && <p className="scrum-master__issue-error">Please create issue</p>}
+          {isCreateGameError && <p className="scrum-master__issue-error">{createGameErrorMessage}</p>}
           {user.user.role === UserRole.DEALER ? (
             <Button className={classes.blueButton} onClick={startGame} variant="contained" color="primary">
               Start Game
