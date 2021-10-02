@@ -18,8 +18,7 @@ import { User } from '../../../model/User';
 import { changeGameState, setFullData, setMembers, setRoomId } from '../../../slices/GameSlice';
 import { ifKicked, setUser } from '../../../slices/UserSlice';
 import { UserRole } from '../../../model/UserRole';
-import { GameState, Room } from '../../../model/Room';
-import DeleteInfoPopup from '../deleteInfoPopup';
+import { GameState } from '../../../model/Room';
 
 export function Popup(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -122,12 +121,12 @@ export function Popup(): JSX.Element {
                 roomID = responseObject.roomObj?.roomID;
               }
               localStorage.setItem('roomID', roomID);
-              createUserState(responseObject.userID, roomID, UserRole.PLAYER)
-              const {memberVote, roomObj} = responseObject;
+              createUserState(responseObject.userID, roomID, UserRole.PLAYER);
+              const { memberVote, roomObj } = responseObject;
               console.log('check vote');
               console.log(memberVote);
-              if(memberVote){
-                dispatch(setFullData({memberVote, room: roomObj}))
+              if (memberVote) {
+                dispatch(setFullData({ memberVote, room: roomObj }));
               } else {
                 dispatch(setFullData({ room: roomObj }));
               }

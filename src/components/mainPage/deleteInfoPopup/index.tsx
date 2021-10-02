@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogContentText } from '@material-ui/core';
 
-export default function DeleteInfoPopup() {
+export default function DeleteInfoPopup(): JSX.Element {
   const [isOpenPopup, setIsOpenPopup] = useState(true);
 
   function handleClose() {
