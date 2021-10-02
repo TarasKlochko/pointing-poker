@@ -7,7 +7,7 @@ import { addIssue } from '../../../../../slices/GameSlice';
 import './issueFromFile.css';
 import sampleExcel from '../../../../../assets/issue-from-file.xlsx';
 
-export default function IssueFromFile() {
+export default function IssueFromFile(): JSX.Element {
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
 

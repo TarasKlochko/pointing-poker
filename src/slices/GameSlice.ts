@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction, Reducer } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { GameSettings } from '../components/wrapperPage/lobby/settingsBlock/settingBlog.slice';
 import { Issue } from '../model/Issue';
 import { MemberVote, MemberVoteStatus } from '../model/MemberVote';
@@ -47,9 +47,9 @@ const initialState: RoomState = {
     timer: {
       min: 0,
       sec: 0,
-      start: false
-    }
-  }
+      start: false,
+    },
+  },
 };
 
 export const gameSlice = createSlice({
@@ -114,7 +114,7 @@ export const gameSlice = createSlice({
   },
 });
 
-const { actions, reducer } = gameSlice;
+const { actions } = gameSlice;
 
 export const {
   setMembers,

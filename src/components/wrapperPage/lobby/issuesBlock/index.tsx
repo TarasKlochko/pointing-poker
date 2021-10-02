@@ -14,7 +14,7 @@ export interface IssuesBlockProps {
 
 export default function IssuesBlock(): JSX.Element {
   const room = useAppSelector((state) => state.game.room);
-  const socket = useAppSelector(state => state.socket.socket);
+  const socket = useAppSelector((state) => state.socket.socket);
   const [issues, setIssues] = useState(room.issues);
   const issueItems: JSX.Element[] = [];
 
@@ -31,17 +31,22 @@ export default function IssuesBlock(): JSX.Element {
   };
 
   for (let i = 0; i < issues.length; i++) {
-    issueItems.push(<IssueeCard deleteIssueHandler={deleteDialogYesHandler} key={i} issue={issues[i]} userRole={UserRole.DEALER}></IssueeCard>);
+    issueItems.push(
+      <IssueeCard
+        deleteIssueHandler={deleteDialogYesHandler}
+        key={i}
+        issue={issues[i]}
+        userRole={UserRole.DEALER}
+      ></IssueeCard>,
+    );
   }
-
-
 
   const createIssueHandler = (issue: Issue) => {
     setIssues([...issues, issue]);
   };
 
   useEffect(() => {
-    if(JSON.stringify(issues) !== JSON.stringify(room.issues)) {
+    if (JSON.stringify(issues) !== JSON.stringify(room.issues)) {
       Controller.updateIssues(socket, room.roomID, issues).then((response) => {
         if (response.status !== 200) {
           console.log(response.message);

@@ -1,11 +1,10 @@
 import { IconButton } from '@material-ui/core';
-import React, { useLayoutEffect, useRef, useState } from 'react';
+import React, { useLayoutEffect, useRef } from 'react';
 import { ReactComponent as EditIcon } from '../../../../assets/pencil.svg';
 import './lobby-name.css';
 import { UserRole } from '../../../../model/UserRole';
 import { useAppDispatch, useAppSelector } from '../../../../app/hooks';
 import { setName } from '../../../../slices/GameSlice';
-import { Room } from '../../../../model/Room';
 import { Controller } from '../../../../api/Controller';
 
 export default function LobbyName(): JSX.Element {

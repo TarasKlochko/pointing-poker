@@ -4,7 +4,7 @@ import { IssueUtil } from '../../../../utils/IssueUtil';
 import GameCard from '../../../common/gameCard';
 import './statistics.css';
 
-export default function Statistics() {
+export default function Statistics(): JSX.Element {
   const gameSettings = useAppSelector((state) => state.game.room.gameSettings);
   const currentIssue = useAppSelector((state) => state.game.memberVote.currentIssue);
   const issues = useAppSelector((state) => state.game.room.issues);
