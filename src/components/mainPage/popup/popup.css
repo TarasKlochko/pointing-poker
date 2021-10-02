@@ -34,7 +34,7 @@ body {
 .popup__top {
   display: flex;
   align-items: flex-end;
-  justify-content: start;
+  justify-content: flex-start;
   column-gap: 60px;
   margin-bottom: 40px;
 }
