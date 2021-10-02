@@ -1,7 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { MemberCardKind } from '../../../model/MemberCardKind';
 import { GameState, Room } from '../../../model/Room';
@@ -28,7 +25,17 @@ export default function GamePage(): JSX.Element {
   const user = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
   const socket = useAppSelector((state) => state.socket.socket);
-  const matches = useMediaQuery('(min-width:600px)');
+  const isStopRoundButton =
+    !isTimer && !game.room.gameSettings.isAutoCardFlipping && game.memberVote.status === MemberVoteStatus.IN_PROGRESS;
+  const isPlayCards =
+    ((user.user.role === UserRole.DEALER && game.room.gameSettings.isMasterAsPlayer) ||
+      user.user.role === UserRole.PLAYER) &&
+    game.memberVote.status === MemberVoteStatus.IN_PROGRESS;
+  const isStatisticForDealer =
+    user.user.role === UserRole.DEALER && game.memberVote.status === MemberVoteStatus.FINISHED;
+  const isStatisticForPlayer =
+    user.user.role === UserRole.PLAYER && game.memberVote.status === MemberVoteStatus.FINISHED;
+
   function handleStopGame() {
     const NewRoom: Room = {
       roomID: game.room.roomID,
@@ -193,13 +200,11 @@ export default function GamePage(): JSX.Element {
             <div className="issues__control-wrap">
               {isTimer && game.memberVote.timer && <Timer />}
               <div className="issues__control-buttons-wrap">
-                {!isTimer &&
-                  !game.room.gameSettings.isAutoCardFlipping &&
-                  game.memberVote.status === MemberVoteStatus.IN_PROGRESS && (
-                    <button className="issues__control-button" onClick={stopRound}>
-                      Stop Round
-                    </button>
-                  )}
+                {isStopRoundButton && (
+                  <button className="issues__control-button" onClick={stopRound}>
+                    Stop Round
+                  </button>
+                )}
                 {game.memberVote.status === MemberVoteStatus.BEFORE_START && (
                   <button className="issues__control-button" onClick={handleRunRound}>
                     {isTimer ? 'Run Round' : 'Run'}
@@ -220,16 +225,10 @@ export default function GamePage(): JSX.Element {
               </div>
             </div>
           )}
-          {user.user.role === UserRole.PLAYER && game.memberVote.status === MemberVoteStatus.FINISHED && <Statistics />}
+          {isStatisticForPlayer && <Statistics />}
         </div>
-        {user.user.role === UserRole.DEALER && game.memberVote.status === MemberVoteStatus.FINISHED && <Statistics />}
-        {((user.user.role === UserRole.DEALER && game.room.gameSettings.isMasterAsPlayer) ||
-          user.user.role === UserRole.PLAYER) &&
-        game.memberVote.status === MemberVoteStatus.IN_PROGRESS ? (
-          <PlayCards></PlayCards>
-        ) : (
-          <></>
-        )}
+        {isStatisticForDealer && <Statistics />}
+        {isPlayCards ? <PlayCards></PlayCards> : <></>}
       </div>
       <div className={scoreShow ? 'game__score' : 'game__score game__score_hide'}>
         <div
