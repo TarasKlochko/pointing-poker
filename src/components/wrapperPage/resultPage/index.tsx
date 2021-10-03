@@ -6,10 +6,10 @@ import CardIssue from '../gamePage/cardIssue';
 import './resultPage.css';
 
 export type ResultInfo = {
-  column1: string;
-  column2: string;
-  column3?: string;
-  column4?: string;
+  ' ': string;
+  '  ': string;
+  '   '?: string;
+  '    '?: string;
 };
 
 export default function ResultPage(): JSX.Element {
@@ -20,22 +20,22 @@ export default function ResultPage(): JSX.Element {
 
   issues.forEach((issue) => {
     resultReal.push(
-      { column1: 'Issue', column2: issue.name },
-      { column1: 'Priority', column2: issue.priority },
-      { column1: 'Score', column2: issue.score || '-' },
+      { ' ': 'Issue', '  ': issue.name },
+      { ' ': 'Priority', '  ': issue.priority },
+      { ' ': 'Score', '  ': issue.score || '-' },
       {
-        column1: 'Link',
-        column2: issue.link,
+        ' ': 'Link',
+        '  ': issue.link,
       },
     );
     if (issue.statistic) {
-      resultReal.push({ column1: 'Cards:', column2: '№', column3: 'Value', column4: 'Percentage' });
+      resultReal.push({ ' ': 'Cards:', '  ': '№', '   ': 'Value', '    ': 'Percentage' });
       issue.statistic?.forEach((obj, index) => {
-        resultReal.push({ column1: '', column2: (index + 1).toString(), column3: obj.value, column4: obj.percentage });
+        resultReal.push({ ' ': '', '  ': (index + 1).toString(), '   ': obj.value, '    ': obj.percentage });
       });
     }
 
-    resultReal.push({ column1: '', column2: '' });
+    resultReal.push({ ' ': '', '  ': '' });
   });
 
   return (
