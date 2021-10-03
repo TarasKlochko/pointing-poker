@@ -33,6 +33,11 @@ export default function ScrumMasterBlock(): JSX.Element {
 
   useEffect(() => {
     socket.on('cancelGame', () => {
+      dispatch(resetSettingsAction());
+      dispatch(IDGameAction(''));
+      dispatch(setFullData(initialState));
+      localStorage.removeItem('roomID');
+      localStorage.removeItem('userID');
       history.push(`/`);
       dispatch(cancelGamePopupAction(true));
     });
@@ -49,11 +54,7 @@ export default function ScrumMasterBlock(): JSX.Element {
       if (response.status !== 200) {
         console.log(response.message);
       } else {
-        dispatch(resetSettingsAction());
-        dispatch(IDGameAction(''));
-        dispatch(setFullData(initialState));
-        localStorage.removeItem('roomID');
-        localStorage.removeItem('userID');
+        console.log('room was deleted');
       }
     });
   };
