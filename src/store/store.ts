@@ -5,16 +5,19 @@ import createSocketReducer from '../api/socket.slice';
 import gameSettingsReducer from '../components/wrapperPage/lobby/settingsBlock/settingBlog.slice';
 import { gameSlice } from '../slices/GameSlice';
 import { userSlice } from '../slices/UserSlice';
+import cancelGamePopupReducer from '../components/mainPage/cancelGamePopup/cancelGamePopup.slice';
 
 export const store = configureStore({
   reducer: {
     popup: popupReducer,
+    cancelGamePopup: cancelGamePopupReducer,
     createGame: createGameReducer,
     socket: createSocketReducer,
     gameSettings: gameSettingsReducer,
     game: gameSlice.reducer,
     user: userSlice.reducer,
-  },middleware: getDefaultMiddleware({
+  },
+  middleware: getDefaultMiddleware({
     serializableCheck: false,
   }),
 });

@@ -6,15 +6,16 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { createGameAction, IDGameAction } from './createGame.slice';
 import { Controller } from '../../api/Controller';
 import DeleteInfoPopup from './deleteInfoPopup';
+import CancelGamePopup from './cancelGamePopup';
 
 export default function MainPage(): JSX.Element {
   const dispatch = useAppDispatch();
   const isPopup = useAppSelector((state) => state.popup.isPopup);
   const [isErrorID, setIsError] = useState(false);
   const id = useAppSelector((state) => state.createGame.id);
-  const isKicked = useAppSelector((state) => state.user.kicked)
-
+  const isKicked = useAppSelector((state) => state.user.kicked);
   const socket = useAppSelector((state) => state.socket.socket);
+  const isCancelGamePopup = useAppSelector((state) => state.cancelGamePopup.isCancelGamePopup);
 
   function handleClickStart() {
     dispatch(isPopupAction(true));
@@ -70,6 +71,7 @@ export default function MainPage(): JSX.Element {
       </div>
       {isPopup && <Popup></Popup>}
       {isKicked && <DeleteInfoPopup />}
+      {isCancelGamePopup && <CancelGamePopup />}
     </section>
   );
 }

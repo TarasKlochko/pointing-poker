@@ -13,6 +13,7 @@ import { Controller } from '../../../../api/Controller';
 import YesNoDialog from '../../../common/common-dialogs/YesNoDialog';
 import { resetSettingsAction } from '../settingsBlock/settingBlog.slice';
 import { IDGameAction } from '../../../mainPage/createGame.slice';
+import { cancelGamePopupAction } from '../../../mainPage/cancelGamePopup/cancelGamePopup.slice';
 
 export default function ScrumMasterBlock(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -27,13 +28,13 @@ export default function ScrumMasterBlock(): JSX.Element {
   const classes = useButtonStyles();
   const domain = window.location.origin;
   const adress = `${domain}/#/connect/${game.room.roomID}`;
-  const [isIssueError, setIsIssueError] = useState(false);
   const [isCreateGameError, setIsCreateGameError] = useState(false);
   const [createGameErrorMessage, setCreateGameErrorMessage] = useState('');
 
   useEffect(() => {
     socket.on('cancelGame', () => {
       history.push(`/`);
+      dispatch(cancelGamePopupAction(true));
     });
   }, [socket]);
 
