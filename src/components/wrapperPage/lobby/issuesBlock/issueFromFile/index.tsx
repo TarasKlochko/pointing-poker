@@ -1,15 +1,21 @@
 import React, { useState } from 'react';
 import * as XLSX from 'xlsx';
 import { Dialog, DialogContent, DialogContentText } from '@material-ui/core';
-import { useAppDispatch } from '../../../../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../../../../app/hooks';
 import { Issue, IssuePriority } from '../../../../../model/Issue';
 import { addIssue } from '../../../../../slices/GameSlice';
 import './issueFromFile.css';
 import sampleExcel from '../../../../../assets/issue-from-file.xlsx';
+import { IssueUtil } from '../../../../../utils/IssueUtil';
+import { Controller } from '../../../../../api/Controller';
 
 export default function IssueFromFile(): JSX.Element {
   const dispatch = useAppDispatch();
+  const room = useAppSelector((state) => state.game.room);
+  const socket = useAppSelector((state) => state.socket.socket);
   const [open, setOpen] = useState(false);
+  const issueItems: Issue[] = [];
+  
 
   function createIssue(obj: string[]) {
     const issue: Issue = {
@@ -21,6 +27,7 @@ export default function IssueFromFile(): JSX.Element {
     if (obj.length > 0) {
       [issue.name] = obj;
       issue.link = obj[2] || '';
+      issue.id = `${IssueUtil.getRandomId()}`;
       if (obj[1]) {
         switch (obj[1].toLocaleLowerCase()) {
           case 'low':
@@ -38,8 +45,14 @@ export default function IssueFromFile(): JSX.Element {
       } else {
         issue.priority = IssuePriority.LOW;
       }
-      dispatch(addIssue(issue));
+      issueItems.push(issue)
+      //  dispatch(addIssue(issue));
     }
+  }
+
+  const sendIssues = () => {
+    const issuesRes = [...room.issues, ...issueItems];
+    Controller.updateIssues(socket, room.roomID, issuesRes);
   }
 
   function handleDownloadIssues(event: React.ChangeEvent<HTMLInputElement>) {
@@ -53,6 +66,7 @@ export default function IssueFromFile(): JSX.Element {
       const ws = workbook.Sheets[wsname];
       const dataParse: [string, string, string][] = XLSX.utils.sheet_to_json(ws, { header: 1 });
       dataParse.map((obj) => createIssue(obj.filter((el) => el)));
+      sendIssues();
       setOpen(false);
     };
     reader.readAsBinaryString(file);

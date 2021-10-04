@@ -7,7 +7,7 @@ import { useAppSelector } from '../../../app/hooks';
 
 export interface IssueDialogProps {
   open: boolean;
-  onClose: (issue: Issue) => void;
+  onClose: (name: string, link: string, priority: IssuePriority) => void;
   noHandler: () => void;
   issue?: Issue;
 }
@@ -31,9 +31,9 @@ export default function IssueDialog(props: IssueDialogProps): JSX.Element {
     priority = IssuePriority.LOW;
     $id = '';
   }
-  const [$name, setName] = useState<string>('');
-  const [$link, setLink] = useState<string>('');
-  const [$priority, setPriority] = useState<IssuePriority>(IssuePriority.LOW);
+  const [$name, setName] = useState<string>(props.issue? `${props.issue.name}` : '');
+  const [$link, setLink] = useState<string>(props.issue? `${props.issue.link}` : '');
+  const [$priority, setPriority] = useState<IssuePriority>(props.issue? props.issue.priority : IssuePriority.LOW);
   const [isNameError, setIsNameError] = useState(false);
 
   const { onClose, open, noHandler } = props;
@@ -45,13 +45,8 @@ export default function IssueDialog(props: IssueDialogProps): JSX.Element {
 
   const handleClose = () => {
     if ($name.length > 0) {
-      const issue = {
-        id: `${issues.length+ 1}`,
-        priority: $priority,
-        name: $name,
-        link: $link,
-      };
-      onClose(issue);
+
+      onClose($name, $link, $priority);
       setName('');
       setLink('');
       setPriority(IssuePriority.LOW);

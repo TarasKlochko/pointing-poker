@@ -15,6 +15,7 @@ export interface IssuesBlockProps {
 export default function IssuesBlock(): JSX.Element {
   const room = useAppSelector((state) => state.game.room);
   const socket = useAppSelector((state) => state.socket.socket);
+  const issues1 = useAppSelector((state) => state.game.room.issues);
   const [issues, setIssues] = useState(room.issues);
   const issueItems: JSX.Element[] = [];
 
@@ -30,19 +31,21 @@ export default function IssuesBlock(): JSX.Element {
     //  dispatch(removeIssue(props.issue));
   };
 
-  for (let i = 0; i < issues.length; i++) {
+  for (let i = 0; i < issues1.length; i++) {
     issueItems.push(
       <IssueeCard
         deleteIssueHandler={deleteDialogYesHandler}
         key={i}
-        issue={issues[i]}
+        issue={issues1[i]}
         userRole={UserRole.DEALER}
       ></IssueeCard>,
     );
   }
 
   const createIssueHandler = (issue: Issue) => {
-    setIssues([...issues, issue]);
+    const issuesRes = [...issues1];
+    issuesRes.push(issue)
+    Controller.updateIssues(socket, room.roomID, issuesRes);
   };
 
   useEffect(() => {

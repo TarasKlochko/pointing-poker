@@ -1,6 +1,6 @@
 import { Card, CardActions, CardContent, IconButton, Typography } from '@material-ui/core';
 import React from 'react';
-import { Issue } from '../../../model/Issue';
+import { Issue, IssuePriority } from '../../../model/Issue';
 import { UserRole } from '../../../model/UserRole';
 import { useCardsStyles } from '../../../styles/CardStyles';
 import { ReactComponent as DeleteIcon } from '../../../assets/delete-icon.svg';
@@ -8,8 +8,7 @@ import { ReactComponent as EditIcon } from '../../../assets/pencil.svg';
 import './issue-common.css';
 import IssueDialog from '../issueDialog/IssueDialog';
 import YesNoDialog from '../common-dialogs/YesNoDialog';
-import { useAppDispatch, useAppSelector } from '../../../app/hooks';
-import { removeIssue, upDateIssue } from '../../../slices/GameSlice';
+import { useAppSelector } from '../../../app/hooks';
 import { Controller } from '../../../api/Controller';
 
 export interface IssueCardProps {
@@ -19,12 +18,11 @@ export interface IssueCardProps {
 }
 
 export default function IssueeCard(props: IssueCardProps): JSX.Element {
-  const dispatch = useAppDispatch();
+  const room = useAppSelector((state) => state.game.room);
+  const socket = useAppSelector((state) => state.socket.socket);
   const [open, setOpen] = React.useState(false);
   const [deleteOpen, setDeleteOpen] = React.useState(false);
   const issues = useAppSelector((state) => state.game.room.issues);
-  const room = useAppSelector((state) => state.game.room);
-  const socket = useAppSelector((state) => state.socket.socket);
 
   const deleteContent = `Do you realy want to delete issue: ${props.issue.name} ?`;
 
@@ -36,9 +34,23 @@ export default function IssueeCard(props: IssueCardProps): JSX.Element {
     setOpen(true);
   };
 
-  const upDateIssueHandler = (issue: Issue) => {
+  const upDateIssueHandler = ($name: string, $link: string, $priority: IssuePriority) => {
     setOpen(false);
-    dispatch(upDateIssue(issue));
+    const issues1: Issue[] = [];
+    issues.forEach((issueLoop) => {
+      if (issueLoop.id === props.issue.id) {
+        const issue = {
+          id: props.issue.id,
+          priority: $priority,
+          name: $name,
+          link: $link,
+        };
+        issues1.push(issue);
+      } else {
+        issues1.push(issueLoop);
+      }
+    });
+    Controller.updateIssues(socket, room.roomID, issues1);
   };
 
   const noUpDateIssueHandler = () => {
@@ -58,7 +70,6 @@ export default function IssueeCard(props: IssueCardProps): JSX.Element {
       }
     });
     props.deleteIssueHandler(issues1);
-    //  dispatch(removeIssue(props.issue));
   };
 
   
