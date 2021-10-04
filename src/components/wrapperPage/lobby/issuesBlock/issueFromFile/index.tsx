@@ -45,8 +45,7 @@ export default function IssueFromFile(): JSX.Element {
       } else {
         issue.priority = IssuePriority.LOW;
       }
-      issueItems.push(issue)
-      //  dispatch(addIssue(issue));
+      issueItems.push(issue);
     }
   }
 

@@ -53,7 +53,7 @@ export default function CreateIssueButton(props: CreateIssueButtonProps): JSX.El
         {' '}
         Create New Issue
       </Button>
-      <IssueDialog noHandler={noHandler} open={open} onClose={yesHandler}></IssueDialog>
+      <IssueDialog create={true} noHandler={noHandler} open={open} onClose={yesHandler}></IssueDialog>
     </div>
   );
 }

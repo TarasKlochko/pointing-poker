@@ -97,6 +97,7 @@ export default function IssueeCard(props: IssueCardProps): JSX.Element {
         issue={props.issue}
         open={open}
         onClose={upDateIssueHandler}
+        create={false}
       ></IssueDialog>
       <YesNoDialog
         content={deleteContent}

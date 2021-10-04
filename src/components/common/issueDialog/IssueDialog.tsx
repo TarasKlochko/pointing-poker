@@ -9,6 +9,7 @@ export interface IssueDialogProps {
   open: boolean;
   onClose: (name: string, link: string, priority: IssuePriority) => void;
   noHandler: () => void;
+  create: boolean;
   issue?: Issue;
 }
 
@@ -31,9 +32,9 @@ export default function IssueDialog(props: IssueDialogProps): JSX.Element {
     priority = IssuePriority.LOW;
     $id = '';
   }
-  const [$name, setName] = useState<string>(props.issue? `${props.issue.name}` : '');
-  const [$link, setLink] = useState<string>(props.issue? `${props.issue.link}` : '');
-  const [$priority, setPriority] = useState<IssuePriority>(props.issue? props.issue.priority : IssuePriority.LOW);
+  const [$name, setName] = useState<string>(props.issue ? `${props.issue.name}` : '');
+  const [$link, setLink] = useState<string>(props.issue ? `${props.issue.link}` : '');
+  const [$priority, setPriority] = useState<IssuePriority>(props.issue ? props.issue.priority : IssuePriority.LOW);
   const [isNameError, setIsNameError] = useState(false);
 
   const { onClose, open, noHandler } = props;
@@ -45,10 +46,11 @@ export default function IssueDialog(props: IssueDialogProps): JSX.Element {
 
   const handleClose = () => {
     if ($name.length > 0) {
-
       onClose($name, $link, $priority);
-      setName('');
-      setLink('');
+      if (props.create) {
+        setName('');
+        setLink('');
+      }
       setPriority(IssuePriority.LOW);
     } else {
       setIsNameError(true);
