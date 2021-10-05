@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { MemberCardKind } from '../../../model/MemberCardKind';
 import { UserRole } from '../../../model/UserRole';
 import ImageBlock from './ImageBlock';
@@ -8,6 +8,7 @@ import { User } from '../../../model/User';
 import { useAppSelector } from '../../../app/hooks';
 import { Controller } from '../../../api/Controller';
 import YesNoDialog from '../common-dialogs/YesNoDialog';
+import NotEnoughPlayersPopup from '../kickMember/kickInfo/NotEnoughPlayersPopup';
 
 export interface MemberCardProps {
   user: User;
@@ -18,7 +19,9 @@ export interface MemberCardProps {
 export default function MemberCard(props: MemberCardProps): JSX.Element {
   const user = useAppSelector((state) => state.user);
   const socket = useAppSelector((state) => state.socket.socket);
-  const [open, setOpen] = React.useState(false);
+  const room = useAppSelector((state) => state.game.room);
+  const [open, setOpen] = useState(false);
+  const [notEnoughUsers, setNotEnoughUsers] = useState(false);
   let classes = '';
 
   if (props.classList) {
@@ -39,7 +42,12 @@ export default function MemberCard(props: MemberCardProps): JSX.Element {
     if (user.user.role === UserRole.DEALER) {
       Controller.deleteUser(socket, props.user.id);
     } else {
-      Controller.startKickVoting(socket, props.user.id, user.user.id);
+      const memberLength = room.members.filter((member) => member.role === UserRole.PLAYER).length;
+      if (memberLength > 2){
+        Controller.startKickVoting(socket, props.user.id, user.user.id);
+      } else {
+        setNotEnoughUsers(true);
+      }
     }
     setOpen(false);
   };
@@ -92,6 +100,7 @@ export default function MemberCard(props: MemberCardProps): JSX.Element {
             noClickHandle={closeDialog}
             title={'Kick player?'}
           ></YesNoDialog>
+          {notEnoughUsers && <NotEnoughPlayersPopup setNotEnoughUsers={setNotEnoughUsers}/>}
         </div>
       </div>
     </div>
