@@ -35,6 +35,7 @@ export function Popup(): JSX.Element {
   const socket = useAppSelector((state) => state.socket.socket);
   const [isError, setIsError] = useState(false);
   const [alreadeCicked, setAlreadeCicked] = useState(false);
+  const [isDisable, setIsDisable] = useState(false);
 
   const history = useHistory();
 
@@ -91,6 +92,7 @@ export function Popup(): JSX.Element {
   function handleConfirm(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
     if ($name) {
+      setIsDisable(true);
       if (isCreateGame) {
         Controller.createRoom(socket, popupData).then((responseObject) => {
           if (responseObject.status === 200) {
@@ -241,6 +243,7 @@ export function Popup(): JSX.Element {
               className="popup__button popup__button_main"
               type="submit"
               onClick={(event) => handleConfirm(event)}
+              disabled={isDisable}
             >
               Confirm
             </button>
