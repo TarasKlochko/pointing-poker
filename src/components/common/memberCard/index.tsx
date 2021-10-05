@@ -100,10 +100,8 @@ export default function MemberCard(props: MemberCardProps): JSX.Element {
       <div className="member-info-block-wrap">
         <div className="member__chat-member-info-block">
           <div className="member-info-block__chat-current-user">IT`S YOU</div>
-          <div className="member-info-block-wrap">
-            <div className="member-info-block__chat-name">{`${props.user.name} ${props.user.surname}`}</div>
-            <div className="member-info-block__chat-position">{props.user.jobPosition}</div>
-          </div>
+          <div className="member-info-block__chat-name">{`${props.user.name} ${props.user.surname}`}</div>
+          <div className="member-info-block__chat-position">{props.user.jobPosition}</div>
         </div>
         <div className="member__chat-image-wrapper">
           {user.user.role === UserRole.DEALER && props.user.role === UserRole.PLAYER ? kickButton : ''}
