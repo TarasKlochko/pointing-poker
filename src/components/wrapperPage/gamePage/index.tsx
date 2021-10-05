@@ -74,16 +74,13 @@ export default function GamePage(): JSX.Element {
   }
 
   function handleRestartRound() {
-    console.log('Restart Round');
     setIsTimerOver(false);
     const changeIssue = { ...game.room.issues[currentIssue] };
-    changeIssue.name = 'issue5';
     dispatch(upDateIssue(changeIssue));
     Controller.startRound(socket, game.room.roomID, currentIssue);
   }
 
   function handleNextIssue() {
-    console.log('Next issue');
     setIsTimerOver(false);
     Controller.startRound(socket, game.room.roomID, currentIssue + 1);
   }
