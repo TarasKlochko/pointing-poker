@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogContentText } from '@material-ui/core';
+import { useAppSelector } from '../../../app/hooks';
 
 export default function DeleteInfoPopup(): JSX.Element {
   const [isOpenPopup, setIsOpenPopup] = useState(true);
+  const isExitPlayer = useAppSelector((state) => state.deleteInfoPopup.isExit);
 
   function handleClose() {
     setIsOpenPopup(false);
@@ -12,7 +14,7 @@ export default function DeleteInfoPopup(): JSX.Element {
     <Dialog open={isOpenPopup} onClose={handleClose} aria-labelledby="form-dialog-title">
       <DialogTitle id="form-dialog-title">Notification!</DialogTitle>
       <DialogContent>
-        <DialogContentText>You are removed from the game by dealer</DialogContentText>
+        <DialogContentText>{`You are removed from the game ${!isExitPlayer ? 'by dealer' : ''} `}</DialogContentText>
       </DialogContent>
     </Dialog>
   );

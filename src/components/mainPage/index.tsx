@@ -16,6 +16,7 @@ export default function MainPage(): JSX.Element {
   const isKicked = useAppSelector((state) => state.user.kicked);
   const socket = useAppSelector((state) => state.socket.socket);
   const isCancelGamePopup = useAppSelector((state) => state.cancelGamePopup.isCancelGamePopup);
+  const isExitPlayer = useAppSelector((state) => state.deleteInfoPopup.isExit);
 
   function handleClickStart() {
     dispatch(isPopupAction(true));

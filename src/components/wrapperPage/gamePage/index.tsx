@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { MemberCardKind } from '../../../model/MemberCardKind';
 import { GameState, Room } from '../../../model/Room';
@@ -15,6 +16,9 @@ import { Controller } from '../../../api/Controller';
 import VoteBlock from './voteBlock/VoteBlock';
 import PlayCards from '../../common/playCard';
 import { MemberVoteStatus } from '../../../model/MemberVote';
+import { ifKicked } from '../../../slices/UserSlice';
+import { isExitAction } from '../../mainPage/deleteInfoPopup/deleteInfoPopup.slice';
+import YesNoDialog from '../../common/common-dialogs/YesNoDialog';
 
 export default function GamePage(): JSX.Element {
   const game = useAppSelector((state) => state.game);
@@ -35,6 +39,8 @@ export default function GamePage(): JSX.Element {
     user.user.role === UserRole.DEALER && game.memberVote.status === MemberVoteStatus.FINISHED;
   const isStatisticForPlayer =
     user.user.role === UserRole.PLAYER && game.memberVote.status === MemberVoteStatus.FINISHED;
+  const history = useHistory();
+  const [open, setOpen] = useState(false);
 
   function handleStopGame() {
     const NewRoom: Room = {
@@ -49,8 +55,19 @@ export default function GamePage(): JSX.Element {
   }
 
   function handleExit() {
-    console.log('Exit');
+    setOpen(true);
   }
+
+  const exitGame = (): void => {
+    Controller.deleteUser(socket, user.user.id);
+    dispatch(isExitAction(true));
+    history.push(`/`);
+    setOpen(false);
+  };
+
+  const closeDialog = () => {
+    setOpen(false);
+  };
 
   function handleRunRound() {
     Controller.startRound(socket, game.room.roomID, currentIssue + 1);
@@ -239,6 +256,13 @@ export default function GamePage(): JSX.Element {
           <VoteBlock></VoteBlock>
         </div>
       </div>
+      <YesNoDialog
+        content={`Do you really want to exit game?`}
+        open={open}
+        yesClickHandle={exitGame}
+        noClickHandle={closeDialog}
+        title={'Exit game?'}
+      ></YesNoDialog>
     </section>
   );
 }
