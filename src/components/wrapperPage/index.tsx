@@ -16,7 +16,9 @@ import LobbyPage from './lobby';
 import ResultPage from './resultPage';
 import Chat, { Message } from '../common/chat';
 import './wrapperPage.css';
-
+import { KickVoting } from '../../model/KickVoting';
+import KickMember from '../common/kickMember';
+import KickInfo from '../common/kickMember/kickInfo/KickInfo';
 
 export default function WrapperPage(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -26,76 +28,86 @@ export default function WrapperPage(): JSX.Element {
   const [waitingList, setWaitingList] = useState([] as User[]);
   const [isChatOpend, setIsChatOpend] = useState(false);
   const [messages, setMessages] = useState([] as Message[]);
-  const socket = useAppSelector(state => state.socket.socket);
+  const [voteKickList, setVoteKick] = useState([] as KickVoting[]);
+  const [voteKickResults, setResults] = useState([] as { kickResult: boolean; victim: User }[]);
+  const socket = useAppSelector((state) => state.socket.socket);
 
   const changeChatViewHandler = () => {
     setIsChatOpend(!isChatOpend);
-  }
+  };
 
   useEffect(() => {
     const userID = localStorage.getItem('userID');
     const roomID = localStorage.getItem('roomID');
     if (userID !== null && roomID !== null) {
       if (currentUser.user.id.length === 0) {
-        Controller.getDataForReload(socket, roomID, userID).then(response => {
-          if(response.status === 200) {
+        Controller.getDataForReload(socket, roomID, userID).then((response) => {
+          if (response.status === 200) {
             dispatch(setUser(response.user!));
-          } else
-            history.push('/');
-        })
+          } else history.push('/');
+        });
       }
       if (game.room.roomID.length === 0) {
-        Controller.getDataForReload(socket, roomID, userID).then(response => {
+        Controller.getDataForReload(socket, roomID, userID).then((response) => {
           const room: Room = { ...response.roomObj!, members: response.users! };
           const dealer: User = response.dealer!;
           const memberVote: MemberVote = response.memberVote!;
-          if(response.status === 200){
-            if(memberVote){
-              dispatch(setFullData({room, dealer, memberVote}))
+          if (response.status === 200) {
+            if (memberVote) {
+              dispatch(setFullData({ room, dealer, memberVote }));
             } else {
-              dispatch(setFullData({room, dealer}))
+              dispatch(setFullData({ room, dealer }));
             }
-          }else
-            history.push('/');
-        })
+          } else history.push('/');
+        });
       }
     }
   });
 
   useEffect(() => {
-    socket.on("users", (users): void => {
+    socket.on('users', (users): void => {
       const usersO: User[] = users;
       dispatch(setMembers(usersO));
       dispatch(ifKicked(usersO));
     });
-    socket.on("getVoteResults", (roomObj): void => {
-      const {roomID, state, name, issues, gameSettings, members, memberVote} = roomObj;
-      dispatch(setRoomState({roomID, state, gameSettings, members, name, issues} as Room));
+    socket.on('getVoteResults', (roomObj): void => {
+      const { roomID, state, name, issues, gameSettings, members, memberVote } = roomObj;
+      dispatch(setRoomState({ roomID, state, gameSettings, members, name, issues } as Room));
       dispatch(setMemberVote(memberVote));
     });
     socket.on('updatedRoom', (roomObj) => {
-      const {gameSettings, issues, members, name, roomID, state, memberVote} = roomObj;
-      const room:Room = {
+      const { gameSettings, issues, members, name, roomID, state, memberVote } = roomObj;
+      const room: Room = {
         gameSettings,
         issues,
         members,
         name,
         roomID,
-        state
-      }
+        state,
+      };
       dispatch(setMemberVote(memberVote));
       dispatch(setRoomState(room));
     });
     socket.on('message', ({ user, message }) => {
       const newMessage = { user, message, id: Date.now() } as Message;
-      setMessages(state => [...state, newMessage]);
+      setMessages((state) => [...state, newMessage]);
     });
-    if(currentUser.user.role === UserRole.DEALER) {
-      console.log('a');
+    if (currentUser.user.role === UserRole.DEALER) {
       socket.on('confirmUser', (newUser) => {
-        setWaitingList(state => [...state, newUser]);
+        setWaitingList((state) => [...state, newUser]);
       });
     }
+    socket.on('kickVouting', (kickVouting: KickVoting) => {
+      if (
+        (kickVouting as KickVoting).maniac.id !== currentUser.user.id &&
+        (kickVouting as KickVoting).victim.id !== currentUser.user.id &&
+        currentUser.user.role !== UserRole.DEALER
+      )
+        setVoteKick((state) => [...state, kickVouting]);
+    });
+    socket.on('kickResult', ({ kickResult, victim }) => {
+      setResults((state) => [...state, { kickResult, victim }]);
+    });
   }, [socket]);
 
   if (currentUser.kicked) history.push(`/`);
@@ -103,13 +115,13 @@ export default function WrapperPage(): JSX.Element {
   let page: JSX.Element = <></>;
   switch (game.room.state) {
     case GameState.WAITING:
-      page = <LobbyPage></LobbyPage>
+      page = <LobbyPage></LobbyPage>;
       break;
     case GameState.PLAYING:
-      page = <GamePage></GamePage>
+      page = <GamePage></GamePage>;
       break;
     case GameState.RESULT:
-      page = <ResultPage></ResultPage>
+      page = <ResultPage></ResultPage>;
       break;
     default:
       page = <></>;
@@ -122,11 +134,23 @@ export default function WrapperPage(): JSX.Element {
       <div className="chat-view-btn-container">
         {isChatOpend && <Chat messages={messages} />}
         <IconButton size="medium" className="chat-view-btn" onClick={changeChatViewHandler}>
-          <ChatIcon color="primary" fontSize="large"/>
+          <ChatIcon color="primary" fontSize="large" />
         </IconButton>
       </div>
       {currentUser.user.role === UserRole.DEALER &&
-        waitingList.map(elem => <AdmitRejectNewMember key={elem.id} user={elem} setWaitingList={setWaitingList} />)}
+        waitingList.map((elem) => <AdmitRejectNewMember key={elem.id} user={elem} setWaitingList={setWaitingList} />)}
+      {voteKickList.map((elem) => (
+        <KickMember
+          key={elem.id}
+          maniac={elem.maniac}
+          victim={elem.victim}
+          voteID={elem.id}
+          setVoteKick={setVoteKick}
+        />
+      ))}
+      {voteKickResults.map((elem) => (
+        <KickInfo key={elem.victim.id} victim={elem.victim} kickResult={elem.kickResult} setResults={setResults} />
+      ))}
     </div>
   );
 }

@@ -125,7 +125,6 @@ export class Controller {
   }
 
   public static updateIssues(socket: Socket, roomID: string, issues: Issue[]): Promise<Response> {
-    console.log('send');
     return new Promise((resolve) => {
       socket.emit('updateIssues', { roomID, issues }, (response: string) => {
         const responseObject: Response = JSON.parse(response);
@@ -155,7 +154,7 @@ export class Controller {
    * @returns {@link Response}
    */
 
-  public static getUser(socket: Socket, userID: string ): Promise<Response> {
+  public static getUser(socket: Socket, userID: string): Promise<Response> {
     return new Promise((resolve) => {
       socket.emit('getUser', { userID }, (response: string) => {
         const responseObject: Response = JSON.parse(response);
@@ -164,7 +163,7 @@ export class Controller {
     });
   }
 
-  public static getDataForReload(socket: Socket, roomID: string, userID: string ): Promise<Response> {
+  public static getDataForReload(socket: Socket, roomID: string, userID: string): Promise<Response> {
     return new Promise((resolve) => {
       socket.emit('getDataForReload', { roomID, userID }, (response: string) => {
         const responseObject: Response = JSON.parse(response);
@@ -173,7 +172,7 @@ export class Controller {
     });
   }
 
-  public static getUsers(socket: Socket, roomID: string ): Promise<Response> {
+  public static getUsers(socket: Socket, roomID: string): Promise<Response> {
     return new Promise((resolve) => {
       socket.emit('getUsers', { roomID }, (response: string) => {
         const responseObject: Response = JSON.parse(response);
@@ -182,9 +181,9 @@ export class Controller {
     });
   }
 
-  public static sendUserVote(socket: Socket, userID: string, value: string ): Promise<Response> {
+  public static sendUserVote(socket: Socket, userID: string, value: string): Promise<Response> {
     return new Promise((resolve) => {
-      socket.emit('sendUserVote', { userID, value }, (response: string) => {  
+      socket.emit('sendUserVote', { userID, value }, (response: string) => {
         const responseObject: Response = JSON.parse(response);
         resolve(responseObject);
       });
@@ -203,7 +202,7 @@ export class Controller {
   public static updateMemberVote(socket: Socket, roomID: string, memberVote: MemberVote): Promise<Response> {
     return new Promise((resolve) => {
       socket.emit('updateMemberVote', { roomID, memberVote }, (response: string) => {
-        const responseObject: Response = JSON.parse(response);  
+        const responseObject: Response = JSON.parse(response);
         resolve(responseObject);
       });
     });
@@ -212,7 +211,7 @@ export class Controller {
   public static startRound(socket: Socket, roomID: string, currentIssue: number): Promise<Response> {
     return new Promise((resolve) => {
       socket.emit('startRound', { roomID, currentIssue }, (response: string) => {
-        const responseObject: Response = JSON.parse(response);  
+        const responseObject: Response = JSON.parse(response);
         resolve(responseObject);
       });
     });
@@ -221,13 +220,26 @@ export class Controller {
   public static completeUser(socket: Socket, userID: string, isConfirm: boolean): Promise<Response> {
     return new Promise((resolve) => {
       socket.emit('completeUser', { userID, isConfirm }, (response: string) => {
-        const responseObject: Response = JSON.parse(response);  
+        const responseObject: Response = JSON.parse(response);
+        resolve(responseObject);
+      });
+    });
+  }
+
+  public static startKickVoting(socket: Socket, victimID: string, maniacID: string): Promise<Response> {
+    return new Promise((resolve) => {
+      socket.emit('startKickVoting', { victimID, maniacID }, (response: string) => {
+        const responseObject: Response = JSON.parse(response);
         resolve(responseObject);
       });
     });
   }
 
   public static sendMessage(socket: Socket, userID: string, message: string): void {
-    socket.emit('sendMessage', { message, userID })
+    socket.emit('sendMessage', { message, userID });
+  }
+
+  public static sendKickVote(socket: Socket, userID: string, voteID: string, vote: boolean): void {
+    socket.emit('sendKickVote', { userID, voteID, vote });
   }
 }

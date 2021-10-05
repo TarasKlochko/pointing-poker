@@ -13,7 +13,6 @@ interface KickInfoProps {
 
 export default function KickInfo(props: KickInfoProps): JSX.Element {
   const [isOpenPopup, setIsOpenPopup] = useState(true);
-  console.log(props);
 
   const deleteUserFromWaiting = () => {
     props.setResults((state) => {

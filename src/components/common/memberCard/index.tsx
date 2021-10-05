@@ -36,7 +36,11 @@ export default function MemberCard(props: MemberCardProps): JSX.Element {
   };
 
   const kickPlayer = () => {
-    Controller.deleteUser(socket, props.user.id);
+    if (user.user.role === UserRole.DEALER) {
+      Controller.deleteUser(socket, props.user.id);
+    } else {
+      Controller.startKickVoting(socket, props.user.id, user.user.id);
+    }
     setOpen(false);
   };
 
@@ -76,7 +80,11 @@ export default function MemberCard(props: MemberCardProps): JSX.Element {
           <div className="member-info-block__simple-position">{props.user.jobPosition}</div>
         </div>
         <div className="member__simple-image-wrapper">
-          {user.user.role === UserRole.DEALER && props.user.role === UserRole.PLAYER ? kickButton : ''}
+          {(user.user.role === UserRole.DEALER ||
+          (user.user.role === UserRole.PLAYER && user.user.id !== props.user.id)) &&
+          props.user.role === UserRole.PLAYER
+            ? kickButton
+            : ''}
           <YesNoDialog
             content={`Do you really want to kick ${props.user.name} ${props.user.surname}`}
             open={open}

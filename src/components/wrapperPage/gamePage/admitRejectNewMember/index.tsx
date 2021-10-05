@@ -16,7 +16,7 @@ export default function AdmitRejectNewMember(props: AdmitRejectNewMemberProps): 
 
   function deleteUserFromWaiting() {
     props.setWaitingList(state => {
-      const index =  state.findIndex(currentUser => currentUser.id === props.user.id);
+      const index =  state.findIndex(confirm => confirm.id === props.user.id);
       if (index !== -1) {
         state.splice(index, 1);
       }

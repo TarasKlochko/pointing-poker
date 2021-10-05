@@ -24,7 +24,7 @@ export default function Chat(props: ChatProps): JSX.Element {
       <Paper id="style-1" className="messages-body">
         {messages.map((elem) => {
           if (elem.user.id === currentUser.id) {
-            return <MessageRight key={`${elem.id}`} message={elem.message} user={elem.user} />;
+            return <MessageRight key={elem.id} message={elem.message} user={elem.user} />;
           }
           return <MessageLeft key={elem.id} message={elem.message} user={elem.user} />;
         })}
