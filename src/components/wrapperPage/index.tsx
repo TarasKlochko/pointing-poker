@@ -118,15 +118,13 @@ export default function WrapperPage(): JSX.Element {
 
   return (
     <div className="page-wrapper">
-      <>
-        {page}
-        <div className="chat-view-btn-container">
-          {isChatOpend && <Chat messages={messages} />}
-          <IconButton size="medium" className="chat-view-btn" onClick={changeChatViewHandler}>
-            <ChatIcon color="primary" fontSize="large"/>
-          </IconButton>
-        </div>
-      </>
+      {page}
+      <div className="chat-view-btn-container">
+        {isChatOpend && <Chat messages={messages} />}
+        <IconButton size="medium" className="chat-view-btn" onClick={changeChatViewHandler}>
+          <ChatIcon color="primary" fontSize="large"/>
+        </IconButton>
+      </div>
       {currentUser.user.role === UserRole.DEALER &&
         waitingList.map(elem => <AdmitRejectNewMember key={elem.id} user={elem} setWaitingList={setWaitingList} />)}
     </div>

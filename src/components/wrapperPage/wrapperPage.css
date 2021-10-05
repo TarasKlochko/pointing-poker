@@ -1,11 +1,12 @@
 .chat-view-btn-container {
+  height: 0;
   position: sticky;
   display: flex;
   align-items: flex-end;
   bottom: 0;
   justify-content: flex-end;
-  padding-right: 2rem;
-  padding-bottom: 2rem;
+  padding-right: 1rem;
+  padding-bottom: 1rem;
 }
 
 .chat-view-btn {
@@ -17,5 +18,9 @@
 }
 
 .page-wrapper{
+  position: relative;
+}
+
+.chat-wrapper {
   position: relative;
 }
