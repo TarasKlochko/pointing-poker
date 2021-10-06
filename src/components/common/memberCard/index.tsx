@@ -43,7 +43,7 @@ export default function MemberCard(props: MemberCardProps): JSX.Element {
       Controller.deleteUser(socket, props.user.id);
     } else {
       const memberLength = room.members.filter((member) => member.role === UserRole.PLAYER).length;
-      if (memberLength > 2){
+      if (memberLength > 2) {
         Controller.startKickVoting(socket, props.user.id, user.user.id);
       } else {
         setNotEnoughUsers(true);
@@ -89,7 +89,7 @@ export default function MemberCard(props: MemberCardProps): JSX.Element {
         </div>
         <div className="member__simple-image-wrapper">
           {(user.user.role === UserRole.DEALER ||
-          (user.user.role === UserRole.PLAYER && user.user.id !== props.user.id)) &&
+            (user.user.role === UserRole.PLAYER && user.user.id !== props.user.id)) &&
           props.user.role === UserRole.PLAYER
             ? kickButton
             : ''}
@@ -100,7 +100,7 @@ export default function MemberCard(props: MemberCardProps): JSX.Element {
             noClickHandle={closeDialog}
             title={'Kick player?'}
           ></YesNoDialog>
-          {notEnoughUsers && <NotEnoughPlayersPopup setNotEnoughUsers={setNotEnoughUsers}/>}
+          {notEnoughUsers && <NotEnoughPlayersPopup setNotEnoughUsers={setNotEnoughUsers} />}
         </div>
       </div>
     </div>
@@ -116,7 +116,7 @@ export default function MemberCard(props: MemberCardProps): JSX.Element {
       ></ImageBlock>
       <div className="member-info-block-wrap">
         <div className="member__chat-member-info-block">
-          <div className="member-info-block__chat-current-user">IT`S YOU</div>
+          <div className="member-info-block__chat-current-user">{props.user.id === user.user.id ? 'IT`S YOU' : ''}</div>
           <div className="member-info-block__chat-name">{`${props.user.name} ${props.user.surname}`}</div>
           <div className="member-info-block__chat-position">{props.user.jobPosition}</div>
         </div>
