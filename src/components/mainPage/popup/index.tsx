@@ -229,6 +229,7 @@ export function Popup(): JSX.Element {
               id="popup-input-image"
               type="file"
               name="image"
+              accept="image/*"
               onChange={(event) => handleInput(event)}
             />
             <label htmlFor="popup-input-image" className="popup__button popup__label-image">
