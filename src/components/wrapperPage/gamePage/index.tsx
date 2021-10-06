@@ -16,8 +16,6 @@ import { Controller } from '../../../api/Controller';
 import VoteBlock from './voteBlock/VoteBlock';
 import PlayCards from '../../common/playCard';
 import { MemberVoteStatus } from '../../../model/MemberVote';
-import { ifKicked } from '../../../slices/UserSlice';
-import { isExitAction } from '../../mainPage/deleteInfoPopup/deleteInfoPopup.slice';
 import YesNoDialog from '../../common/common-dialogs/YesNoDialog';
 
 export default function GamePage(): JSX.Element {
@@ -61,7 +59,6 @@ export default function GamePage(): JSX.Element {
 
   const exitGame = (): void => {
     Controller.deleteUser(socket, user.user.id);
-    dispatch(isExitAction(true));
     history.push(`/`);
     setOpen(false);
   };

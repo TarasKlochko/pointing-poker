@@ -6,13 +6,11 @@ import gameSettingsReducer from '../components/wrapperPage/lobby/settingsBlock/s
 import { gameSlice } from '../slices/GameSlice';
 import { userSlice } from '../slices/UserSlice';
 import cancelGamePopupReducer from '../components/mainPage/cancelGamePopup/cancelGamePopup.slice';
-import deleteInfoPopupReducer from '../components/mainPage/deleteInfoPopup/deleteInfoPopup.slice';
 
 export const store = configureStore({
   reducer: {
     popup: popupReducer,
     cancelGamePopup: cancelGamePopupReducer,
-    deleteInfoPopup: deleteInfoPopupReducer,
     createGame: createGameReducer,
     socket: createSocketReducer,
     gameSettings: gameSettingsReducer,
