@@ -37,8 +37,9 @@ export default function GamePage(): JSX.Element {
     game.memberVote.status === MemberVoteStatus.IN_PROGRESS;
   const isStatisticForDealer =
     user.user.role === UserRole.DEALER && game.memberVote.status === MemberVoteStatus.FINISHED;
-  const isStatisticForPlayer =
-    user.user.role === UserRole.PLAYER && game.memberVote.status === MemberVoteStatus.FINISHED;
+  const isStatisticForMembers =
+    (user.user.role === UserRole.PLAYER || user.user.role === UserRole.OBSERVER) &&
+    game.memberVote.status === MemberVoteStatus.FINISHED;
   const history = useHistory();
   const [open, setOpen] = useState(false);
 
@@ -239,7 +240,7 @@ export default function GamePage(): JSX.Element {
               </div>
             </div>
           )}
-          {isStatisticForPlayer && <Statistics />}
+          {isStatisticForMembers && <Statistics />}
         </div>
         {isStatisticForDealer && <Statistics />}
         {isPlayCards ? <PlayCards></PlayCards> : <></>}
