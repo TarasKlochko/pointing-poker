@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Snackbar } from '@material-ui/core';
 import { Popup } from './popup';
 import './mainPage.css';
 import { isObsorverShow, isPopupAction } from './popup/popupSlice';
@@ -12,6 +13,7 @@ export default function MainPage(): JSX.Element {
   const dispatch = useAppDispatch();
   const isPopup = useAppSelector((state) => state.popup.isPopup);
   const [isErrorID, setIsError] = useState(false);
+  const [accessDenied, setAccessDenied] = useState(false);
   const id = useAppSelector((state) => state.createGame.id);
   const isKicked = useAppSelector((state) => state.user.kicked);
   const socket = useAppSelector((state) => state.socket.socket);
@@ -70,9 +72,14 @@ export default function MainPage(): JSX.Element {
           Connect
         </button>
       </div>
-      {isPopup && <Popup></Popup>}
+      {isPopup && <Popup setAccessDenied={setAccessDenied}></Popup>}
       {isKicked && <DeleteInfoPopup />}
       {isCancelGamePopup && <CancelGamePopup />}
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        open={accessDenied}
+        message="Admin reject the request."
+      />
     </section>
   );
 }

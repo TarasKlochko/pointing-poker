@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { Snackbar, SnackbarContent } from '@material-ui/core';
 import { Checker } from '../../common/checker';
 import './popup.css';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
@@ -20,7 +21,11 @@ import { ifKicked, setUser } from '../../../slices/UserSlice';
 import { UserRole } from '../../../model/UserRole';
 import { GameState } from '../../../model/Room';
 
-export function Popup(): JSX.Element {
+interface PopupProps{
+  setAccessDenied: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export function Popup(props: PopupProps): JSX.Element {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user);
   const isCreateGame = useAppSelector((state) => state.createGame.isCreateGame);
@@ -36,6 +41,7 @@ export function Popup(): JSX.Element {
   const [isError, setIsError] = useState(false);
   const [alreadeCicked, setAlreadeCicked] = useState(false);
   const [isDisable, setIsDisable] = useState(false);
+  const [isWaitingForAdmin, setIsWaitingForAdmin] = useState(false);
 
   const history = useHistory();
 
@@ -125,8 +131,6 @@ export function Popup(): JSX.Element {
               localStorage.setItem('roomID', roomID);
               createUserState(responseObject.userID, roomID, observer ? UserRole.OBSERVER : UserRole.PLAYER);
               const { memberVote, roomObj } = responseObject;
-              console.log('check vote');
-              console.log(memberVote);
               if (memberVote) {
                 dispatch(setFullData({ memberVote, room: roomObj }));
               } else {
@@ -134,11 +138,15 @@ export function Popup(): JSX.Element {
               }
               history.push(`/game/${responseObject.roomObj?.roomID}`);
             } else if (responseObject.status === 202) {
+              setIsWaitingForAdmin(true);
+              const waitingTimeout = setTimeout(() => {
+                setIsWaitingForAdmin(false);
+              }, 2000);
               socket.on('isConfirm', (response): void => {
+                clearTimeout(waitingTimeout);
                 dispatch(isPopupAction(false));
                 dispatch(clearPopupAction());
                 const { status, ...fields } = JSON.parse(response) as Response;
-                console.log(response);
                 if (status === 200) {
                   let roomID = '';
                   if (fields.roomObj.roomID) {
@@ -154,7 +162,11 @@ export function Popup(): JSX.Element {
                   }
                   history.push(`/game/${roomObj.roomID}`);
                 } else {
-                  console.log('Not confirm!');
+                  clearTimeout(waitingTimeout);
+                  props.setAccessDenied(true);
+                  setTimeout(() => {
+                    props.setAccessDenied(false);
+                  }, 2000);
                 }
               });
             } else {
@@ -258,6 +270,11 @@ export function Popup(): JSX.Element {
           </div>
         </form>
       </div>
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        open={isWaitingForAdmin}
+        message="Request was sended to admin."
+      />
     </div>
   );
 }
