@@ -12,6 +12,7 @@ export function TextInput(): JSX.Element {
 
   const sendMessageHandler = () => {
     Controller.sendMessage(socket, user.id, message);
+    setMessage('');
   };
 
   return (
@@ -23,6 +24,12 @@ export function TextInput(): JSX.Element {
           className="wrap-text"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
+          onKeyDown={(e) => {
+            if(e.key === 'Enter') {
+              e.preventDefault();
+              sendMessageHandler();
+            }
+          }}
         />
         <Button variant="contained" color="primary" className="send-message-button" onClick={sendMessageHandler}>
           <SendIcon />
