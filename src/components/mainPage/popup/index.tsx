@@ -123,7 +123,7 @@ export function Popup(): JSX.Element {
                 roomID = responseObject.roomObj?.roomID;
               }
               localStorage.setItem('roomID', roomID);
-              createUserState(responseObject.userID, roomID, UserRole.PLAYER);
+              createUserState(responseObject.userID, roomID, observer ? UserRole.OBSERVER : UserRole.PLAYER);
               const { memberVote, roomObj } = responseObject;
               console.log('check vote');
               console.log(memberVote);
@@ -145,7 +145,7 @@ export function Popup(): JSX.Element {
                     roomID = fields.roomObj.roomID;
                   }
                   localStorage.setItem('roomID', roomID);
-                  createUserState(fields.userID, roomID, UserRole.PLAYER);
+                  createUserState(fields.userID, roomID, observer ? UserRole.OBSERVER : UserRole.PLAYER);
                   const { memberVote, roomObj } = fields;
                   if (memberVote) {
                     dispatch(setFullData({ memberVote, room: roomObj }));
