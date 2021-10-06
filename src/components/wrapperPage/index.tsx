@@ -139,18 +139,20 @@ export default function WrapperPage(): JSX.Element {
       </div>
       {currentUser.user.role === UserRole.DEALER &&
         waitingList.map((elem) => <AdmitRejectNewMember key={elem.id} user={elem} setWaitingList={setWaitingList} />)}
-      {voteKickList.map((elem) => (
-        <KickMember
-          key={elem.id}
-          maniac={elem.maniac}
-          victim={elem.victim}
-          voteID={elem.id}
-          setVoteKick={setVoteKick}
-        />
-      ))}
-      {voteKickResults.map((elem) => (
-        <KickInfo key={elem.victim.id} victim={elem.victim} kickResult={elem.kickResult} setResults={setResults} />
-      ))}
+      {currentUser.user.role === UserRole.PLAYER &&
+        voteKickList.map((elem) => (
+          <KickMember
+            key={elem.id}
+            maniac={elem.maniac}
+            victim={elem.victim}
+            voteID={elem.id}
+            setVoteKick={setVoteKick}
+          />
+        ))}
+      {currentUser.user.role === UserRole.PLAYER &&
+        voteKickResults.map((elem) => (
+          <KickInfo key={elem.victim.id} victim={elem.victim} kickResult={elem.kickResult} setResults={setResults} />
+        ))}
     </div>
   );
 }
