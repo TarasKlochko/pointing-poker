@@ -11,8 +11,10 @@ export function TextInput(): JSX.Element {
   const [message, setMessage] = useState('');
 
   const sendMessageHandler = () => {
-    Controller.sendMessage(socket, user.id, message);
-    setMessage('');
+    if (message.length > 0){
+      Controller.sendMessage(socket, user.id, message);
+      setMessage('');
+    }
   };
 
   return (
